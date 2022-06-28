@@ -1,7 +1,3 @@
-<!--
-Author: W3layouts
-Author URL: http://w3layouts.com
--->
 <!doctype html>
 <html lang="en">
 
@@ -15,9 +11,11 @@ Author URL: http://w3layouts.com
   <!-- google fonts -->
   <link href="//fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
   <!-- Template CSS -->
   <link rel="stylesheet" href="assets/css/style-starter.css">
-
+  
 </head>
 
 <body>
@@ -26,7 +24,7 @@ Author URL: http://w3layouts.com
   <div class="w3l-header" id="home">
     <div class="container">
       <nav class="navbar navbar-expand-lg navbar-dark pl-0 pr-0">
-        <a class="navbar-brand m-0" href="index.html"><span class="fa fa-gamepad"></span> VSP </a>
+        <a class="navbar-brand m-0" href="index.html"><span class="fa fa-gamepad"></span> VSP CONGLOMERATES </a>
         <!-- if logo is image enable this   
             <a class="navbar-brand" href="#index.html">
                 <img src="image-path" alt="Your logo" title="Your logo" style="height:35px;" />
@@ -67,18 +65,25 @@ Author URL: http://w3layouts.com
 					<a href="https://twitter.com/vspeeeeee" class="editContent">twitter</a>
 					or <a href="#linkedin" class="editContent">linkedin</a>.</h3>
 			</div>
+
+
 			<!-- <form action="https://sendmail.w3layouts.com/submitForm" method="post" class=""> -->
-        <form action="mailto:vishnusureshperumbavoor@gmail.com" method="post" class="">
+        <!-- <form action="mailto:vishnusureshperumbavoor@gmail.com" method="post" class=""> -->
+        <!-- <form action="https://formsubmit.co/vishnusureshperumbavoor@gmail.com" method="post" class=""> -->
+        <form id="submit-form" action="">
 				<div class="main-input">
-					<input type="text" name="w3lName" placeholder="Enter your name" class="contact-input" required="" />
-					<input type="email" name="w3lSender" placeholder="Enter your mail" class="contact-input" required="" />
-					<input type="email" name="w3lSubject" placeholder="Subject" class="contact-input" />
-					<textarea class="contact-textarea contact-input" name="w3lMessage" placeholder="Enter your message" required=""></textarea>
+					<input type="text" name="Name" placeholder="Enter your name" class="contact-input" required="" />
+					<input type="email" name="Email" placeholder="Enter your mail" class="contact-input" required="" />
+					<input type="text" name="Subject" placeholder="Subject" class="contact-input" />
+					<textarea class="contact-textarea contact-input" name="Message" placeholder="Enter your message" required=""></textarea>
+          <!-- <input type="hidden" name="_captcha" value="false"> -->
+          <!-- <input type="hidden" name="_next" value="http://localhost:5501/contact.html"> -->
+          <!-- <input type="hidden" name="_subject" value="New Member to Trichromatic"> -->
 				</div>
 				<div class="text-right">
 					<button class="btn-primary btn btn-style">Send</button>
 				</div>
-			</form>
+			</formid>
 		</div>
 	</div>
 </section>
@@ -91,7 +96,7 @@ Author URL: http://w3layouts.com
         <div class="footer-content">
           <div class="row">
             <div class="col-lg-8 footer-left">
-              <p class="m-0">&copy; 2020 Eccentric Portfolio.
+              <p class="m-0">&copy; 2022 Eccentric Portfolio.
                  <!-- All Rights Reserved | Design by <a href="https://w3layouts.com">W3layouts</a> -->
                 </p>
             </div>
@@ -101,7 +106,7 @@ Author URL: http://w3layouts.com
                 <li><a href="https://github.com/vishnusureshperumbavoor"><span class="fa fa-github"></span></a></li>
                 <li><a href="#linkedin"><span class="fa fa-linkedin"></span></a></li>
                 <li><a href="https://t.me/vishnusureshperumbavoor"><span class="fa fa-telegram"></span></a></li>
-                <!-- <li><a href="https://www.instagram.com/vishnusureshperumbavoor/"><span class="fa fa-instagram"></span></a></li> -->
+                <li><a href="https://www.instagram.com/vishnusureshperumbavoor/"><span class="fa fa-instagram"></span></a></li>
                 <li><a href="http://www.twitter.com/vspeeeeee"><span class="fa fa-twitter"></span></a></li>
               </ul>
             </div>
@@ -117,6 +122,33 @@ Author URL: http://w3layouts.com
 <button onclick="topFunction()" id="movetop" class="editContent" title="Go to top">
   <span class="fa fa-angle-up"></span>
 </button>
+
+<script>
+        $("#submit-form").submit((e)=>{
+            e.preventDefault()
+            $.ajax({
+                url:"https://script.google.com/macros/s/AKfycbxDeRQcWgl9cJZFkWirTszeBtVrnLIjo_thXtU4Ystr4m22LZ3a5nx18RLzhJbxHmnXtQ/exec",
+                data:$("#submit-form").serialize(),
+                method:"post",
+                success:function (response){
+                    alert("Form submitted successfully")
+                    window.location.reload()
+                    //window.location.href="https://google.com"
+                },
+                error:function (err){
+                    alert("Something Error")
+                }
+            })
+        })
+    </script>
+<script>
+  // function sendEmail(){
+  //   Email.send({
+  //     Host:"smtp.yourisp.com",
+
+  //   })
+  // }
+</script>
 <script>
   // When the user scrolls down 20px from the top of the document, show the button
   window.onscroll = function () {
