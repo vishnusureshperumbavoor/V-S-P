@@ -23,7 +23,7 @@
   <body>
     <!-- header -->
     <header>
-      <div class="w3l-header" id="home">
+      <div class="w3l-header fixed-top" id="home">
         <div class="container">
           <nav class="navbar navbar-expand-lg navbar-dark pl-0 pr-0">
             <a class="navbar-brand m-0" href="index.html"
@@ -52,15 +52,22 @@
                   >
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="about.html">Events</a>
+                  <a class="nav-link pl-0 pr-0" href="#about">About</a>
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="services.html"
-                    >Services</a
-                  >
+                  <a class="nav-link pl-0 pr-0" href="#software-services">Software Services</a>
                 </li>
+                <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0" href="#hardware-services">Hardware Services</a>
+                </li>
+                <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0" href="#events">Events</a>
+                </li>
+                <!-- <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0" href="#gallery-vsp">Gallery</a>
+                </li> -->
                 <li class="nav-item">
-                  <a class="nav-link pl-0 pr-0" href="contact.html">Contact</a>
+                  <a class="nav-link pl-0 pr-0" href="#contact">Contact</a>
                 </li>
               </ul>
             </div>
@@ -70,14 +77,14 @@
     </header>
     <!-- //header -->
     <!--  Main banner section -->
-    <section class="w3l-main-banner">
+    <section class="w3l-main-banner mt-3">
       <div class="banner-view">
         <div class="banner-info container">
           <h3 class="banner-text">VISHNU SURESH PERUMBAVOOR</h3>
           <p class="mt-3 mb-5">
             VSP is the acronym of Vishnu Suresh Perumbavoor. He is the co-founder and CTO of CAPE. What CAPE doing is building 
             smart 
-            villages using IOT, AI and blockchain and effectively use village economy. <br>He was a part of the team which won Vaiga 
+            villages using IOT, AI and cloud and effectively use village economy. <br>He was a part of the team which won Vaiga 
             AgriHack 2023, Kerala's biggest agricultural hackthon, which is conducted by Kerala Government. 
             He also won startup pith presentation conduced by Kerala Startup Mission at
             GPTC Palakkad. He is particated in Rajasthan IT hackathon. That was India's biggest hackthon on that time.  <br>
@@ -139,9 +146,9 @@
                 </div>
               
             </div>
-            <div class="col-lg-8 content-left mt-lg-0 mt-5">
+            <div id="about" class="col-lg-8 content-left mt-lg-0 mt-5">
               <h3>
-                I'm an engineer who loves to advance humanity using technology.
+                Entrepreneur who loves to advance humanity using technology.
               </h3>
   
               <p class="mb-0">
@@ -164,23 +171,28 @@
         </div>
       </div>
     </div>
-    <!-- //w3l-content-photo-5 -->
-    <section class="w3l-services-block-3">
-      <div class="features-main pb-5 pt-0 text-center">
+    <!-- software servies -->
+    <section id="software-services" class="w3l-services-block-3" style="padding-top:100px">
+      <div class="features-main pb-5 text-center">
         <div class="container pb-lg-3">
+          <div  class="row-features">
+            <h3 style="font-weight: bold;">
+              SOFTWARE SERVICES
+            </h3>
+          </div>
           <div class="row features">
+            
             <div class="col-lg-4 col-md-6 feature-grid">
               <a href="#url">
                 <div class="feature-body service1">
                   <div class="feature-img">
                     <span class="fa fa-bar-chart" aria-hidden="true"></span>
+                    
                   </div>
                   <div class="feature-info mt-4">
-                    <h3 class="feature-titel mb-2">Computer Vision</h3>
+                    <h3 class="feature-titel mb-2">MongoDB</h3>
                     <p class="feature-text">
-                      Working on Python, OpenCV, mediapipe and YoloV3. I do
-                      pedestrian detection, hand detection, body detection, face
-                      detection, face recognition, object detection.
+                      Popular NoSQL document-oriented database that stores data in a flexible, JSON-like format. 
                     </p>
                   </div>
                 </div>
@@ -196,11 +208,9 @@
                     ></span>
                   </div>
                   <div class="feature-info mt-4">
-                    <h3 class="feature-titel mb-2">Mobile Apps</h3>
+                    <h3 class="feature-titel mb-2">MySQL</h3>
                     <p class="feature-text">
-                      I make augmented reality mobile apps for pedestrian
-                      detection, hand detection, body detection, face detection,
-                      face recognition, object detection.
+                      Open-source relational database management system that uses SQL for data manipulation and retrieval. 
                     </p>
                   </div>
                 </div>
@@ -213,11 +223,9 @@
                     <span class="fa fa-codepen" aria-hidden="true"></span>
                   </div>
                   <div class="feature-info mt-4">
-                    <h3 class="feature-titel mb-2">MERN Stack</h3>
+                    <h3 class="feature-titel mb-2">RDBMS</h3>
                     <p class="feature-text">
-                      I do full stack web development using MERN stack. MongoDB
-                      as database. ExpressJS as framework. ReactJS as frontend
-                      library. NodeJS as JS scripting language.
+                      Relational Database Management System, which is a type of database system based on the relational model of data. 
                     </p>
                     <div class="hover"></div>
                   </div>
@@ -231,11 +239,9 @@
                     <span class="fa fa-modx" aria-hidden="true"></span>
                   </div>
                   <div class="feature-info mt-4">
-                    <h3 class="feature-titel mb-2">Machine Learning</h3>
+                    <h3 class="feature-titel mb-2">Cloud</h3>
                     <p class="feature-text">
-                      I loves to learn ML algorithms such as linear regression,
-                      logistic regression, K-Nearest Neighbour, Support Vector
-                      Machine, Decision tree, Naive Bayes.
+                    Model of delivering computing resources over the internet, including servers, storage, databases, and applications. 
                     </p>
                   </div>
                 </div>
@@ -251,11 +257,47 @@
                     ></span>
                   </div>
                   <div class="feature-info mt-4">
-                    <h3 class="feature-titel mb-2">Speech Recognition</h3>
+                    <h3 class="feature-titel mb-2">Node JS</h3>
                     <p class="feature-text">
-                      I loves to work on text to speech and speech to text
-                      technologies and build efficient virtual assistants and
-                      chatbots using deep learning neural networks.
+                      Open-source, cross-platform, JavaScript runtime environment that allows developers to build server-side applications
+                       using JavaScript. 
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service6">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-paint-brush icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">Express JS</h3>
+                    <p class="feature-text">
+                      Web application framework for Node.js, which provides a robust set of features for building web and mobile 
+                      applications. 
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service6">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-paint-brush icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">Machine Learning</h3>
+                    <p class="feature-text">
+                      Subset of AI that focuses on creating systems that can learn and improve from data without being explicitly programmed. 
                     </p>
                   </div>
                 </div>
@@ -273,20 +315,456 @@
                   <div class="feature-info mt-4">
                     <h3 class="feature-titel mb-2">Deep Learning</h3>
                     <p class="feature-text">
-                      I'm working on deep learning neural networks such as
-                      artificial, convolutional, recurrent, graph, LSTM,
-                      multilayer perceptron etc.
+                      DL is a subset of ML that involves training artificial neural networks to learn and make decisions based on complex data. 
                     </p>
                   </div>
                 </div>
               </a>
             </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service6">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-paint-brush icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">Computer Vision</h3>
+                    <p class="feature-text">
+                      It enables machines to interpret and understand visual information from the world 
+                      around them. 
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service6">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-paint-brush icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">NLP</h3>
+                    <p class="feature-text">
+                      Field of study that focuses on enabling computers to understand, interpret, and generate human language.
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service6">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-paint-brush icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">Speech Recognition</h3>
+                    <p class="feature-text">
+                      Speech recognition is the process of converting spoken words into text or commands that a computer can understand and execute. 
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service6">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-paint-brush icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">Data Science</h3>
+                    <p class="feature-text">
+                      Multidisciplinary field that involves the use of statistical, computational, and ML techniques to extract insights and knowledge from data.
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+
           </div>
         </div>
       </div>
     </section>
+    <!-- hardware servies -->
+    <section id="hardware-services" class="w3l-services-block-3" style="padding-top:100px">
+      <div class="features-main pb-5 pt-0 text-center">
+        <div class="container pb-lg-3">
+              <div class="row-features">
+                  <h3 style="font-weight: bold;">
+                    HARDWARE SERVICES (Sensors)
+                  </h3>
+                </div>
+          <div class="row features">
+            
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service1">
+                  <div class="feature-img">
+                    <span class="fa fa-bar-chart" aria-hidden="true"></span>
+                    
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">LoRa</h3>
+                    <p class="feature-text">
+                      LoRa sensors are low-power, long-range wireless sensors that use LoRaWAN (Long Range Wide Area Network) technology to transmit data over long distances 
+                      with minimal power consumption.
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service2">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-laptop icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">NPK Soil</h3>
+                    <p class="feature-text">
+                      NPK soil sensors are devices that measure the levels of nitrogen, phosphorus, and potassium (NPK) in the soil, which are essential nutrients for plant growth. 
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service3">
+                  <div class="feature-img">
+                    <span class="fa fa-codepen" aria-hidden="true"></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">DHT11</h3>
+                    <p class="feature-text">
+                      The DHT11 sensor is a low-cost, digital temperature and humidity sensor that can be used to measure ambient temperature and humidity levels in real-time. 
+                    </p>
+                    <div class="hover"></div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service4">
+                  <div class="feature-img">
+                    <span class="fa fa-modx" aria-hidden="true"></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">Soil Moisture</h3>
+                    <p class="feature-text">
+                      They provide real-time data on soil moisture levels, which can help farmers and gardeners optimize irrigation schedules and conserve water resources.
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service5">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-signal icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">Passive IR</h3>
+                    <p class="feature-text">
+                      A Passive Infrared (PIR) sensor is a type of motion sensor that detects infrared radiation emitted by objects in its field of view. 
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-md-6 feature-grid">
+              <a href="#url">
+                <div class="feature-body service6">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-paint-brush icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">TCS3200</h3>
+                    <p class="feature-text">
+                      The TCS3200 color recognition sensor is a programmable color sensor that can detect and measure the intensity of different colors in real-time.</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            
+
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- events -->
+
+    <section class="w3l-about-bottom py-5" id="events" style="padding-top:100px">
+      <div class="row-features">
+        <h3 style="font-weight: bold;text-align: center;">
+          HARDWARE SERVICES (Sensors)
+        </h3>
+      </div>
+      <div class="container py-lg-5 py-md-3">
+          <div class="row middle-grids">
+              <div class="col-lg-7 advantage-grid-info">
+                  <div class="advantage_left">
+                      <h4>Vaiga Agri Hack 2023</h4>
+                      <h5 class="mt-2">Event : Hackathon</h5>
+                      <h5 class="mt-2">Organized by : Kerala Government + Department of Agriculture Development and Farmers' Welfare</h5>
+                      <h5 class="mt-2">Date : 25/02/2023 - 27/02/2023</h5>
+                      <h5 class="mt-2">Venue : College of Agriculture, Vellayani, Thiruvananthapuram</h5>
+                      <h5 class="mt-2">Result : Won 3rd prize</h5>
+                      <p class="mb-3 mt-2">We won 3rd prize in this 36 hour event and was able to talk with h'ble agricultural minister of Kerala. 
+                        VAIGA Agri Hack 23 is Kerala’s largest agricultural hackathon conducted as a part of the VAIGA Agricultural Fest, 
+                        participating college students, startups, individuals, farmers, innovationists, and the public. <br><br>
+                        Me & Afwan Sha came back from coimbatore paper presentation event & joined with our team. There were 5 members in 
+                        our team including us and Rhithuja, Akhiyar, Shinas . They were already there on 24th. My price prediction were 
+                        rejected by them one week back & now I joined Brown Plant Hopper detection problem statement. <br><br>
+  
+  It was a 36 hour hackathon & the participants were not allowed to sleep between. Already it was sleepless nights for me last 2 days.
+  
+  Our project was BPH detection using Low Powered Wide Area Network. Our product wasn't organized that much in the beginning. But it started 
+  to improve 
+  after each jury visit. I built 2 ML models based on eXtreme 
+  Gradient Boosting. After 36 hours both teams from our college selected to the final round.
+  After the presentation round, the winners were announced & we were third.
+  3rd in a state level hack is not bad. Right?? <br><br>
+  
+  We received the price on March 2nd at Putharikandam Maidanam, Thiruvananthapuram.
+  We are also planning on upgrading the project into a startup.
+                      </p>
+                      <!-- <a href="resume.html" class="btn-style btn-primary btn mt-lg-5 mt-4">Download CV</a>
+                      <a href="contact.html" class="btn-style btn-secondary btn mt-lg-5 mt-4 ml-1">Hire Me</a> -->
+                  </div>
+              </div>
+              <div class="col-lg-5 advantage-grid-info1">
+                  <div class="advantage_left1 mt-lg-0 mt-5">
+                      <img src="assets/images/vaiga/Vaiga.jpg" class="img img-fluid" alt="">
+                      <img src="assets/images/vaiga/Vaiga3.jpg" class="img img-fluid" alt="">
+                  </div>
+              </div>
+          </div>
+          
+      </div>
+      <div class="container py-lg-5 py-md-3">
+          <div class="row middle-grids">
+              <div class="col-lg-7 advantage-grid-info">
+                  <div class="advantage_left">
+                      <h4>Rajasthan IT Hackathon - 2k23</h4>
+                      <h5 class="mt-2">Event : Hackathon</h5>
+                      <h5 class="mt-2">Organized by : Rajasthan Government + Information Technology and Communications, Rajasthan</h5>
+                      <h5 class="mt-2">Date : 19/03/2023 - 21/03/2023</h5>
+                      <h5 class="mt-2">Venue : University Rajasthan College</h5>
+                      <p class="mb-3 mt-2">
+                         Organized by the Department of IT&C, Rajasthan Hackathon 7.0 is a 24 hour non-stop 
+                         coding marathon. The program started at 19/02/2023 10.00 PM & ended at 21/03/2023 10.00 AM. It was stupendous 
+                         experience for me to participate in a national level cosmopolitan event. There were 3 members in my team including 
+                         me, Afwan and Maheshwaran Mayavan from TN. It was 
+                         first time I'm working with a member outside of the state. <br><br>
+  
+                         We were planning to do a tourist automation project based on smart city and infrastruture. But we didn't know 
+                         they will give the problem statement 
+                         only at 10.00 PM. There were total 12 problem statements. And we had doubt which problem to choose. I wanted to 
+                         try supply chain management using blockchain. Maheshwaran wanted to try financial fraud detection. But to make it 
+                         interesting we decided to do locust attack detection using LoRa sensor. 
+                         
+                         But what lacked was the hardware. We decided to give it a shot on the software part. We collected details related 
+                         to the ideal condition for the existence of locust & created ML model on eXtreme Gradient Boosting. It was all 
+                         perfectly fine. But what I understood from this hackathon was the IOT devices are the heart of every hackathons. <br><br>
+                         
+                         Rajasthan cold temperature was one hell of an experience for me. I thought rajasthan is a hot city before coming to 
+                         this event. It was cold there even during afternoons. Made lot of friends from multiple cities like Pune, 
+                         Chennai, Noida, Ahmedabad, Lucknow etc. The main agenda for participating in this event was to expand the network
+                         all over India.
+                      </p>
+                  </div>
+              </div>
+              <div class="col-lg-5 advantage-grid-info1">
+                  <div class="advantage_left1 mt-lg-0 mt-5">
+                      <img src="assets/images/Rajasthan/Rajasthan.jpg" class="img img-fluid" alt="">
+                      <img src="assets/images/Rajasthan/Rajasthan2.jpg" class="img img-fluid" alt="">
+                  </div>
+              </div>
+          </div>
+          
+      </div>
+      <div class="container py-lg-5 py-md-3">
+          <div class="row middle-grids">
+              <div class="col-lg-7 advantage-grid-info">
+                  <div class="advantage_left">
+                      <h4>Technova - 23</h4>
+                      <h5 class="mt-2">Event : Startup Idea Presentation</h5>
+                      <h5 class="mt-2">Organized by : IEDC + KSUM + IIT Palakkad + GPTC Palakkad</h5>
+                      <h5 class="mt-2">Date : 12/04/2023</h5>
+                      <h5 class="mt-2">Venue : GPTC Palakkad</h5>
+                      <h5 class="mt-2">Result : Won 1st prize</h5>
+                      <p class="mb-3 mt-2">
+                        We won 1st prize in the startup idea pitching event. As always me and Afwan were the team members. Rijish Rajan 
+                        (founder of Simplify Agri) who were the judge opened 
+                        us an opportunity to build a company. He were searching for students like us. So this event leads to the phase 2 of my 
+                        corporate career.<br><br> I was so excited to participate 
+                        in this event, because the chief guests were Anoop K Ambike (CEO of KSUM),
+                        Rahul Balachandran (founder & MD of Inker Robotics), Akhil Asokan (co-founder & COO of Sastra Robotics). Anoop K Ambika couldn't 
+                        participate in the event.  Akhil Asokan managed the event very well. <br><br>
+                        Also interacted with Shahid KP (co-founder and CEO of Koderfin) and lot of like minded people such as Mehara Jannath and Anjana and 
+                        student from other collges as well. <br><br>
+                        There were lot of ideas such as recycling of refined oil and creating biofuel out of moss. But the crop early disease detection
+                        won the prize. 
+                      </p>
+                  </div>
+              </div>
+              <div class="col-lg-5 advantage-grid-info1">
+                  <div class="advantage_left1 mt-lg-0 mt-5">
+                      <img src="assets/images/Palakkad/Palakkad.jpeg" class="img img-fluid" alt="">
+                      <img src="assets/images/Palakkad/Palakkad2.jpg" class="img img-fluid" alt="">
+                  </div>
+              </div>
+          </div>
+          
+      </div>
+      <div class="container py-lg-5 py-md-3">
+          <div class="row middle-grids">
+              <div class="col-lg-7 advantage-grid-info">
+                  <div class="advantage_left">
+                      <h4>Awega - 2k23</h4>
+                      <h5 class="mt-2">Event : Startup Idea presenation</h5>
+                      <h5 class="mt-2">Organized by : MES AIMAT</h5>
+                      <h5 class="mt-2">Date : 13/02/2023</h5>
+                      <h5 class="mt-2">Venue : MES AIMAT Marampilly</h5>
+                      <h5 class="mt-2">Result : Won 2nd prize</h5>
+                      <p class="mb-3 mt-2">
+                        We won 2nd prize in this event. But the special thing was this event was the beginning of everything.
+                        This was the foundation for Thiruvananthapuram, Rajasthan, Coimbatore, Palakkad and many more to come events. <br><br>
+  
+                        On 11/02/2023 this program's student coordinator invited us to participate in this event. Actually we didn't had any 
+                        startup idea back then. But we had a project which we prepared for an hackathon event at Thiruvananthapuram. 
+                        So we decided showcase that project as a startup idea. I called Afwan Sha he was ready to join with me.
+                        
+                        It was an idea related to agricultural market intelligence. We created a ML model based on eXtreme Gradient Boosting to 
+                        predict the prices and yield of crops and a crop recommendation system. 
+                        <br><br>
+                        We presented the idea first. Cuz others were not ready to present. Funny part is that the judges are co-founders of Infinio
+                        Technology Solutions (The company which is I'm doing internship). Everything was good except we failed to answer a question related to the GDP 
+                        contribution of agricultural sector to Indian economy. It was only 16%. But we said 50%. 
+                      </p>
+                  </div>
+              </div>
+              <div class="col-lg-5 advantage-grid-info1">
+                  <div class="advantage_left1 mt-lg-0 mt-5">
+                      <img src="assets/images/MESAIMAT/mes0.jpeg" class="img img-fluid" alt="">
+                      <img src="assets/images/MESAIMAT/Mes1.jpg" class="img img-fluid" alt="">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="container py-lg-5 py-md-3">
+          <div class="row middle-grids">
+              <div class="col-lg-7 advantage-grid-info">
+                  <div class="advantage_left">
+                      <h4>SanTekFest - 2k23</h4>
+                      <h5 class="mt-2">Event : Symposium (Paper Presentation)</h5>
+                      <h5 class="mt-2">Organized by : Sankara College, Coimbatore</h5>
+                      <h5 class="mt-2">Date : 24/02/2023</h5>
+                      <h5 class="mt-2">Venue : Sankara, College Coimbatore</h5>
+                      <h5 class="mt-2">Result : Out in the 1st round</h5>
+                      <p class="mb-3 mt-2">
+                        This National level technical symposium was a special event for me. Becuase I met Maheshwaran Mayavan who won the 
+                        1st prize in this event. He is 
+                        a 17 year old develper and public speaker from Tamil 
+                        Nadu. We discussed a lot about current technolgies. Also he is the one who compelled us to participate in the 
+                        Rajastan IT Hackathon which happened after 23 days of this event. 
+                        <br><br>
+                        We didn't won any prize cuz the program was actually paper presentation, but 
+                        actually what we presented is startup idea presentation. Real time applications using AI/ML and Big Data Analytics
+                        were the subjects. What I thought is we should build projects based on these subjects and present it. And a guy who
+                        read 'What is Machine Learning' won the 2nd prize. 
+  
+                        We reached at Coimbatore on 23/02/2023 10.30 PM and was all set for the program. There were contestants from 
+                        Karnataka & Tamil Nadu. We were the only one from Kerala though. Program started at morning 9.30.
+  
+  We presentation was the rejected Vaiga Agrihack 2023 Agricultual Price Prediction project. Our ML model using eXtreme gradient boosting 
+  can predict the prices and yield of agricultural crops. We removed the crop recommendation model to purely focus on regression analysis 
+  instead of classification.
+  <br><br>
+  The judges were talking about the practical application of ML and we presented the same. Even though we didn't get any prize.
+  
+  Moreover it was really nice to participate in a national level event. This program was really helpful to check my English speaking skills.
+  
+  We left from there to participate in Trivandrum event. Our project were rejected by the organizers on 17/02/2023 & we joined another 
+  team. I'm hopping that we will win the prize on 27/02/2023. It's a 3 day event & 36 hour hackathon.
+                      </p>
+                  </div>
+              </div>
+              <div class="col-lg-5 advantage-grid-info1">
+                  <div class="advantage_left1 mt-lg-0 mt-5">
+                      <img src="assets/images/Coimbatore/Coimbatore .jpg" class="img img-fluid" alt="">
+                      <img src="assets/images/Coimbatore/Coimbatore1.jpg" class="img img-fluid" alt="">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="container py-lg-5 py-md-3">
+          <div class="row middle-grids">
+              <div class="col-lg-7 advantage-grid-info">
+                  <div class="advantage_left">
+                      <h4>Speak for India - 2k23</h4>
+                      <h5 class="mt-2">Event : Speech</h5>
+                      <h5 class="mt-2">Organized by : Speak for India Kerala Edition + Federal Bank of India + Mathrubhoomi</h5>
+                      <h5 class="mt-2">Date : 24/01/2023</h5>
+                      <h5 class="mt-2">Venue : Bharatha Mata College</h5>
+                      <h5 class="mt-2">Result : Out in the 1st round</h5>
+  
+                      <p class="mb-3 mt-2">
+                        We started preparation for this event about a month ago and my speech wasn't that much great. But this event helped 
+                        me to overcome the stage fear. I alreay took 3 seminars in my college to get rid of my stage fear. But this big 
+                        event at BMC was real test. The speech statement was 
+                        'College hostels need time limit'. I got to speak in favor of the statement. I couldn't speak well actually I was 
+                        against it. Fathima Sulaiman's and Fayiz KV's speech was top notch. We were well guided by our college faculties
+                        Salih K sir and Soya Narayanan Ma'am and Principal Aiju Thomas.
+                        <br><br>
+  Fathima Sulaiman selected to next round.
+  
+                      </p>
+                  </div>
+              </div>
+              <div class="col-lg-5 advantage-grid-info1">
+                  <div class="advantage_left1 mt-lg-0 mt-5">
+                      <img src="assets/images/speakforIndia/SpeakforIndia-01.jpeg" class="img img-fluid" alt="">
+                      <img src="assets/images/speakforIndia/SpI2.jpg" class="img img-fluid" alt="">
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+  
+  </section>
+
+    <!-- /events -->
     <!-- gallery-7 -->
-    <section class="w3l-gallery-7">
+    <section id="gallery-vsp" class="w3l-gallery-7">
       <div class="gallery-7_sur py-5">
         <div class="container py-lg-5">
           <div id="container">
@@ -299,7 +777,7 @@
                   class="img"
                   alt=""
                 />
-                <input type="radio" name="controls" id="c2" /><img
+                <!-- <input type="radio" name="controls" id="c2" /><img
                   class="galleryImage img-fluid"
                   id="i2"
                   src="assets/images/g2.jpg"
@@ -389,7 +867,7 @@
                     src="assets/images/vsp.jpeg"
                     class="img img-fluid"
                     alt=""
-                /></label>
+                /></label> -->
               </div>
             </div>
           </div>
@@ -480,19 +958,19 @@
 </section> -->
     <!-- //home page blog-->
     <!-- freelance hire me -->
-    <section class="w3l-grid-quote py-5">
+    <!-- <section class="w3l-grid-quote py-5">
       <div class="container py-lg-3">
         <h6>I'am available to change the world</h6>
         <h3>Let's work together indeed!</h3>
         <a href="contact.html" class="btn-style btn-primary btn">Get quotes</a>
         <a href="contact.html" class="btn btn-style btn-light ml-2">Hire me</a>
       </div>
-    </section>
+    </section> -->
     <!-- //freelance hire me -->
 
     <!-- Footer -->
     <footer>
-      <section class="w3l-footers-1">
+      <section id="contact" class="w3l-footers-1">
         <div class="footer py-3">
           <div class="container">
             <div class="footer-content">
