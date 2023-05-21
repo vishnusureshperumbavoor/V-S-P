@@ -34,6 +34,41 @@
 *::after {
   box-sizing: border-box; }
 
+  /* send resume */
+  .send-resume-button{
+    padding-bottom:15px;
+  }
+
+  /* centering downalod cv section in mobile devices */
+  @media (max-width: 768px) {
+    .downalod-cv-section {
+      text-align: center;
+    }
+  }
+  
+
+  /* download cv */
+.download-cv-button {
+  width:100%;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  div.footer-right {
+    width:100%;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .download-cv-icons a {
+    color: black;
+    font-size: 24px;
+  }
+  
+  
+
 html {
   font-family: sans-serif;
   line-height: 1.15;
@@ -9777,6 +9812,15 @@ a.navbar-brand span.fa {
 
 .w3l-main-banner {
   position: relative; }
+
+  @media (max-width: 768px) {
+    .banner-text {
+      padding-top: 35px;
+      text-align: center;
+    }
+  }
+  
+  
 
 .w3l-main-banner h3.banner-text {
   font-weight: 700;
