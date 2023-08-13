@@ -15,8 +15,6 @@
     developer, and he is known for his innovative capitalistic views and his commitment to corporate world."/>
 
     <title>VSP: Corporate Criminal</title>
-
-    <title>VSP</title>
     <link rel="icon" href="./assets/images/icon.png" type="image/png">
 
     <!-- google fonts -->
@@ -25,11 +23,14 @@
       rel="stylesheet"
     />
 
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/style-starter.css" />
   </head>
 
-  <body>
+  <body class="show-vspbot">
     <!-- header -->
     <header>
       <div class="w3l-header fixed-top" id="home">
@@ -157,7 +158,7 @@
             </div>
             <div id="about" class="col-lg-8 content-left mt-lg-0 mt-5">
               <h3>
-                Corporate Criminal who builds a bunch of bots to destroy humanity.
+                "I'm here to rule the corporate world and my battle is not against you"
               </h3>
   
               <p class="mb-0">
@@ -174,7 +175,7 @@
                   <li>Attended One Day Conclave and Technology Expo by KSUM & IEDC at Aluva (10/05/2023)</li>
                   <li>Attended Google Cloud Community Day Kochi 2023 (10/06/2023)</li>
                   <li>Sold Jubily Industris website <a href="https://jubilyind.com/" target="_blank">jubilyind.com</a> (28/06/2023)</li>
-                  <li>VSP Bot powered by Falcon is out</li>
+                  <li>VSP Bot powered by Falcon is out (10/08/2023)</li>
                 </ul>
               </p>
               <!--<a
@@ -188,7 +189,7 @@
       </div>
     </div>
     <!-- vsp youtube videos -->
-    <section class="w3l-about-bottom" id="events" style="padding-top:100px">
+    <section class="w3l-about-bottom" id="events">
       <div class="container py-lg-5 py-md-3">
           <div class="row middle-grids">
               <div class="col-lg-6 advantage-grid-info">
@@ -1135,16 +1136,38 @@
     <span class="fa fa-arrow-up"></span>
     </button> -->
 
+      <button class="vspbot-toggler">
+        <span class="fa-regular fa-comment"></span>
+        <span class="fa-solid fa-xmark"></span>
+      </button>
+    <div class="vspbot">
+      <header>
+        <h2>Chat with VSP Bot</h2>
+        <span class="fa-solid fa-xmark"></span>
+      </header>
+      <ul class="chatbox">
+        <li class="chat incoming">
+          <span class="fa-solid fa-robot"></span>
+          <p>Hi there <br>How can I help you? </p>
+        </li>
+        <li class="chat outgoing">
+          <p>Give love </p>
+        </li>
+      </ul>
+      <div class="chat-input">
+        <textarea placeholder="Enter a message..." required></textarea>
+        <span class="fa-regular fa-paper-plane"></span>
+      </div>
+    </div>
 
-    <button
-      id="movetop"
+    <!-- <button
+      id="vspbot"
       class="editContent"
       title="Chat-with-VSP"
       style="background-color:white"
     >
-    <!-- <span class="fa fa-arrow-up"></span> -->
     <img src="assets/images/chatbot2.png" alt="Image Description" style="width: 100%; height: 100%">
-    </button>
+    </button> -->
 
 
     <script>
@@ -1209,6 +1232,36 @@
           },
         });
       });
+
+      // js for vspbot
+      
+      document.addEventListener("DOMContentLoaded", function() {
+        const vspbotToggler = document.querySelector(".vspbot-toggler");
+    const firstIcon = vspbotToggler.querySelector(".fa-regular");
+    const secondIcon = vspbotToggler.querySelector(".fa-solid");
+    const bodyElement = document.body;
+    
+    // if (document.body.classList.contains("show-vspbot")) {
+    //     firstIcon.style.display = "none";
+    //     secondIcon.style.display = "inline-block";
+    // } else {
+    //     firstIcon.style.display = "inline-block";
+    //     secondIcon.style.display = "none";
+    // }
+
+    // // toggling effect
+
+    // vspbotToggler.addEventListener("click", function() {
+    //         bodyElement.classList.toggle("show-vspbot");
+    //     });
+    vspbotToggler.addEventListener("click", function() {
+            bodyElement.classList.toggle("show-vspbot");
+            firstIcon.classList.toggle("hidden");
+            secondIcon.classList.toggle("hidden");
+        });
+});
+
+      // javascript for vspbot / 
     </script>
     <!-- //for blog carousel slider -->
 

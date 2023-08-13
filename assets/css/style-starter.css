@@ -10353,29 +10353,199 @@ section.w3l-grid-quote h3 {
       grid-template-columns: 1fr;
       grid-row-gap: 20px; } }
 
-#movetop {
-  display: none;
-  position: fixed;
-  bottom: 15px;
-  right: 15px;
-  z-index: 99;
-  font-size: 25px;
-  cursor: pointer;
-  color: #fff;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  border-width: initial;
-  border-style: none;
-  border-color: initial;
-  -o-border-image: initial;
-  border-image: initial;
-  outline: none;
-  padding: 0px;
-  border-radius: 50%;
-  opacity: .8;
-  transition: all 20.5s ease-out 20s;
-  background-color: var(--primary); }
+/* vspbot */
+
+/* Add this CSS to hide the x icon by default */
+.fa-xmark {
+    display: none;
+}
+
+/* Add this CSS to show the x icon when needed */
+.show-vspbot .fa-xmark {
+    display: inline-block;
+}
+
+/* Add this CSS to show the x icon when show-vspbot class is present */
+.show-vspbot .fa-xmark {
+    display: inline-block;
+}
+
+/* Add this CSS to hide the comment icon when show-vspbot class is present */
+.show-vspbot .fa-comment {
+    display: none;
+}
+
+.show-vspbot .vspbot{
+  transform:scale(1);
+  opacity:1;
+  pointer-events:auto;
+}
+
+.vspbot-toggler{
+  position:fixed;
+  bottom:40px;
+  right:40px;
+  width:60px;
+  height:60px;
+  background-color: var(--primary);
+  border:none;
+  outline:none;
+  display: flex;
+  justify-content: center;
+  border-radius:50%;
+  align-items: center;
+  /* box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1), */
+              /* 0 32px 64px -48px rgba(0, 0, 0, 0.1); */
+  cursor:pointer;
+  /* transition: all 0.3s ease-in-out; */
+  /* z-index: 1000; */
+}
+
+.vspbot-toggler span{
+  position:absolute;
+}
+
+/* .vspbot-toggler span:first-child,
+.vspbot-toggler span:last-child{
+  opacity:0;
+} */
+
+.vspbot-toggler span:last-child{
+  opacity:1;
+}
+
+.vspbot {
+  position:fixed;
+  bottom:110px;
+  right:40px;
+  width:420px;
+  background-color: #fff;
+  overflow:hidden;
+  border-radius:15px;
+  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
+              0 32px 64px -48px rgba(0, 0, 0, 0.1);
+  transform: scale(0.5);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.vspbot header{
+  padding:16px;
+  background-color: var(--primary);
+  text-align:center;
+  position: relative;
+}
+
+.vspbot header span{
+  position:absolute;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  display:none;
+}
+
+.vspbot header h2{
+  font-weight: bolder;
+}
+
+.vspbot .chatbox{
+  height:280px;
+  padding:15px 20px 70px;
+  overflow-y:auto;
+}
+
+.vspbot .chat{
+  display:flex;
+}
+
+.vspbot .chat p{
+  padding:12px 16px;
+  border-radius:10px 10px 0px;
+  background-color: var(--primary);
+  max-width: 75%;
+}
+
+.vspbot .incoming p{
+  color:#000;
+  background-color: #f2f2f2;
+  border-radius:15px 15px 15px 0px;
+}
+
+.vspbot .outgoing{
+  margin:10px 0px;
+  justify-content: flex-end;
+  color: #000;
+}
+
+.vspbot .incoming span{
+  color:#000;
+  background-color: var(--primary);
+  border-radius: 4px;
+  text-align: center;
+  line-height: 32px;
+  height:32px;
+  width:32px;
+  margin:0px 5px 0px;
+  align-self: flex-end;
+}
+
+.vspbot .outgoing p{
+  color: #000;
+}
+
+.vspbot .chat-input{
+  position:absolute;
+  bottom:0;
+  border-top:1px solid #ccc;
+  width:100%;
+  padding:5px 20px;
+  background-color: #fff;
+  display: flex;
+  gap:5px;
+}
+
+.vspbot .chat-input textarea{
+  border:none;
+  outline:none;
+  font-size:0.9rem;
+  resize:none;
+  padding:16px 15px 16px 0px;
+  height: 55px;
+  width:100%;
+}
+
+.vspbot .chat-input textarea:valid ~ span{
+  visibility: visible;
+}
+
+.vspbot .chat-input span{
+  color: var(--secondary);
+  font-size:1.2rem;
+  line-height: 55px;
+  cursor:pointer;
+  visibility: hidden;
+}
+
+@media(max-width:490px){
+  .vspbot{
+    right:0;
+    bottom:0;
+    width:100%;
+    height:93%;
+    border-radius:0;
+  }
+  .vspbot .chatbox{
+    height:90%;
+  }
+  .vspbot header span{
+    display:block;
+  }
+  .vspbot-toggler{
+    visibility: hidden;
+  }
+}
+
+/* /vspbot */
 
 .w3l-about .about-content h4 {
   font-size: 30px;
