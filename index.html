@@ -1140,6 +1140,8 @@
         <span class="fa-solid fa-robot"></span>
         <span class="fa-solid fa-xmark"></span>
       </button>
+
+    
     <div class="vspbot">
       <header>
         <h2>Chat with VSP Bot</h2>
@@ -1151,12 +1153,12 @@
           <p>Hi there <br>How can I help you? </p>
         </li>
         <li class="chat outgoing">
-          <p>Give love </p>
+          <p id="input-text">Give love </p>
         </li>
       </ul>
       <div class="chat-input">
-        <textarea placeholder="Enter a message..." required></textarea>
-        <span class="fa-regular fa-paper-plane"></span>
+        <textarea id="user-input" placeholder="Enter a message..." required></textarea>
+        <span class="fa-regular fa-paper-plane" onclick="sendMessage()"></span>
       </div>
     </div>
 
@@ -1242,29 +1244,33 @@
     const closeIcon = vspbotToggler.querySelector(".fa-xmark");
     const closeIconHeader = vspbotHeader.querySelector(".fa-xmark");
     const bodyElement = document.body;
-    
-    // if (document.body.classList.contains("show-vspbot")) {
-    //     firstIcon.style.display = "none";
-    //     secondIcon.style.display = "inline-block";
-    // } else {
-    //     firstIcon.style.display = "inline-block";
-    //     secondIcon.style.display = "none";
-    // }
+    const userInputTextArea = document.getElementById("user-input");
 
-    // // toggling effect
-
-    // vspbotToggler.addEventListener("click", function() {
-    //         bodyElement.classList.toggle("show-vspbot");
-    //     });
     vspbotToggler.addEventListener("click", function() {
             bodyElement.classList.toggle("show-vspbot");
             firstIcon.classList.toggle("hidden");
             closeIcon.classList.toggle("hidden");
-        });
+    });
 
-        closeIconHeader.addEventListener("click", function() {
+    closeIconHeader.addEventListener("click", function() {
             bodyElement.classList.remove("show-vspbot");
-        });
+    });
+
+    userInputTextArea.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // Prevent the newline character from being added
+        sendMessage();
+    }
+});
+
+function sendMessage() {
+  const userMessage = userInputTextArea.value.trim();
+    if (userMessage) {
+      const inputChat = document.getElementById("input-text");
+      inputChat.textContent = userMessage;
+      userInputTextArea.value = ""; // Clear the textarea after sending
+    }
+  }
 });
 
       // javascript for vspbot / 
