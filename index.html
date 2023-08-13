@@ -1237,8 +1237,10 @@
       
       document.addEventListener("DOMContentLoaded", function() {
         const vspbotToggler = document.querySelector(".vspbot-toggler");
+        const vspbotHeader = document.querySelector(".vspbot header");
     const firstIcon = vspbotToggler.querySelector(".fa-robot");
-    const secondIcon = vspbotToggler.querySelector(".fa-xmark");
+    const closeIcon = vspbotToggler.querySelector(".fa-xmark");
+    const closeIconHeader = vspbotHeader.querySelector(".fa-xmark");
     const bodyElement = document.body;
     
     // if (document.body.classList.contains("show-vspbot")) {
@@ -1257,7 +1259,11 @@
     vspbotToggler.addEventListener("click", function() {
             bodyElement.classList.toggle("show-vspbot");
             firstIcon.classList.toggle("hidden");
-            secondIcon.classList.toggle("hidden");
+            closeIcon.classList.toggle("hidden");
+        });
+
+        closeIconHeader.addEventListener("click", function() {
+            bodyElement.classList.remove("show-vspbot");
         });
 });
 
