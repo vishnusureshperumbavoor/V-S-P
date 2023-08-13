@@ -10371,7 +10371,7 @@ section.w3l-grid-quote h3 {
 }
 
 /* Add this CSS to hide the comment icon when show-vspbot class is present */
-.show-vspbot .fa-comment {
+.show-vspbot .vspbot-toggler .fa-robot {
     display: none;
 }
 
