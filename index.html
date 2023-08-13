@@ -28,6 +28,9 @@
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/style-starter.css" />
+
+    
+    
   </head>
 
   <body class="">
@@ -1150,7 +1153,10 @@
       <ul class="chatbox">
         <li class="chat incoming">
           <span class="fa-solid fa-robot"></span>
-          <p>Hi there <br> My name is VSP Bot. <br> Powered by Falcon 7B. <br> How can I help you? </p>
+          <p>This is a tried and failed conversational chatbot project by VSP. <br>
+        You can use VSP Bot Falcon 7B through <a href="https://vishnusureshperumbavoor-vspbot-falcon-langchain.hf.space/" target="_blank">huggingface</a>.
+        <br>
+      Currently I can't reply from this website.</p>
         </li>
         <li class="chat outgoing">
           <p id="input-text"></p>
@@ -1171,7 +1177,9 @@
     <img src="assets/images/chatbot2.png" alt="Image Description" style="width: 100%; height: 100%">
     </button> -->
 
-
+    <!-- bot.mjs -->
+    <script src="bot.mjs"></script>
+    <script src="script.js"></script>
     <script>
       // When the user scrolls down 20px from the top of the document, show the button
       window.onscroll = function () {
@@ -1199,7 +1207,7 @@
 
     <!-- common jquery -->
     <script src="assets/js/jquery-3.3.1.min.js"></script>
-    <!-- //common jquery -->
+    
 
     <!-- disable body scroll which navbar is in active -->
     <script>
@@ -1234,90 +1242,6 @@
           },
         });
       });
-
-      // js for vspbot
-      
-      
-      const bodyElement = document.body;
-    document.addEventListener("DOMContentLoaded", function() {
-        const vspbotToggler = document.querySelector(".vspbot-toggler");
-        const vspbotHeader = document.querySelector(".vspbot header");
-        const firstIcon = vspbotToggler.querySelector(".fa-robot");
-        const closeIcon = vspbotToggler.querySelector(".fa-xmark");
-        const closeIconHeader = vspbotHeader.querySelector(".fa-xmark");
-        const userInputTextArea = document.getElementById("user-input");
-
-        vspbotToggler.addEventListener("click", function() {
-                bodyElement.classList.toggle("show-vspbot");
-                firstIcon.classList.toggle("hidden");
-                closeIcon.classList.toggle("hidden");
-        });
-
-        closeIconHeader.addEventListener("click", function() {
-                bodyElement.classList.remove("show-vspbot");
-        });
-
-        userInputTextArea.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault(); // Prevent the newline character from being added
-            sendMessage();
-        }
-});
-
-async function getBotResponse(userMessage) {
-    const apiUrl = "https://vishnusureshperumbavoor-vspbot-falcon-langchain.hf.space/run/predict";
-    const requestData = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            userMessage,
-            api_name: "/predict"
-        })
-    };
-
-    return fetch(apiUrl, requestData)
-        .then(response =>{
-          console.log(response);
-          return response;
-    })
-}
-
-function sendMessage() {
-  const userMessage = userInputTextArea.value.trim();
-    if (userMessage) {
-      const inputChat = document.getElementById("input-text");
-      const chatbox = document.querySelector(".chatbox");
-
-      // Create a new list item for the user's message
-      const userChatItem = document.createElement("li");
-      userChatItem.className = "chat outgoing";
-      userChatItem.innerHTML = `<p>${userMessage}</p>`;
-      chatbox.appendChild(userChatItem);
-
-      // Scroll to the bottom of the chatbox to show the latest messages
-      chatbox.scrollTop = chatbox.scrollHeight;
-
-      userInputTextArea.value = ""; // Clear the textarea after sending
-
-      setTimeout(async function() {
-            const botResponse = await getBotResponse(userMessage);
-            const botChatItem = document.createElement("li");
-            botChatItem.className = "chat incoming";
-            botChatItem.innerHTML = `
-                <span class="fa-solid fa-robot"></span>
-                <p>${botResponse}</p>
-            `;
-            chatbox.appendChild(botChatItem);
-
-            // Scroll to the bottom again after adding the bot's response
-            chatbox.scrollTop = chatbox.scrollHeight;
-        }, 500); // Simulate a delay of 500 milliseconds before the bot responds
-    }
-  }
-});
-      // javascript for vspbot / 
     </script>
     <!-- //for blog carousel slider -->
 
