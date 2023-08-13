@@ -1237,38 +1237,49 @@
 
       // js for vspbot
       
-      document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
         const vspbotToggler = document.querySelector(".vspbot-toggler");
         const vspbotHeader = document.querySelector(".vspbot header");
-    const firstIcon = vspbotToggler.querySelector(".fa-robot");
-    const closeIcon = vspbotToggler.querySelector(".fa-xmark");
-    const closeIconHeader = vspbotHeader.querySelector(".fa-xmark");
-    const bodyElement = document.body;
-    const userInputTextArea = document.getElementById("user-input");
+        const firstIcon = vspbotToggler.querySelector(".fa-robot");
+        const closeIcon = vspbotToggler.querySelector(".fa-xmark");
+        const closeIconHeader = vspbotHeader.querySelector(".fa-xmark");
+        const bodyElement = document.body;
+        const userInputTextArea = document.getElementById("user-input");
 
-    vspbotToggler.addEventListener("click", function() {
-            bodyElement.classList.toggle("show-vspbot");
-            firstIcon.classList.toggle("hidden");
-            closeIcon.classList.toggle("hidden");
-    });
+        vspbotToggler.addEventListener("click", function() {
+                bodyElement.classList.toggle("show-vspbot");
+                firstIcon.classList.toggle("hidden");
+                closeIcon.classList.toggle("hidden");
+        });
 
-    closeIconHeader.addEventListener("click", function() {
-            bodyElement.classList.remove("show-vspbot");
-    });
+        closeIconHeader.addEventListener("click", function() {
+                bodyElement.classList.remove("show-vspbot");
+        });
 
-    userInputTextArea.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault(); // Prevent the newline character from being added
-        sendMessage();
-    }
+        userInputTextArea.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Prevent the newline character from being added
+            sendMessage();
+        }
 });
 
 function sendMessage() {
   const userMessage = userInputTextArea.value.trim();
     if (userMessage) {
       const inputChat = document.getElementById("input-text");
-      inputChat.textContent = userMessage;
+      const chatbox = document.querySelector(".chatbox");
+
+      // Create a new list item for the user's message
+      const userChatItem = document.createElement("li");
+      userChatItem.className = "chat outgoing";
+      userChatItem.innerHTML = `<p>${userMessage}</p>`;
+      chatbox.appendChild(userChatItem);
+
+      // Scroll to the bottom of the chatbox to show the latest messages
+      chatbox.scrollTop = chatbox.scrollHeight;
+
       userInputTextArea.value = ""; // Clear the textarea after sending
+
     }
   }
 });
