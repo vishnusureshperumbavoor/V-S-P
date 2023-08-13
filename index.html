@@ -1150,10 +1150,10 @@
       <ul class="chatbox">
         <li class="chat incoming">
           <span class="fa-solid fa-robot"></span>
-          <p>Hi there <br>How can I help you? </p>
+          <p>Hi there <br> My name is VSP Bot. <br> Powered by Falcon 7B. <br> How can I help you? </p>
         </li>
         <li class="chat outgoing">
-          <p id="input-text">Give love </p>
+          <p id="input-text"></p>
         </li>
       </ul>
       <div class="chat-input">
@@ -1237,13 +1237,13 @@
 
       // js for vspbot
       
+      const bodyElement = document.body;
     document.addEventListener("DOMContentLoaded", function() {
         const vspbotToggler = document.querySelector(".vspbot-toggler");
         const vspbotHeader = document.querySelector(".vspbot header");
         const firstIcon = vspbotToggler.querySelector(".fa-robot");
         const closeIcon = vspbotToggler.querySelector(".fa-xmark");
         const closeIconHeader = vspbotHeader.querySelector(".fa-xmark");
-        const bodyElement = document.body;
         const userInputTextArea = document.getElementById("user-input");
 
         vspbotToggler.addEventListener("click", function() {
@@ -1279,11 +1279,9 @@ function sendMessage() {
       chatbox.scrollTop = chatbox.scrollHeight;
 
       userInputTextArea.value = ""; // Clear the textarea after sending
-
     }
   }
 });
-
       // javascript for vspbot / 
     </script>
     <!-- //for blog carousel slider -->
