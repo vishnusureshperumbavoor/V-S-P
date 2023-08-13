@@ -10463,9 +10463,11 @@ section.w3l-grid-quote h3 {
   border-radius:10px 10px 0px;
   background-color: var(--primary);
   max-width: 75%;
+ 
 }
 
 .vspbot .incoming p{
+  margin:5px 0 0 0;
   color:#000;
   padding:12px 16px;
   background-color: #f2f2f2;
