@@ -1183,9 +1183,9 @@
           document.body.scrollTop > 20 ||
           document.documentElement.scrollTop > 20
         ) {
-          document.getElementById("movetop").style.display = "block";
+          // document.getElementById("movetop").style.display = "block";
         } else {
-          document.getElementById("movetop").style.display = "none";
+          // document.getElementById("movetop").style.display = "none";
         }
       }
 
@@ -1237,6 +1237,7 @@
 
       // js for vspbot
       
+      
       const bodyElement = document.body;
     document.addEventListener("DOMContentLoaded", function() {
         const vspbotToggler = document.querySelector(".vspbot-toggler");
@@ -1263,6 +1264,26 @@
         }
 });
 
+async function getBotResponse(userMessage) {
+    const apiUrl = "https://vishnusureshperumbavoor-vspbot-falcon-langchain.hf.space/run/predict";
+    const requestData = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            userMessage,
+            api_name: "/predict"
+        })
+    };
+
+    return fetch(apiUrl, requestData)
+        .then(response =>{
+          console.log(response);
+          return response;
+    })
+}
+
 function sendMessage() {
   const userMessage = userInputTextArea.value.trim();
     if (userMessage) {
@@ -1279,6 +1300,20 @@ function sendMessage() {
       chatbox.scrollTop = chatbox.scrollHeight;
 
       userInputTextArea.value = ""; // Clear the textarea after sending
+
+      setTimeout(async function() {
+            const botResponse = await getBotResponse(userMessage);
+            const botChatItem = document.createElement("li");
+            botChatItem.className = "chat incoming";
+            botChatItem.innerHTML = `
+                <span class="fa-solid fa-robot"></span>
+                <p>${botResponse}</p>
+            `;
+            chatbox.appendChild(botChatItem);
+
+            // Scroll to the bottom again after adding the bot's response
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }, 500); // Simulate a delay of 500 milliseconds before the bot responds
     }
   }
 });
