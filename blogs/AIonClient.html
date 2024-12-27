@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>VSP</title>
+    <link
+      href="//fonts.googleapis.com/css?family=Nunito:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/style-starter.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="w3l-header" id="home">
+        <div class="container">
+          <nav class="navbar navbar-expand-lg navbar-dark pl-0 pr-0">
+            <a class="navbar-brand m-0" href="../index.html"
+              ><span class="fa fa-gamepad"></span> VSP
+            </a>
+            <span class="navbar-toggler-icon fa fa-bars"></span>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0" href="../index.html">Home</a>
+                  <a class="nav-link pl-0 pr-0" href="../blogs.html">Blogs</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <section class="w3l-about-bottom py-5" id="about">
+      <div class="container py-lg-5 py-md-3">
+        <div class="row middle-grids">
+          <div class="col-lg-12 advantage-grid-info">
+            <div class="advantage_left">
+              <h1 class="font-weight">AI on the client side</h1>
+              This is my series related to the implementation of AI on the
+              client side. I will be covering WebGPU, ONNX and Encoder-Decoder
+              models, transformers.js, WebWorkers etc.
+              <h3 class="mt-2">WebGPU vs WebGL</h3>
+              Both are browser rendering tools. WebGPU is the successor of WebGL
+              which enables us to use Compute Shaders directly.
+              <h3 class="mt-2">What is WebGL</h3>
+              <p class="mb-3 mt-2">
+                WebGL is a javascript framework to render 2D and 3D graphics on
+                your browser. Released in 2011. Almost all the graphics on the
+                browsers are browsers are handled by WebGL. Most of the major
+                web-based rendering frameworks such as three.js, babylon.js,
+                box2D, cornerstone.js are written on top of WebGL. Until last
+                few years "rendering on the web == WebGL".
+                <br />
+                WebGL is powered by Graphics API OpenGL.
+              </p>
+              <h3 class="mt-2">Drawbacks of WebGL</h3>
+              <p class="mt-4">
+                The latest version of WebGL which is WebGL 2.0 is powered by
+                OpenGL ES 3.0. It is came out in 2008. So basically the
+                capabilities of WebGL is from a graphics API which is released
+                16+ years back.
+              </p>
+              <p class="mt-4">
+                There has been significant development in consumer level GPUs,
+                starting with the GeForce 200 Series released in 2008. Since
+                then, the series has progressed through the 300, 400, ..., 900,
+                10 series, 20 series, and now the 40 series. Now we have
+                graphics APIs such as DirectX 12, Vulkan, Metal etc. So using
+                these graphics cards and graphics APIs there have been a huge
+                development in the desktop/mobile games. But the browser games
+                are still using WebGL which is still using OpenGL 3.0. So you
+                can now imagine how behind is the web based rendering if you
+                compare that with mobile/desktop based rendering. We have
+                performance and frame rate issues on the web browsers. As since
+                WebGL is till used OpenGL3.0 there are many functionalities of
+                the SOTA graphic cards which we are not able to use on browsers.
+              </p>
+              <h3 class="mt-2">What is WebGPU</h3>
+              <p class="mb-3 mt-2">
+                WebGPU is the successor of WebGL. It's development started in
+                2017. It enabled us to use the latest graphics cards features.
+                WebGPU is supported on Chrome, Edge, Firefox, Safari etc.
+                <br />
+                WebGPU supports multi-threading which is helpful while
+                downloading the model without using main thread.
+                <br />
+                WebGPU is powered by graphics APIs such as DirectX 12, Vulkan
+                and Metal based on the browser platform.
+              </p>
+              <h3 class="mt-2">WebGPU for Machine Learning</h3>
+              <p class="mb-3 mt-2">
+                ML frameworks such as Tensorflow.js and Transformers.js are
+                using WebGPU under the hood. If you want to do any kind of
+                computations on the tensorflow, tensorflow has to convert the
+                input tensor into textual or vertex data and again back to
+                tensor data. WebGPU supports Compute Shader. Compute Shaders are
+                General Purpose Programs that you can run on the GPUs. When
+                tensorflow is directly able to use the computer shaders there is
+                no need to convert the input data into vertex or textures. You
+                can directly perform the computation on the shaders. Because of
+                the less overhead it enabled the developers to run
+                encoder-decoder ML models such as SAM2, Whisper, llama, gemma on
+                the client side.
+              </p>
+              <h3 class="mt-2">
+                Advantages of using ML model on the client side
+              </h3>
+              <ul>
+                <li>Gives privacy to the user data.</li>
+                <li>
+                  It enabled offline compute once the model is downloaded.
+                </li>
+                <li>
+                  Since no cloud is involved the latency will be lower once the
+                  model is downloaded.
+                </li>
+                <li>
+                  Cost of running the model is zero since there are no OpenAI,
+                  Anthropic or AWS API is involved.
+                </li>
+              </ul>
+              <h3 class="mt-2">Future</h3>
+              <ul>
+                <li>
+                  As the device computing power increases more and almost all of
+                  browsers supporting it, WebGPU usage is only going to grow.
+                </li>
+                <li>
+                  WebGPU capabilities can increase the speed of medical imaging
+                  platforms.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <section class="w3l-footers-1">
+        <div class="footer py-3">
+          <div class="container">
+            <div class="footer-content">
+              <div class="row">
+                <div class="col-lg-8 footer-left">
+                  <p class="m-0">
+                    &copy; 2024 All Rights Reserved | Design by VSP
+                  </p>
+                </div>
+                <div
+                  class="col-lg-4 footer-right text-lg-right text-center mt-lg-0 mt-3"
+                >
+                  <ul class="social m-0 p-0">
+                    <li>
+                      <a href="https://github.com/vishnusureshperumbavoor"
+                        >Github<span class="fa fa-github"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.linkedin.com/in/vishnu-suresh-perumbavoor-9a7a8223a/"
+                        >LinkedIn<span class="fa fa-linkedin"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a href="https://t.me/vishnusureshperumbavoor"
+                        >Telegram<span class="fa fa-telegram"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.instagram.com/vishnusureshperumbavoor/"
+                        >Instagram<span class="fa fa-instagram"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a href="http://www.twitter.com/vspeeeeee"
+                        >Twitter/X<span class="fa fa-twitter"></span
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </footer>
+  </body>
+</html>
+<style>
+  body {
+    background-color: #121212;
+    color: #d3cdcd;
+  }
+  .nav-link:hover {
+    color: #bb86fc;
+  }
+</style>
