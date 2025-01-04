@@ -45,7 +45,7 @@
               This is my series related to the implementation of AI on the
               client side. I will be covering WebGPU, ONNX and Encoder-Decoder
               models, transformers.js, WebWorkers etc.
-              <h3 class="mt-2">WebGPU vs WebGL</h3>
+              <h2 class="mt-2">WebGPU vs WebGL</h2>
               Both are browser rendering tools. WebGPU is the successor of WebGL
               which enables us to use Compute Shaders directly.
               <h3 class="mt-2">What is WebGL</h3>
@@ -125,18 +125,76 @@
                   Anthropic or AWS API is involved.
                 </li>
               </ul>
-              <h3 class="mt-2">Future</h3>
-              <ul>
-                <li>
-                  As the device computing power increases more and almost all of
-                  browsers supporting it, WebGPU usage is only going to grow.
-                </li>
-                <li>
-                  WebGPU capabilities can increase the speed of medical imaging
-                  platforms.
-                </li>
-              </ul>
+              <h3 class="mt-2">ONNX models</h3>
+              The Open Neural Network eXchange (ONNX) is an open-source format
+              designed to facilitate the representation and interoperability of
+              ML models across different frameworks. <br />
+              This standard enables developers to share models between popular
+              ML libraries such as TensorFlow & PyTorch, without needing to
+              retrain them for each specific framework.
+              <h3 class="mt-2">Web Workers</h3>
+              A Web Worker is a JavaScript script that runs independently of the
+              main thread. <br />
+              This means that while the worker is processing data, the main
+              thread remains free to handle user interactions, such as clicks
+              and scrolling, ensuring that the web application remains
+              responsive. <br />
+              Web Workers can handle downloading the ML models.
             </div>
+            <h3 class="mt-2">Transformers js</h3>
+            Transformers.js is a powerful library that allows developers to run
+            ML models directly in the browser, leveraging the capabilities of
+            modern web technologies. <br />
+            Transformers.js is designed to be functionally equivalent to Hugging
+            Face's Python Transformers library, enabling users to run the same
+            pretrained models with a similar API. <br />
+            This allows for seamless integration of advanced ML tasks without
+            server-side processing.
+            <h3 class="mt-2">
+              @huggingface/transformers vs @xenova/transformers
+            </h3>
+            <h4>@huggingface/transformers</h4>
+            Supports a wide range of pretrained models from the Hugging Face
+            Model Hub <br />
+            <h4>@xenova/transformers</h4>
+            Developed by popular developer Xenova <br />
+            Focuses on providing lightweight models optimized for in-browser
+            execution.
+            <h3 class="mt-2">Pre-trained models</h3>
+            Pre-trained models are ML models that have been previously trained
+            on large datasets and can be fine-tuned or directly used for various
+            tasks. ex: llama, llava, phi3, sam2, deepseek etc.
+            <h3 class="mt-2">Popular Transformers Pipelines</h3>
+            <strong>text2text-generation</strong>: LaMini-Flan-T5-783M <br />
+            <strong>translation</strong>: nllb-200-distilled-600M,
+            Xenova/m2m100_418M, mbart-large-50-many-to-many-mmt<br />
+            <strong>text-generation</strong> (for next word prediction):
+            distilgpt2, codegen-350M-mono<br />
+            <strong>automatic-speech-recognition</strong> (for speech to text):
+            whisper-tiny.en, whisper-small <br />
+            <strong>image-to-text</strong>: vit-gpt2-image-captioning,
+            trocr-small-handwritten<br />
+            <strong>image-segmentation</strong>: detr-resnet-50-panoptic <br />
+            <strong>object-detection</strong>: detr-resnet-50<br />
+            <strong>document-question-answering</strong> (RAG implementation):
+            donut-base-finetuned-docvqa<br />
+            <strong>text-to-speech</strong>: speecht5_tts, mms-tts-fra<br />
+            <strong>image-to-image</strong>: swin2SR-classical-sr-x2-64 <br />
+            <h3 class="mt-2">Popular Transformers js Models</h3>
+            Whisper (OpenAI) <br />
+            GPT2 (OpenAI)<br />
+            Llava <br />
+            Llama (Meta) <br />
+            SAM (Meta)<br />
+            Cohere <br />
+            Gemma2 (Google)<br />
+            Qwen2 <br />
+            Phi3 (Micorsoft)<br />
+            Mistral <br />
+            Falcon <br />
+            MusicGen <br />
+            YolosObjectDetection <br />
+            VisionEncoderDecoder <br />
           </div>
         </div>
       </div>
@@ -150,7 +208,7 @@
               <div class="row">
                 <div class="col-lg-8 footer-left">
                   <p class="m-0">
-                    &copy; 2024 All Rights Reserved | Design by VSP
+                    &copy; 2025 All Rights Reserved | Design by VSP
                   </p>
                 </div>
                 <div
@@ -196,10 +254,10 @@
 </html>
 <style>
   body {
-    background-color: #121212;
-    color: #d3cdcd;
+    background-color: #000;
+    color: #7cfc00;
   }
-  .nav-link:hover {
-    color: #bb86fc;
+  ul li a {
+    color: #7df9ff;
   }
 </style>
