@@ -42,44 +42,45 @@
           <div class="col-lg-12 advantage-grid-info">
             <div class="advantage_left">
               <h1 class="font-weight">AI on the client side</h1>
-              This is my series related to the implementation of AI on the
-              client side. I will be covering WebGPU, ONNX and Encoder-Decoder
-              models, transformers.js, WebWorkers etc.
+              This is my series on implementing AI on the client side. I will be
+              covering WebGPU, ONNX, Encoder-Decoder models, transformers.js,
+              Web Workers, and more.
               <h2 class="mt-2">WebGPU vs WebGL</h2>
-              Both are browser rendering tools. WebGPU is the successor of WebGL
-              which enables us to use Compute Shaders directly.
+              Both are browser rendering tools. WebGPU is the successor of
+              WebGL, enabling direct use of compute shaders for advanced
+              graphics and parallel processing tasks.
               <h3 class="mt-2">What is WebGL</h3>
               <p class="mb-3 mt-2">
-                WebGL is a javascript framework to render 2D and 3D graphics on
-                your browser. Released in 2011. Almost all the graphics on the
-                browsers are browsers are handled by WebGL. Most of the major
-                web-based rendering frameworks such as three.js, babylon.js,
-                box2D, cornerstone.js are written on top of WebGL. Until last
-                few years "rendering on the web == WebGL".
+                WebGL is a JavaScript framework used to render 2D and 3D
+                graphics in your browser. Released in 2011, it has become the
+                backbone of almost all graphical rendering on the web. Most
+                major web-based rendering frameworks, such as Three.js,
+                Babylon.js, Box2D, and Cornerstone.js, are built on top of
+                WebGL. Until the last few years, the phrase "rendering on the
+                web" was synonymous with WebGL.
                 <br />
-                WebGL is powered by Graphics API OpenGL.
               </p>
               <h3 class="mt-2">Drawbacks of WebGL</h3>
               <p class="mt-4">
-                The latest version of WebGL which is WebGL 2.0 is powered by
-                OpenGL ES 3.0. It is came out in 2008. So basically the
-                capabilities of WebGL is from a graphics API which is released
-                16+ years back.
+                WebGL is powered by the OpenGL graphics API. The latest version,
+                WebGL 2.0, is based on OpenGL ES 3.0, which was released in
+                2008. This means that the capabilities of WebGL are rooted in a
+                graphics API that is over 16 years old.
               </p>
               <p class="mt-4">
-                There has been significant development in consumer level GPUs,
+                There has been significant development in consumer-level GPUs,
                 starting with the GeForce 200 Series released in 2008. Since
                 then, the series has progressed through the 300, 400, ..., 900,
-                10 series, 20 series, and now the 40 series. Now we have
-                graphics APIs such as DirectX 12, Vulkan, Metal etc. So using
-                these graphics cards and graphics APIs there have been a huge
-                development in the desktop/mobile games. But the browser games
-                are still using WebGL which is still using OpenGL 3.0. So you
-                can now imagine how behind is the web based rendering if you
-                compare that with mobile/desktop based rendering. We have
-                performance and frame rate issues on the web browsers. As since
-                WebGL is till used OpenGL3.0 there are many functionalities of
-                the SOTA graphic cards which we are not able to use on browsers.
+                10 series, 20 series, and now the 40 series. Alongside this,
+                modern graphics APIs like DirectX 12, Vulkan, and Metal have
+                emerged, enabling advanced capabilities in desktop and mobile
+                gaming. However, browser-based games still rely on WebGL, which
+                is based on OpenGL ES 3.0 (released in 2008). This means
+                web-based rendering is significantly behind compared to desktop
+                and mobile rendering. As a result, web browsers face performance
+                and frame rate limitations, and many advanced features of modern
+                GPUs remain inaccessible due to WebGL's reliance on outdated
+                technology.
               </p>
               <h3 class="mt-2">What is WebGPU</h3>
               <p class="mb-3 mt-2">
