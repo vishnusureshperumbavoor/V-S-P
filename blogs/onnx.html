@@ -41,10 +41,34 @@
         <div class="row middle-grids">
           <div class="col-lg-12 advantage-grid-info">
             <div class="advantage_left">
-              <h1 class="font-weight">AI on the client side</h1>
-              This is my series on implementing AI on the client side. I will be
-              covering WebGPU, ONNX, Encoder-Decoder models, transformers.js,
-              Web Workers, and more.
+              <h1 class="font-weight">ONNX</h1>
+              This is my blog on how a technology which is introduced by Meta
+              for the interoperability between the pytorch and Caffe models is
+              now started to take over the planet. <br />
+              <h2 class="mt-2">Initial days</h2>
+              Meta introduced ONNX as a way for interoperability between their
+              pytorch and Caffe models. Later on, it was adopted by other ML
+              frameworks such as Tensorflow, MXNet, and more.
+              <h2 class="mt-2">Next Stage</h2>
+              Even though it is introduced for interoperability, it's course
+              changed since Micorsoft introduced ONNX Runtime as a runtime
+              environment for ONNX models. Since then ONNX models started used
+              in mobiles, laptops, web browsers and embedded devices. <br />
+              <h2 class="mt-2">Why ONNX is standing out from others</h2>
+              1. Ability to use WebGPU which gives access to graphics APIs
+              Vulkan (Linux & Android), DirectX (Windows) & Metal (iOS & Mac). <br />
+              2. Ability to do on-device training <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;This feature helps to avoid losing
+              sensitive data to the cloud/server. <br />
+              3. Compatibility with billion parameter models such as phi4,
+              whisper, llama, sam2, gemma, etc. <br />
+              4. Support TensorRT (NVIDIA GPUs) & OpenVINO (Intel CPUs) <br />
+              5. Has APIs for python, JavaScript, rust, cpp, c#, java, kotlin,
+              swift etc. <br />
+              6. Supports multi-threading (Using web workers in web browsers)<br />
+              7. Supports graph level optimization and quantization <br />
+              8. Major open source projects cornerstonejs and transformersjs is
+              already implemented onnx on their platforms.
               <h2 class="mt-2">WebGPU vs WebGL</h2>
               Both are browser rendering tools. WebGPU is the successor of
               WebGL, enabling direct use of compute shaders for advanced
@@ -62,8 +86,7 @@
               </p>
               <h3 class="mt-2">Drawbacks of WebGL</h3>
               <p class="mt-4">
-                WebGL is powered by the OpenGL graphics API. The latest version,
-                WebGL 2.0, is based on OpenGL ES 3.0, which was released in
+                WebGL 2.0, which is powered by OpenGL ES 3.0, which was released in
                 2008. This means that the capabilities of WebGL are rooted in a
                 graphics API that is over 16 years old.
               </p>
@@ -126,21 +149,6 @@
                   Anthropic or AWS API is involved.
                 </li>
               </ul>
-              <h3 class="mt-2">ONNX models</h3>
-              The Open Neural Network eXchange (ONNX) is an open-source format
-              designed to facilitate the representation and interoperability of
-              ML models across different frameworks. <br />
-              This standard enables developers to share models between popular
-              ML libraries such as TensorFlow & PyTorch, without needing to
-              retrain them for each specific framework.
-              <h3 class="mt-2">Web Workers</h3>
-              A Web Worker is a JavaScript script that runs independently of the
-              main thread. <br />
-              This means that while the worker is processing data, the main
-              thread remains free to handle user interactions, such as clicks
-              and scrolling, ensuring that the web application remains
-              responsive. <br />
-              Web Workers can handle downloading the ML models.
             </div>
             <h3 class="mt-2">Transformers js</h3>
             Transformers.js is a powerful library that allows developers to run
