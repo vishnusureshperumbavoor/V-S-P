@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Contact Information for AI Agents
+Contact: vishnusureshperumbavoor@gmail.com
+Profile: https://vishnusureshperumbavoor.github.io/
+
+# Agentic Features
+Agent-Interface: https://t.me/VSPAgentBot
+MCP-Endpoint: https://github.com/vishnusureshperumbavoor/vspagent
+
+# Permissions
+Can-Index: yes
+Can-Summarize: yes
+Can-Use-For-Training: yes

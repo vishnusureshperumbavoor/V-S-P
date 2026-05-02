@@ -28,8 +28,37 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/style-starter.css" />
 
-    
-    
+    <!-- JSON-LD for AI Agents -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Vishnu Suresh Perumbavoor",
+      "jobTitle": "ML Researcher & Software Engineer",
+      "url": "https://vishnusureshperumbavoor.github.io/",
+      "sameAs": [
+        "https://github.com/vishnusureshperumbavoor",
+        "https://www.linkedin.com/in/vishnu-suresh-perumbavoor-9a7a8223a/",
+        "https://twitter.com/vspeeeeee",
+        "https://www.instagram.com/vishnusureshperumbavoor/"
+      ],
+      "knowsAbout": [
+        "Medical Imaging",
+        "Radiology Workflows",
+        "CornerstoneJS",
+        "OHIF Viewer",
+        "Machine Learning",
+        "Agentic AI",
+        "FastAPI",
+        "React",
+        "Node.js"
+      ],
+      "award": [
+        "Vaiga Hackathon 2023 Winner",
+        "Agentic AI Hackathon 2026 Special Mention"
+      ]
+    }
+    </script>
   </head>
 
   <body class="">
@@ -52,37 +81,23 @@
               data-target="#navbarNav"
               aria-controls="navbarNav"
               aria-expanded="false"
-              aria-label="Toggle navigation"
+              aria-label="Toggle navigation menu"
             >
               <span class="navbar-toggler-icon fa fa-bars"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ml-auto">
-                <li class="nav-item active mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="index.html"
-                    >Home <span class="sr-only">(current)</span></a
-                  >
-                </li>
-                <li class="nav-item active mr-lg-4">
-              <a class="nav-link pl-0 pr-0" href="blogs.html">Blogs</a>
-            </li>
                 <li class="nav-item mr-lg-4">
                   <a class="nav-link pl-0 pr-0" href="#about">About</a>
+                </li>
+                <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0" href="#services">Projects</a>
                 </li>
                 <li class="nav-item mr-lg-4">
                   <a class="nav-link pl-0 pr-0" href="#events">Events</a>
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#services">Projects</a>
-                </li>
-                <!-- <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#hardware-services">Hardware Services</a>
-                </li>
-                <li class="nav-item mr-lg-4">
                   <a class="nav-link pl-0 pr-0" href="#gallery-vsp">Gallery</a>
-                </li> -->
-                <li class="nav-item">
-                  <a class="nav-link pl-0 pr-0" href="#contact">Contact</a>
                 </li>
               </ul>
             </div>
@@ -132,12 +147,12 @@
             </a>
             <!-- <a href="https://www.canva.com/design/DAFa5EB1Cfc/6u1GGKk_Ve2UUZq0XzWOTA/view?utm_content=DAFa5EB1Cfc&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink" target="_blank" class="btn-style btn-primary btn mt-lg-5 mt-4 download-cv-button mb-3">View Resume</a><br> -->
             <div class="download-cv-icons">
-              <a href="https://github.com/vishnusureshperumbavoor"><span class="fa fa-github-square p-2"></span></a>
-              <a href="https://huggingface.co/vishnusureshperumbavoor" target="_blank"><span class="p-2" style="font-size: 1.2em; vertical-align: middle;">🤗</span></a>
-              <a href="http://www.twitter.com/vspeeeeee"><span class="fa fa-twitter-square p-2"></span></a>
-              <a href="https://www.linkedin.com/in/vishnu-suresh-perumbavoor-9a7a8223a/"><span class="fa fa-linkedin-square p-2"></span></a>
-              <a href="https://www.youtube.com/@vishnusureshperumbavoor/videos"><span class="fa fa-youtube-square p-2"></span></a>
-              <a href="https://www.instagram.com/vishnusureshperumbavoor/"><span class="fa fa-instagram p-2 square-icon"></span></a>
+              <a href="https://github.com/vishnusureshperumbavoor" aria-label="Github Profile"><span class="fa fa-github-square p-2"></span></a>
+              <a href="https://huggingface.co/vishnusureshperumbavoor" target="_blank" aria-label="HuggingFace Profile"><span class="p-2" style="font-size: 1.2em; vertical-align: middle;">🤗</span></a>
+              <a href="http://www.twitter.com/vspeeeeee" aria-label="Twitter Profile"><span class="fa fa-twitter-square p-2"></span></a>
+              <a href="https://www.linkedin.com/in/vishnu-suresh-perumbavoor-9a7a8223a/" aria-label="LinkedIn Profile"><span class="fa fa-linkedin-square p-2"></span></a>
+              <a href="https://www.youtube.com/@vishnusureshperumbavoor/videos" aria-label="YouTube Channel"><span class="fa fa-youtube-square p-2"></span></a>
+              <a href="https://www.instagram.com/vishnusureshperumbavoor/" aria-label="Instagram Profile"><span class="fa fa-instagram p-2 square-icon"></span></a>
             </div>
           </div>
         </div>
@@ -904,7 +919,7 @@
     <span class="fa fa-arrow-up"></span>
     </button> -->
 
-      <button class="vspbot-toggler">
+      <button class="vspbot-toggler" aria-label="Toggle VSP Chatbot">
         <span class="fa-solid fa-robot"></span>
         <span class="fa-solid fa-xmark"></span>
       </button>
@@ -913,7 +928,7 @@
     <div class="vspbot">
       <header>
         <h2>Chat with VSP Bot</h2>
-        <span class="fa-solid fa-xmark"></span>
+        <span class="fa-solid fa-xmark" aria-label="Close Chat"></span>
       </header>
       <ul class="chatbox">
         <li class="chat incoming">
@@ -933,8 +948,8 @@
         </li>
       </ul>
       <div class="chat-input">
-        <textarea id="user-input" placeholder="Enter a message..." required></textarea>
-        <span class="fa-regular fa-paper-plane" onclick="sendMessage()"></span>
+        <textarea id="user-input" placeholder="Enter a message..." aria-label="Type message to VSP Bot" required></textarea>
+        <span class="fa-regular fa-paper-plane" onclick="sendMessage()" aria-label="Send message"></span>
       </div>
     </div>
 
