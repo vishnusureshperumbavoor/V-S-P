@@ -10427,7 +10427,6 @@ section.w3l-grid-quote h3 {
   transform: scale(0.5);
   opacity: 0;
   pointer-events: none;
-  z-index: 1000;
 }
 
 .vspbot header{
@@ -10473,8 +10472,6 @@ section.w3l-grid-quote h3 {
   padding:12px 16px;
   background-color: #f2f2f2;
   border-radius:15px 15px 15px 0px;
-  max-width: 82%;
-  white-space: pre-wrap;
 }
 
 .vspbot .outgoing{
@@ -10497,32 +10494,6 @@ section.w3l-grid-quote h3 {
 
 .vspbot .outgoing p{
   color: #000;
-  white-space: pre-wrap;
-}
-
-.vspbot .chat p {
-  overflow-wrap: anywhere;
-}
-
-.vspbot-status-message p {
-  font-size: 12px;
-  line-height: 18px;
-}
-
-.vspbot .chat.thinking p::after {
-  content: '';
-  display: inline-block;
-  width: 18px;
-  text-align: left;
-  animation: vspbot-thinking 1s steps(4, end) infinite;
-}
-
-@keyframes vspbot-thinking {
-  0% { content: ''; }
-  25% { content: '.'; }
-  50% { content: '..'; }
-  75% { content: '...'; }
-  100% { content: ''; }
 }
 
 .vspbot .chat-input{
@@ -10550,28 +10521,12 @@ section.w3l-grid-quote h3 {
   visibility: visible;
 }
 
-.vspbot .chat-input button{
-  width:42px;
-  height:42px;
-  margin-top:6px;
-  border:0;
-  border-radius:8px;
-  background: var(--primary);
-  color:#000;
+.vspbot .chat-input span{
+  color: var(--secondary);
+  font-size:1.2rem;
+  line-height: 55px;
   cursor:pointer;
-}
-
-.vspbot .chat-input button:disabled{
-  cursor:not-allowed;
-  opacity:0.55;
-}
-
-.vspbot .chat-input button span{
-  color: inherit;
-  font-size:1rem;
-  line-height:1;
-  cursor:pointer;
-  visibility: visible;
+  visibility: hidden;
 }
 
 @media(max-width:490px){
