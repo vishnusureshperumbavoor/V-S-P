@@ -126,22 +126,22 @@
           <p class="mt-3 mb-5">
             I am Vishnu Suresh Perumbavoor (VSP) from Perumbavoor, Kochi,
             Kerala, India, currently residing in Trivandrum, working at
-            Technopark. I joined the corporate world in October 2023 and have
-            over
+            Technopark. I have
             <span
               id="experience-counter"
               style="font-weight: bold; color: #ff6b6b"
               >...</span
             >
-            of experience. I specialize in the <b>Medical Imaging sector</b>,
-            specifically in <b>radiology workflows</b>, with expertise in
+            years of professional experience. I specialized in the
+            <b>Medical Imaging sector</b>, specifically in
+            <b>radiology workflows</b>, with expertise in
             <b
               >Cornerstone, OHIF, React, Node.js, FastAPI, Docker, Python, and
               TypeScript</b
             >. I won Vaiga Hackathon 2023, Kerala's largest agritech hackathon,
             and also won startup idea presentations at IIT Palakkad and MES
-            Marampilly. I strive for the betterment of humanity using
-            technology. <br />
+            Marampilly. During free time, I work on my side project Vibe-ML
+            which lets agents to train AI models. <br />
           </p>
           <br />
           <!-- <div class="send-resume-button">
@@ -226,8 +226,8 @@
                   Developed BPH Detection ML models.
                 </li>
                 <li>
-                  <b>2023:</b> Entered the corporate world and began
-                  specializing in the <b>Medical Imaging sector</b>.
+                  <b>2023:</b> Started professional career specializing in the
+                  <b>Medical Imaging sector</b>.
                 </li>
                 <li>
                   <b>2024:</b> Attained proficiency in medical imaging
@@ -242,9 +242,9 @@
                   <b>dwv, VTK.js, and PolySeg WASM</b>.
                 </li>
                 <li>
-                  <b>2026:</b> Working on advanced radiology workflows (calcium
-                  scoring, cardiac segmentation). Created <b>Vibe ML Studio</b>,
-                  <b>3D DICOM Segmentation Viewer</b>, and <b>VSP Agents</b>.
+                  <b>2026:</b> Working on advanced radiology workflows. Created
+                  <b>Vibe ML Studio</b>, <b>3D DICOM Segmentation Viewer</b>,
+                  and <b>VSP Agents</b>.
                 </li>
               </ul>
             </div>
@@ -421,10 +421,11 @@
                 <div class="feature-info mt-4">
                   <h3 class="feature-titel mb-2">Company Projects</h3>
                   <p class="feature-text">
-                    Delivered 5+ medical imaging projects using
-                    <b>OHIF & Cornerstone</b>. Built a 3D segmentation platform
-                    with <b>VTK.js, DWV, and PolySeg WASM</b>. Specializing in
-                    advanced radiology and calcium scoring workflows.
+                    Worked on 3
+                    <b>OHIF & Cornerstone</b> related viewer projects. Built a
+                    3D segmentation platform with
+                    <b>VTK.js, DWV, and PolySeg WASM</b>. Currently working on
+                    advanced radiology workflows.
                   </p>
                 </div>
               </div>
@@ -536,7 +537,7 @@
           <div class="col-lg-5 advantage-grid-info1">
             <div class="advantage_left1 mt-lg-0 mt-5">
               <img
-                src="https://media.licdn.com/dms/image/v2/D5622AQEGfLnOHM8ibg/feedshare-shrink_800/B56ZUZXbQgGsAk-/0/1739887330025?e=1779321600&v=beta&t=au_63Fv2kOyMAGnld8j7PWmy4RE2qGfW6DPvUR1wh_k"
+                src="https://media.licdn.com/dms/image/v2/D5622AQF0E0zkvSk46g/feedshare-image-high-res/B56ZWJLZ9CHsAs-/0/1741763225360?e=1783555200&v=beta&t=BXUM7zVqKHV7tlgMGBUvcLUFids_XZ9H7Dvio-dkGeg"
                 class="img img-fluid"
                 alt="Exploring the Future of AI"
               />
@@ -670,7 +671,7 @@
           <div class="col-lg-5 advantage-grid-info1">
             <div class="advantage_left1 mt-lg-0 mt-5">
               <img
-                src="https://media.licdn.com/dms/image/v2/D5622AQEDCYp3R5uopA/feedshare-shrink_1280/feedshare-shrink_1280/0/1682498631629?e=1779321600&v=beta&t=4HGq0laCjsmb_YuwLIWegR2bqBKfMgBXN3LA1PE7I-4"
+                src="https://media.licdn.com/dms/image/v2/D5622AQEDCYp3R5uopA/feedshare-shrink_800/feedshare-shrink_800/0/1682498631629?e=1783555200&v=beta&t=wqffCT9TcRpSw1mzQcbJ3DVg7n-B12vGFv_HZRORrEs"
                 class="img img-fluid"
                 alt="IIC Board Meeting"
               />
@@ -1320,6 +1321,27 @@
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const experienceCounter = document.getElementById("experience-counter");
+        if (!experienceCounter) return;
+
+        const startDate = new Date(2023, 9, 16);
+        const today = new Date();
+        let years = today.getFullYear() - startDate.getFullYear();
+        let months = today.getMonth() - startDate.getMonth();
+
+        if (today.getDate() < startDate.getDate()) {
+          months -= 1;
+        }
+
+        if (months < 0) {
+          years -= 1;
+          months += 12;
+        }
+
+        experienceCounter.textContent = `${years}.${months}`;
+      });
     </script>
     <!-- /move top -->
 
