@@ -1,0 +1,13 @@
+# Local Python environment
+.venv/
+
+# Browser model weights
+public/models/*.gguf
+public/models/*.gguf.*
+public/models/*.bin
+public/models/*.safetensors
+
+# Local caches
+.cache/
+__pycache__/
+*.py[cod]
