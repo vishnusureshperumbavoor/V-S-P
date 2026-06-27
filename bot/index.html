@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>VSP Bot | Expanded Chat</title>
+    <link rel="icon" href="../assets/images/vsp3.jpeg" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../assets/css/style-starter.css" />
+  </head>
+  <body class="vspbot-full-page">
+    <main class="vspbot-page-wrap">
+      <div class="vspbot vspbot-expanded">
+        <header>
+          <h2>Chat with VSP Bot</h2>
+          <a href="../index.html" class="vspbot-home-link" aria-label="Back to home">Home</a>
+        </header>
+        <ul class="chatbox" id="vspbot-chatbox">
+          <li class="chat incoming">
+            <span class="fa-solid fa-robot"></span>
+            <p>
+              Hi, I am VSP Bot powered by Qwen2.5 0.5B, running locally in your browser. The first
+              reply downloads and loads the model.
+            </p>
+          </li>
+          <li class="chat incoming vspbot-status-message">
+            <span class="fa-solid fa-microchip"></span>
+            <p id="vspbot-status">VSP Bot powered by Qwen2.5 0.5B</p>
+          </li>
+        </ul>
+        <div class="chat-input">
+          <textarea id="user-input" placeholder="Ask VSP Bot..." required></textarea>
+          <button id="vspbot-send" type="button" aria-label="Send message">
+            <span class="fa-regular fa-paper-plane"></span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="../assets/js/vspbot-gguf.js"></script>
+  </body>
+</html>
