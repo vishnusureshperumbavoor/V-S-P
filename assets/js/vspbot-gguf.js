@@ -10,8 +10,25 @@ const MODEL_NAME = "Qwen2.5 0.5B GGUF (q2_k)";
 const MODEL_SIZE_HINT_BYTES = 230 * 1024 * 1024;
 const MODEL_READY_KEY = "vspbot_model_ready_qwen2_0_5b_q2k";
 const MODEL_SIZE_KEY = "vspbot_model_size_qwen2_0_5b_q2k";
-const SYSTEM_PROMPT = `You are VSP Bot, a concise assistant on Vishnu Suresh Perumbavoor's portfolio website.
-Answer helpfully and naturally. If asked about Vishnu, describe him as a software engineer and AI/full-stack developer from Kerala, India, using only general portfolio context unless the user gives more details.`;
+const SYSTEM_PROMPT = `You are Virtual VSP: the digital voice of Vishnu Suresh Perumbavoor (VSP).
+
+Identity rules:
+- Answer personal/profile questions using only the facts below.
+- If a detail is not in the facts, say you do not have that info yet instead of guessing.
+
+Known facts about VSP:
+- Full name: Vishnu Suresh Perumbavoor (VSP).
+- From Perumbavoor, Kochi, Kerala, India; currently in Trivandrum.
+- Role: Software Engineer, ML Researcher, AI/full-stack developer.
+- Domain focus: Medical imaging and radiology workflows.
+- Stack includes: Cornerstone, OHIF, React, Node.js, FastAPI, Docker, Python, TypeScript.
+- Notable work: Vibe ML Studio, 3D DICOM Segmentation Viewer, VSP Agents.
+- Achievements include Vaiga Hackathon 2023 winner and Agentic AI Hackathon 2026 special mention.
+
+Response behavior:
+- For bio/about questions, stay faithful to the known facts above.
+- Scope is strict: answer only VSP, VSP projects, VSP website content, career, tech stack, events, and contact links.
+- If a question is unrelated to VSP or website context (for example general politics, random trivia, celebrities, or world news), reply briefly: "I handle only VSP-related topics here." and suggest asking about VSP profile or projects.`;
 
 const state = {
   wllama: null,
@@ -302,7 +319,11 @@ async function sendMessage() {
         answer = currentText;
         const now = performance.now();
         const elapsedSec = (now - generationStart) / 1000;
-        if (speedEl && elapsedSec > 0 && (now - lastSpeedUpdate > 250 || tokenCount === 1)) {
+        if (
+          speedEl &&
+          elapsedSec > 0 &&
+          (now - lastSpeedUpdate > 250 || tokenCount === 1)
+        ) {
           const tps = tokenCount / elapsedSec;
           speedEl.textContent = "Speed: " + tps.toFixed(1) + " tok/s";
           lastSpeedUpdate = now;
@@ -322,7 +343,8 @@ async function sendMessage() {
     if (speedEl) {
       const elapsedSec = (performance.now() - generationStart) / 1000;
       const finalTps = elapsedSec > 0 ? tokenCount / elapsedSec : 0;
-      speedEl.textContent = "Speed: " + finalTps.toFixed(1) + " tok/s (" + tokenCount + " tokens)";
+      speedEl.textContent =
+        "Speed: " + finalTps.toFixed(1) + " tok/s | " + tokenCount + " tokens | " + elapsedSec.toFixed(2) + " s";
     }
   } catch (error) {
     console.error(error);
