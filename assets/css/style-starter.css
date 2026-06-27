@@ -11609,3 +11609,32 @@ span.sicon {
   text-align: right;
 }
 /* /vspbot token speed position fix */
+
+/* vspbot mobile chat-only scroll fix */
+@media (max-width: 768px) {
+  .vspbot,
+  .vspbot.vspbot-expanded {
+    overflow: hidden;
+    max-height: 100dvh;
+  }
+
+  .vspbot .chatbox,
+  .vspbot.vspbot-expanded .chatbox {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 12px;
+  }
+
+  .vspbot .chat-input,
+  .vspbot.vspbot-expanded .chat-input {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    z-index: 2;
+  }
+}
+/* /vspbot mobile chat-only scroll fix */
