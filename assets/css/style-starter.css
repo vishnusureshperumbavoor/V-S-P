@@ -11638,3 +11638,73 @@ span.sicon {
   }
 }
 /* /vspbot mobile chat-only scroll fix */
+
+/* vspbot dark surface with green accents */
+.vspbot {
+  background-color: #0f1720;
+  color: #000;
+  border: 1px solid #21303b;
+}
+
+.vspbot .chatbox {
+  background: #0f1720;
+}
+
+.vspbot .incoming p {
+  color: #dbe7f0;
+  background-color: #1a2630;
+  border: 1px solid #2a3b49;
+}
+
+.vspbot .incoming span {
+  color: #f7fbff;
+}
+
+.vspbot .chat-input {
+  border-top: 1px solid #2a3b49;
+  background-color: #0f1720;
+}
+
+.vspbot .chat-input textarea {
+  color: #e7f0f7;
+  background-color: #0f1720;
+}
+
+.vspbot .chat-input textarea::placeholder {
+  color: #8ea2b2;
+}
+
+.vspbot-status-message p {
+  color: #cfe0ee;
+}
+
+.vspbot-download-message .vspbot-download-meta {
+  color: #dce8f2;
+  background-color: #16212a;
+  border: 1px solid #2a3b49;
+}
+
+.vspbot-progress {
+  background: #2a3b49;
+}
+
+.vspbot-token-speed {
+  color: #8ea2b2;
+}
+
+.vspbot-home-link {
+  color: #e7f1f8;
+  background: rgba(28, 44, 56, 0.85);
+  border: 1px solid #3a4d5e;
+}
+/* /vspbot dark surface with green accents */
+
+/* vspbot icon color override */
+.vspbot .incoming span,
+.vspbot .chat-input button span,
+.vspbot header span,
+.vspbot .fa-solid,
+.vspbot .fa-regular {
+  color: #000 !important;
+}
+/* /vspbot icon color override */
