@@ -11541,3 +11541,41 @@ span.sicon {
 #vspbot-progress-wrap.is-visible {
   display: flex;
 }
+
+/* vspbot mobile layout fix */
+@media (max-width: 768px) {
+  .vspbot,
+  .vspbot.vspbot-expanded {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+  }
+
+  .vspbot header,
+  .vspbot.vspbot-expanded header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+
+  .vspbot .chatbox,
+  .vspbot.vspbot-expanded .chatbox {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 15px 20px 12px;
+  }
+
+  .vspbot .chat-input,
+  .vspbot.vspbot-expanded .chat-input {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    flex-shrink: 0;
+    margin-top: 0;
+  }
+}
+
+/* /vspbot mobile layout fix */
