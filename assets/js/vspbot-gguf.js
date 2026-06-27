@@ -217,7 +217,7 @@ async function initializeModelUi() {
       cachedSize || state.modelTotalBytes || MODEL_SIZE_HINT_BYTES;
     setDownloadMeta({ loaded: sizeToUse, total: sizeToUse });
     setProgress(100);
-    setStatus(`${MODEL_NAME} is ready`);
+    setStatus("VSP Bot is ready");
     markModelCached(sizeToUse);
   } else {
     setDownloadMeta();
@@ -262,7 +262,7 @@ async function loadModel() {
     setProgress(100);
     const finalSize = state.modelTotalBytes || MODEL_SIZE_HINT_BYTES;
     setDownloadMeta({ loaded: finalSize, total: finalSize });
-    setStatus(`${MODEL_NAME} is ready`);
+    setStatus("VSP Bot is ready");
     markModelCached(finalSize);
     state.hasCachedModelHint = true;
     showProgressPanel(true);
@@ -339,12 +339,18 @@ async function sendMessage() {
     botBubble.closest(".chat")?.classList.remove("thinking");
     botBubble.textContent = cleanAnswer;
     state.messages.push({ role: "assistant", content: cleanAnswer });
-    setStatus(MODEL_NAME + " is ready");
+    setStatus("VSP Bot is ready");
     if (speedEl) {
       const elapsedSec = (performance.now() - generationStart) / 1000;
       const finalTps = elapsedSec > 0 ? tokenCount / elapsedSec : 0;
       speedEl.textContent =
-        "Speed: " + finalTps.toFixed(1) + " tok/s | " + tokenCount + " tokens | " + elapsedSec.toFixed(2) + " s";
+        "Speed: " +
+        finalTps.toFixed(1) +
+        " tok/s | " +
+        tokenCount +
+        " tokens | " +
+        elapsedSec.toFixed(2) +
+        " s";
     }
   } catch (error) {
     console.error(error);
