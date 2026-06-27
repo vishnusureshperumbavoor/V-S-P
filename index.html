@@ -1271,12 +1271,36 @@
           <span class="fa-solid fa-robot"></span>
           <p>
             Hi, I am VSP Bot powered by Qwen2.5 0.5B, running locally in your
-            browser. The first reply downloads and loads the model.
+            browser. Model status and storage details are shown below.
           </p>
         </li>
         <li class="chat incoming vspbot-status-message">
           <span class="fa-solid fa-microchip"></span>
           <p id="vspbot-status">VSP Bot powered by Qwen2.5 0.5B</p>
+        </li>
+        <li
+          class="chat incoming vspbot-download-message"
+          id="vspbot-progress-wrap"
+        >
+          <span class="fa-solid fa-download"></span>
+          <div class="vspbot-download-meta">
+            <p id="vspbot-model-size">
+              Model size: approx 230 MB (will auto-detect)
+            </p>
+            <p id="vspbot-downloaded">Downloaded: waiting to start</p>
+            <p id="vspbot-storage-info">
+              Storage location: browser-managed cache/IndexedDB in your browser
+              profile (path is browser and OS specific).
+            </p>
+            <div class="vspbot-progress">
+              <div
+                class="vspbot-progress-bar"
+                id="vspbot-progress-bar"
+                style="width: 0%"
+              ></div>
+            </div>
+            <p id="vspbot-progress-percent">0%</p>
+          </div>
         </li>
       </ul>
       <div class="chat-input">

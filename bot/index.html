@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>VSP Bot | Expanded Chat</title>
     <link rel="icon" href="../assets/images/vsp3.jpeg" type="image/png" />
     <link
@@ -19,23 +22,56 @@
       <div class="vspbot vspbot-expanded">
         <header>
           <h2>Chat with VSP Bot</h2>
-          <a href="../index.html" class="vspbot-home-link" aria-label="Back to home">Home</a>
+          <a
+            href="../index.html"
+            class="vspbot-home-link"
+            aria-label="Back to home"
+            >Home</a
+          >
         </header>
         <ul class="chatbox" id="vspbot-chatbox">
           <li class="chat incoming">
             <span class="fa-solid fa-robot"></span>
             <p>
-              Hi, I am VSP Bot powered by Qwen2.5 0.5B, running locally in your browser. The first
-              reply downloads and loads the model.
+              Hi, I am VSP Bot powered by Qwen2.5 0.5B, running locally in your
+              browser. Model status and storage details are shown below.
             </p>
           </li>
           <li class="chat incoming vspbot-status-message">
             <span class="fa-solid fa-microchip"></span>
             <p id="vspbot-status">VSP Bot powered by Qwen2.5 0.5B</p>
           </li>
+          <li
+            class="chat incoming vspbot-download-message"
+            id="vspbot-progress-wrap"
+          >
+            <span class="fa-solid fa-download"></span>
+            <div class="vspbot-download-meta">
+              <p id="vspbot-model-size">
+                Model size: approx 230 MB (will auto-detect)
+              </p>
+              <p id="vspbot-downloaded">Downloaded: waiting to start</p>
+              <p id="vspbot-storage-info">
+                Storage location: browser-managed cache/IndexedDB in your
+                browser profile (path is browser and OS specific).
+              </p>
+              <div class="vspbot-progress">
+                <div
+                  class="vspbot-progress-bar"
+                  id="vspbot-progress-bar"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <p id="vspbot-progress-percent">0%</p>
+            </div>
+          </li>
         </ul>
         <div class="chat-input">
-          <textarea id="user-input" placeholder="Ask VSP Bot..." required></textarea>
+          <textarea
+            id="user-input"
+            placeholder="Ask VSP Bot..."
+            required
+          ></textarea>
           <button id="vspbot-send" type="button" aria-label="Send message">
             <span class="fa-regular fa-paper-plane"></span>
           </button>
