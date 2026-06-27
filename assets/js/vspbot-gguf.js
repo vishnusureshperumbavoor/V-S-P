@@ -19,6 +19,7 @@ const state = {
   loading: null,
   modelTotalBytes: null,
   hasCachedModelHint: false,
+  cacheCheck: null,
   messages: [{ role: "system", content: SYSTEM_PROMPT }],
 };
 
@@ -78,6 +79,29 @@ function readCachedModelHint() {
   } catch (_error) {
     return false;
   }
+}
+
+async function hasCachedModelArtifacts() {
+  if (!("caches" in window)) return false;
+
+  try {
+    const cacheNames = await caches.keys();
+    for (const cacheName of cacheNames) {
+      const cache = await caches.open(cacheName);
+      const response = await cache.match(MODEL_URL);
+      if (response) {
+        const headerSize = Number(response.headers.get("content-length"));
+        if (Number.isFinite(headerSize) && headerSize > 0) {
+          state.modelTotalBytes = headerSize;
+        }
+        return true;
+      }
+    }
+  } catch (_error) {
+    return false;
+  }
+
+  return false;
 }
 
 function setStatus(message) {
@@ -151,22 +175,29 @@ function buildPrompt(messages) {
   );
 }
 
-function initializeModelUi() {
+async function initializeModelUi() {
+  showProgressPanel(true);
+  setStatus("Checking local model cache...");
+
   state.hasCachedModelHint = readCachedModelHint();
   const cachedSize = getCachedModelSize();
 
-  if (state.hasCachedModelHint) {
-    const sizeToUse = cachedSize || MODEL_SIZE_HINT_BYTES;
+  const hasCacheArtifacts =
+    state.hasCachedModelHint || (await hasCachedModelArtifacts());
+
+  if (hasCacheArtifacts) {
+    state.hasCachedModelHint = true;
+    const sizeToUse =
+      cachedSize || state.modelTotalBytes || MODEL_SIZE_HINT_BYTES;
     setDownloadMeta({ loaded: sizeToUse, total: sizeToUse });
     setProgress(100);
     setStatus(`${MODEL_NAME} is ready`);
+    markModelCached(sizeToUse);
   } else {
     setDownloadMeta();
     setProgress(0);
     setStatus("Model not loaded yet. Send a message to start local loading.");
   }
-
-  showProgressPanel(true);
 }
 
 async function loadModel() {
@@ -217,6 +248,10 @@ async function loadModel() {
 async function sendMessage() {
   const text = inputEl?.value.trim();
   if (!text || !sendBtn || sendBtn.disabled) return;
+
+  if (state.cacheCheck) {
+    await state.cacheCheck;
+  }
 
   inputEl.value = "";
   sendBtn.disabled = true;
@@ -272,7 +307,7 @@ async function sendMessage() {
   }
 }
 
-initializeModelUi();
+state.cacheCheck = initializeModelUi();
 
 if (toggler) {
   toggler.addEventListener("click", () => {
