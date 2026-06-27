@@ -164,6 +164,15 @@ function addMessage(role, content, extraClass = "") {
   return bubble;
 }
 
+function createTokenSpeedEl(chatItem) {
+  if (!chatItem) return null;
+  const metricEl = document.createElement("div");
+  metricEl.className = "vspbot-token-speed";
+  metricEl.textContent = "Speed: -- tok/s";
+  chatItem.appendChild(metricEl);
+  return metricEl;
+}
+
 function buildPrompt(messages) {
   return (
     messages
@@ -264,6 +273,11 @@ async function sendMessage() {
       : "Preparing local model download. Please wait..."
     : "Generating response...";
   const botBubble = addMessage("assistant", preparingText);
+  const botItem = botBubble.closest(".chat");
+  const speedEl = createTokenSpeedEl(botItem);
+  let tokenCount = 0;
+  let generationStart = 0;
+  let lastSpeedUpdate = 0;
 
   try {
     await loadModel();
@@ -273,6 +287,8 @@ async function sendMessage() {
     botBubble.closest(".chat")?.classList.add("thinking");
     botBubble.textContent = "Thinking";
     setStatus("Generating reply...");
+    generationStart = performance.now();
+    lastSpeedUpdate = generationStart;
 
     answer = await state.wllama.createCompletion(buildPrompt(state.messages), {
       nPredict: 256,
@@ -282,7 +298,15 @@ async function sendMessage() {
         top_p: 0.9,
       },
       onNewToken: (_token, _piece, currentText) => {
+        tokenCount += 1;
         answer = currentText;
+        const now = performance.now();
+        const elapsedSec = (now - generationStart) / 1000;
+        if (speedEl && elapsedSec > 0 && (now - lastSpeedUpdate > 250 || tokenCount === 1)) {
+          const tps = tokenCount / elapsedSec;
+          speedEl.textContent = "Speed: " + tps.toFixed(1) + " tok/s";
+          lastSpeedUpdate = now;
+        }
         botBubble.closest(".chat")?.classList.remove("thinking");
         botBubble.textContent = answer;
         if (chatbox) chatbox.scrollTop = chatbox.scrollHeight;
@@ -294,13 +318,21 @@ async function sendMessage() {
     botBubble.closest(".chat")?.classList.remove("thinking");
     botBubble.textContent = cleanAnswer;
     state.messages.push({ role: "assistant", content: cleanAnswer });
-    setStatus(`${MODEL_NAME} is ready`);
+    setStatus(MODEL_NAME + " is ready");
+    if (speedEl) {
+      const elapsedSec = (performance.now() - generationStart) / 1000;
+      const finalTps = elapsedSec > 0 ? tokenCount / elapsedSec : 0;
+      speedEl.textContent = "Speed: " + finalTps.toFixed(1) + " tok/s (" + tokenCount + " tokens)";
+    }
   } catch (error) {
     console.error(error);
     botBubble.closest(".chat")?.classList.remove("thinking");
     botBubble.textContent = `Could not run the local GGUF model: ${error.message}`;
     setStatus("Model failed to load. Check console and local server setup.");
     showProgressPanel(true);
+    if (speedEl && tokenCount === 0) {
+      speedEl.textContent = "Speed: 0.0 tok/s";
+    }
   } finally {
     sendBtn.disabled = false;
     inputEl?.focus();

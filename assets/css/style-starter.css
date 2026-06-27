@@ -11579,3 +11579,33 @@ span.sicon {
 }
 
 /* /vspbot mobile layout fix */
+
+.vspbot-token-speed {
+  margin: 4px 0 0 42px;
+  font-size: 11px;
+  line-height: 14px;
+  color: #65717b;
+}
+
+.vspbot .outgoing .vspbot-token-speed {
+  margin-left: auto;
+  margin-right: 2px;
+}
+
+/* vspbot token speed position fix */
+.vspbot .chat {
+  flex-wrap: wrap;
+}
+
+.vspbot-token-speed {
+  flex-basis: 100%;
+  margin: 4px 0 0 42px;
+  text-align: left;
+}
+
+.vspbot .outgoing .vspbot-token-speed {
+  margin-left: auto;
+  margin-right: 2px;
+  text-align: right;
+}
+/* /vspbot token speed position fix */
