@@ -132,10 +132,10 @@
             Technopark. I have
             <span
               id="experience-counter"
-              style="font-weight: bold; color: #ff6b6b"
+              style="font-weight: bold;"
               >...</span
             >
-            years of professional experience. I specialized in the
+            of professional experience. I specialized in the
             <b>Medical Imaging sector</b>, specifically in
             <b>radiology workflows</b>, with expertise in
             <b
@@ -1367,7 +1367,14 @@
           months += 12;
         }
 
-        experienceCounter.textContent = `${years}.${months}`;
+        const decimal = Math.floor((months / 12) * 10) / 10;
+        const displayValue = (years + decimal).toFixed(1);
+
+        if (months > 0) {
+          experienceCounter.innerHTML = `<span style="color: #ff6b6b">${displayValue}</span> years <span style="color: #ff6b6b">(${years} year${years !== 1 ? "s" : ""} ${months} month${months !== 1 ? "s" : ""})</span>`;
+        } else {
+          experienceCounter.innerHTML = `<span style="color: #ff6b6b">${years}</span> years`;
+        }
       });
     </script>
     <!-- /move top -->
