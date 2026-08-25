@@ -10483,7 +10483,7 @@ section.w3l-grid-quote h3 {
   color: #000;
 }
 
-.vspbot .incoming span{
+.vspbot .incoming > span:first-child {
   color:#000;
   background-color: var(--primary);
   border-radius: 4px;
@@ -11500,18 +11500,20 @@ span.sicon {
 
 .vspbot-download-message .vspbot-download-meta {
   margin: 5px 0 0 0;
-  color: #000;
-  padding: 10px 12px;
-  background-color: #eef4f8;
-  border-radius: 12px;
+  color: #1e293b;
+  padding: 12px 16px;
+  background-color: #f2f2f2;
+  border-radius: 15px 15px 15px 0px;
   max-width: 82%;
   width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .vspbot-download-message .vspbot-download-meta p {
   margin: 0 0 6px 0;
   font-size: 12px;
-  line-height: 17px;
+  line-height: 18px;
+  color: #334155;
 }
 
 .vspbot-download-message .vspbot-download-meta p:last-child {
@@ -11520,9 +11522,9 @@ span.sicon {
 
 .vspbot-progress {
   width: 100%;
-  height: 8px;
+  height: 6px;
   border-radius: 999px;
-  background: #d3dce3;
+  background: #cbd5e1;
   overflow: hidden;
   margin: 8px 0 6px;
 }
@@ -11540,6 +11542,35 @@ span.sicon {
 
 #vspbot-progress-wrap.is-visible {
   display: flex;
+}
+
+.vspbot-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 5px 12px;
+  background: #ffffff;
+  color: #dc2626;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vspbot-delete-btn:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(220, 38, 38, 0.12);
+}
+
+.vspbot-delete-btn:active {
+  transform: translateY(0);
 }
 
 /* vspbot mobile layout fix */
@@ -11650,14 +11681,15 @@ span.sicon {
   background: #0f1720;
 }
 
+.vspbot .incoming > span:first-child {
+  color: #000;
+  background-color: var(--primary);
+}
+
 .vspbot .incoming p {
   color: #dbe7f0;
   background-color: #1a2630;
   border: 1px solid #2a3b49;
-}
-
-.vspbot .incoming span {
-  color: #f7fbff;
 }
 
 .vspbot .chat-input {
@@ -11682,10 +11714,56 @@ span.sicon {
   color: #dce8f2;
   background-color: #16212a;
   border: 1px solid #2a3b49;
+  border-radius: 12px;
 }
 
 .vspbot-progress {
   background: #2a3b49;
+}
+
+.vspbot-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 6px 14px;
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.vspbot-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #f87171;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+.vspbot-delete-btn span,
+.vspbot-delete-btn .fa-trash-can {
+  color: #f87171 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  display: inline !important;
+  align-self: center !important;
+}
+
+.vspbot-delete-btn:hover span,
+.vspbot-delete-btn:hover .fa-trash-can {
+  color: #ffffff !important;
 }
 
 .vspbot-token-speed {
@@ -11700,11 +11778,9 @@ span.sicon {
 /* /vspbot dark surface with green accents */
 
 /* vspbot icon color override */
-.vspbot .incoming span,
+.vspbot .incoming > span:first-child,
 .vspbot .chat-input button span,
-.vspbot header span,
-.vspbot .fa-solid,
-.vspbot .fa-regular {
+.vspbot header span {
   color: #000 !important;
 }
 /* /vspbot icon color override */

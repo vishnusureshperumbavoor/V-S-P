@@ -5,30 +5,10 @@ import {
 import WasmFromCDN from "https://cdn.jsdelivr.net/npm/@wllama/wllama@2.2.1/esm/wasm-from-cdn.js";
 
 const MODEL_URL =
-  "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/resolve/main/qwen2-0_5b-instruct-q2_k.gguf";
-const MODEL_NAME = "Qwen2.5 0.5B GGUF (q2_k)";
-const MODEL_SIZE_HINT_BYTES = 230 * 1024 * 1024;
-const MODEL_READY_KEY = "vspbot_model_ready_qwen2_0_5b_q2k";
-const MODEL_SIZE_KEY = "vspbot_model_size_qwen2_0_5b_q2k";
-const SYSTEM_PROMPT = `You are Virtual VSP: the digital voice of Vishnu Suresh Perumbavoor (VSP).
-
-Identity rules:
-- Answer personal/profile questions using only the facts below.
-- If a detail is not in the facts, say you do not have that info yet instead of guessing.
-
-Known facts about VSP:
-- Full name: Vishnu Suresh Perumbavoor (VSP).
-- From Perumbavoor, Kochi, Kerala, India; currently in Trivandrum.
-- Role: Software Engineer, ML Researcher, AI/full-stack developer.
-- Domain focus: Medical imaging and radiology workflows.
-- Stack includes: Cornerstone, OHIF, React, Node.js, FastAPI, Docker, Python, TypeScript.
-- Notable work: Vibe ML Studio, 3D DICOM Segmentation Viewer, VSP Agents.
-- Achievements include Vaiga Hackathon 2023 winner and Agentic AI Hackathon 2026 special mention.
-
-Response behavior:
-- For bio/about questions, stay faithful to the known facts above.
-- Scope is strict: answer only VSP, VSP projects, VSP website content, career, tech stack, events, and contact links.
-- If a question is unrelated to VSP or website context (for example general politics, random trivia, celebrities, or world news), reply briefly: "I handle only VSP-related topics here." and suggest asking about VSP profile or projects.`;
+  "https://huggingface.co/vishnusureshperumbavoor/vsp_alpaca-instruct-300ep-v2-vml/resolve/main/vsp_alpaca-instruct-300ep-v2-instruct-q4_k_m.gguf";
+const MODEL_SIZE_HINT_BYTES = 380 * 1024 * 1024;
+const MODEL_READY_KEY = "vspbot_model_ready_vsp_alpaca_300ep_v2_instruct_q4km";
+const MODEL_SIZE_KEY = "vspbot_model_size_vsp_alpaca_300ep_v2_instruct_q4km";
 
 const state = {
   wllama: null,
@@ -37,7 +17,7 @@ const state = {
   modelTotalBytes: null,
   hasCachedModelHint: false,
   cacheCheck: null,
-  messages: [{ role: "system", content: SYSTEM_PROMPT }],
+  messages: [],
 };
 
 const bodyElement = document.body;
@@ -153,7 +133,7 @@ function setDownloadMeta({ loaded = null, total = null } = {}) {
 
   if (storageInfoEl) {
     storageInfoEl.textContent =
-      "Storage location: browser-managed cache/IndexedDB in your browser profile (path is browser and OS specific).";
+      "Storage location: IndexedDB";
   }
 }
 
@@ -201,7 +181,26 @@ function buildPrompt(messages) {
   );
 }
 
+function cleanupLegacyStorageKeys() {
+  try {
+    const toRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (
+        k &&
+        k.startsWith("vspbot_") &&
+        k !== MODEL_READY_KEY &&
+        k !== MODEL_SIZE_KEY
+      ) {
+        toRemove.push(k);
+      }
+    }
+    toRemove.forEach((k) => localStorage.removeItem(k));
+  } catch (_e) {}
+}
+
 async function initializeModelUi() {
+  cleanupLegacyStorageKeys();
   showProgressPanel(true);
   setStatus("Checking local model cache...");
 
@@ -310,10 +309,11 @@ async function sendMessage() {
     answer = await state.wllama.createCompletion(buildPrompt(state.messages), {
       nPredict: 256,
       sampling: {
-        temp: 0.7,
+        temp: 0.1,
         top_k: 40,
         top_p: 0.9,
       },
+      stopWords: ["<|im_end|>", "<|endoftext|>", "<|im_start|>"],
       onNewToken: (_token, _piece, currentText) => {
         tokenCount += 1;
         answer = currentText;
@@ -391,3 +391,49 @@ inputEl?.addEventListener("keydown", (event) => {
 });
 
 window.sendMessage = sendMessage;
+
+async function clearCachedModel() {
+  const btn = document.getElementById("vspbot-delete-model");
+  if (btn) btn.disabled = true;
+  setStatus("Purging cached model from browser storage...");
+
+  try {
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      for (const k of keys) {
+        await caches.delete(k);
+      }
+    }
+    localStorage.removeItem(MODEL_READY_KEY);
+    localStorage.removeItem(MODEL_SIZE_KEY);
+    // Remove any legacy vspbot keys
+    const toRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith("vspbot_")) {
+        toRemove.push(k);
+      }
+    }
+    toRemove.forEach((k) => localStorage.removeItem(k));
+
+    state.modelReady = false;
+    state.hasCachedModelHint = false;
+    state.wllama = null;
+    state.loading = null;
+    state.messages = [];
+    setProgress(0);
+    setDownloadMeta({ loaded: 0, total: null });
+    setStatus("Cached model purged. Send a message to download fresh weights.");
+    showProgressPanel(true);
+    if (downloadedEl) downloadedEl.textContent = "Downloaded: 0 B (Cache Cleared)";
+  } catch (err) {
+    console.error("Error clearing model cache:", err);
+    setStatus("Failed to clear cache: " + err.message);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+const deleteModelBtn = document.getElementById("vspbot-delete-model");
+deleteModelBtn?.addEventListener("click", clearCachedModel);
+window.clearCachedModel = clearCachedModel;
