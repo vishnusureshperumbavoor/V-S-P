@@ -293,6 +293,8 @@ async function sendMessage() {
   const speedEl = createTokenSpeedEl(botItem);
   let tokenCount = 0;
   let generationStart = 0;
+  let firstTokenTime = 0;
+  let ttftMs = 0;
   let lastSpeedUpdate = 0;
 
   try {
@@ -318,14 +320,20 @@ async function sendMessage() {
         tokenCount += 1;
         answer = currentText;
         const now = performance.now();
-        const elapsedSec = (now - generationStart) / 1000;
-        if (
-          speedEl &&
-          elapsedSec > 0 &&
-          (now - lastSpeedUpdate > 250 || tokenCount === 1)
-        ) {
-          const tps = tokenCount / elapsedSec;
-          speedEl.textContent = "Speed: " + tps.toFixed(1) + " tok/s";
+
+        if (tokenCount === 1) {
+          firstTokenTime = now;
+          ttftMs = Math.round(firstTokenTime - generationStart);
+        }
+
+        const evalSec = (now - firstTokenTime) / 1000;
+        const tps =
+          evalSec > 0 && tokenCount > 1
+            ? (tokenCount - 1) / evalSec
+            : tokenCount / Math.max(0.001, (now - generationStart) / 1000);
+
+        if (speedEl && (now - lastSpeedUpdate > 250 || tokenCount === 1)) {
+          speedEl.textContent = `Speed: ${tps.toFixed(1)} tok/s | TTFT: ${ttftMs} ms`;
           lastSpeedUpdate = now;
         }
         botBubble.closest(".chat")?.classList.remove("thinking");
@@ -341,16 +349,13 @@ async function sendMessage() {
     state.messages.push({ role: "assistant", content: cleanAnswer });
     setStatus("VSP Bot is ready");
     if (speedEl) {
-      const elapsedSec = (performance.now() - generationStart) / 1000;
-      const finalTps = elapsedSec > 0 ? tokenCount / elapsedSec : 0;
-      speedEl.textContent =
-        "Speed: " +
-        finalTps.toFixed(1) +
-        " tok/s | " +
-        tokenCount +
-        " tokens | " +
-        elapsedSec.toFixed(2) +
-        " s";
+      const totalEvalSec = (performance.now() - firstTokenTime) / 1000;
+      const finalTps =
+        totalEvalSec > 0 && tokenCount > 1
+          ? (tokenCount - 1) / totalEvalSec
+          : tokenCount /
+            Math.max(0.001, (performance.now() - generationStart) / 1000);
+      speedEl.textContent = `Speed: ${finalTps.toFixed(1)} tok/s | ${tokenCount} tokens | TTFT: ${ttftMs} ms`;
     }
   } catch (error) {
     console.error(error);
