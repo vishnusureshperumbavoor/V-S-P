@@ -62,6 +62,11 @@
       name: 'AQUATIC VSP FLUID RIPPLE & CAUSTICS MATRIX',
       category: 'DESIGN 05 // WATER & WAVE DYNAMICS',
       cameraZ: 120,
+    },
+    hologram: {
+      name: 'VOLUMETRIC VSP SCI-FI HOLOGRAPHIC EMITTER',
+      category: 'DESIGN 06 // HOLOGRAPHIC PROJECTION',
+      cameraZ: 110,
     }
   };
 
@@ -851,6 +856,201 @@
   }
 
   // ==========================================================================
+  // 6c. Design 06: VOLUMETRIC VSP SCI-FI HOLOGRAPHIC EMITTER
+  // Authentic Star Wars / Blade Runner hologram with emitter, beam cone & glitch
+  // ==========================================================================
+  function createHologramDesign() {
+    const group = new THREE.Group();
+    const holoCyan = 0x7df9ff;
+    const holoGreen = 0x00d679;
+
+    // 1. Projector Pedestal Base
+    const baseGeo = new THREE.CylinderGeometry(28, 34, 5, 36);
+    const baseMat = new THREE.MeshStandardMaterial({
+      color: 0x081018,
+      roughness: 0.3,
+      metalness: 0.9
+    });
+    const base = new THREE.Mesh(baseGeo, baseMat);
+    base.position.y = -34;
+    group.add(base);
+
+    // Emitter Aperture Lens Disc
+    const lensGeo = new THREE.CircleGeometry(22, 36);
+    const lensMat = new THREE.MeshBasicMaterial({
+      color: holoCyan,
+      side: THREE.DoubleSide
+    });
+    const lens = new THREE.Mesh(lensGeo, lensMat);
+    lens.rotation.x = -Math.PI / 2;
+    lens.position.y = -31.4;
+    group.add(lens);
+
+    // Rotating Pedestal Rings
+    const ringMat1 = new THREE.LineDashedMaterial({ color: holoGreen, dashSize: 4, gapSize: 3, linewidth: 2 });
+    const ringMat2 = new THREE.LineDashedMaterial({ color: holoCyan, dashSize: 6, gapSize: 4, linewidth: 2 });
+
+    const rGeo1 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, 26, 0, Math.PI * 2, true).getPoints(64));
+    const rGeo2 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, 29, 0, Math.PI * 2, true).getPoints(64));
+    const ring1 = new THREE.Line(rGeo1, ringMat1);
+    const ring2 = new THREE.Line(rGeo2, ringMat2);
+    ring1.computeLineDistances();
+    ring2.computeLineDistances();
+    ring1.rotation.x = -Math.PI / 2;
+    ring2.rotation.x = -Math.PI / 2;
+    ring1.position.y = -31.2;
+    ring2.position.y = -31.2;
+    group.add(ring1);
+    group.add(ring2);
+
+    // 2. Volumetric Projection Beam Cone (expanding upward from lens)
+    const coneGeo = new THREE.CylinderGeometry(40, 10, 72, 32, 1, true);
+    const coneMat = new THREE.MeshBasicMaterial({
+      color: holoCyan,
+      transparent: true,
+      opacity: 0.12,
+      side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    const beamCone = new THREE.Mesh(coneGeo, coneMat);
+    beamCone.position.y = 4;
+    group.add(beamCone);
+
+    // 3. Volumetric Floating VSP Hologram Monogram
+    const holoLettersGroup = new THREE.Group();
+
+    function buildHoloTube(points, color) {
+      const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
+      const tubeGeo = new THREE.TubeGeometry(curve, 54, 2.0, 10, false);
+      
+      const wireMat = new THREE.MeshBasicMaterial({
+        color: color,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.88,
+        blending: THREE.AdditiveBlending
+      });
+      const wireMesh = new THREE.Mesh(tubeGeo, wireMat);
+
+      const glowMat = new THREE.MeshStandardMaterial({
+        color: 0x001a24,
+        emissive: color,
+        emissiveIntensity: 0.9,
+        roughness: 0.1,
+        metalness: 0.95,
+        transparent: true,
+        opacity: 0.75
+      });
+      const glowMesh = new THREE.Mesh(tubeGeo, glowMat);
+      glowMesh.scale.set(0.65, 0.65, 0.65);
+
+      const letterHolder = new THREE.Group();
+      letterHolder.add(wireMesh);
+      letterHolder.add(glowMesh);
+      return letterHolder;
+    }
+
+    const holoV = buildHoloTube(V_PATH, holoGreen);
+    const holoS = buildHoloTube(S_PATH, holoCyan);
+    const holoP1 = buildHoloTube(P_SPINE, holoGreen);
+    const holoP2 = buildHoloTube(P_LOOP, holoGreen);
+
+    holoLettersGroup.add(holoV);
+    holoLettersGroup.add(holoS);
+    holoLettersGroup.add(holoP1);
+    holoLettersGroup.add(holoP2);
+    holoLettersGroup.position.set(0, 4, 0);
+    group.add(holoLettersGroup);
+
+    // 4. Moving Hologram Scanline Plane
+    const scanGeo = new THREE.PlaneGeometry(80, 2);
+    const scanMat = new THREE.MeshBasicMaterial({
+      color: holoCyan,
+      transparent: true,
+      opacity: 0.65,
+      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide
+    });
+    const scanline = new THREE.Mesh(scanGeo, scanMat);
+    scanline.rotation.x = -Math.PI / 4;
+    group.add(scanline);
+
+    // 5. Hologram Dust / Micro-Voxels (rising from the emitter)
+    const voxelCount = 180;
+    const voxelGeo = new THREE.BufferGeometry();
+    const voxelPos = new Float32Array(voxelCount * 3);
+    const voxelVels = new Float32Array(voxelCount);
+
+    for (let i = 0; i < voxelCount; i++) {
+      const radius = Math.random() * 28;
+      const angle = Math.random() * Math.PI * 2;
+      voxelPos[i * 3] = Math.cos(angle) * radius;
+      voxelPos[i * 3 + 1] = -30 + Math.random() * 65;
+      voxelPos[i * 3 + 2] = Math.sin(angle) * radius;
+      voxelVels[i] = 0.2 + Math.random() * 0.35;
+    }
+    voxelGeo.setAttribute('position', new THREE.BufferAttribute(voxelPos, 3));
+    const voxelMat = new THREE.PointsMaterial({
+      color: holoCyan,
+      size: 1.8,
+      transparent: true,
+      opacity: 0.75,
+      blending: THREE.AdditiveBlending
+    });
+    const voxels = new THREE.Points(voxelGeo, voxelMat);
+    group.add(voxels);
+
+    // 6. Hologram Targeting HUD Brackets
+    const bracketGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-45, 26, 0), new THREE.Vector3(-45, 30, 0), new THREE.Vector3(-41, 30, 0),
+      new THREE.Vector3(41, 30, 0), new THREE.Vector3(45, 30, 0), new THREE.Vector3(45, 26, 0),
+      new THREE.Vector3(45, -20, 0), new THREE.Vector3(45, -24, 0), new THREE.Vector3(41, -24, 0),
+      new THREE.Vector3(-41, -24, 0), new THREE.Vector3(-45, -24, 0), new THREE.Vector3(-45, -20, 0)
+    ]);
+    const bracketMat = new THREE.LineBasicMaterial({ color: holoCyan, transparent: true, opacity: 0.45 });
+    const hudBrackets = new THREE.LineSegments(bracketGeo, bracketMat);
+    group.add(hudBrackets);
+
+    group.userData = {
+      animate: function (time) {
+        ring1.rotation.z = time * 0.4;
+        ring2.rotation.z = -time * 0.3;
+
+        // Scanline sweep up and down the VSP letters
+        scanline.position.y = 4 + Math.sin(time * 3.2) * 22;
+
+        // Animate rising hologram voxels
+        const vPos = voxelGeo.attributes.position.array;
+        for (let i = 0; i < voxelCount; i++) {
+          vPos[i * 3 + 1] += voxelVels[i];
+          if (vPos[i * 3 + 1] > 38) {
+            vPos[i * 3 + 1] = -30;
+          }
+        }
+        voxelGeo.attributes.position.needsUpdate = true;
+
+        // Authentic Sci-Fi Hologram Glitch & Jitter
+        const isGlitching = Math.random() > 0.95;
+        if (isGlitching) {
+          holoLettersGroup.position.x = (Math.random() - 0.5) * 1.6;
+          holoLettersGroup.position.z = (Math.random() - 0.5) * 1.2;
+          beamCone.material.opacity = 0.05 + Math.random() * 0.15;
+        } else {
+          holoLettersGroup.position.x = 0;
+          holoLettersGroup.position.z = 0;
+          beamCone.material.opacity = 0.12;
+        }
+
+        // Gentle floating hover
+        holoLettersGroup.position.y = 4 + Math.sin(time * 2) * 1.2;
+      }
+    };
+
+    return group;
+  }
+
+  // ==========================================================================
   // 7. Design Switcher & Cleanup Engine
   // ==========================================================================
   function loadDesign(designKey) {
@@ -888,6 +1088,9 @@
         break;
       case 'water':
         newDesignGroup = createWaterDesign();
+        break;
+      case 'hologram':
+        newDesignGroup = createHologramDesign();
         break;
       default:
         newDesignGroup = createMatrixDesign();
