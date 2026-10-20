@@ -69,7 +69,7 @@
       cameraZ: 110,
     },
     avatar: {
-      name: 'ANIMATED 3D HUMAN GLB AVATAR (TEST)',
+      name: 'ANIMATED 3D HUMAN GLB AVATAR',
       category: 'GLTF SKELETAL RIG',
       cameraZ: 45,
     }
