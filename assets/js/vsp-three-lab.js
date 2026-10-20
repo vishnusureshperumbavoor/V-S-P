@@ -66,7 +66,9 @@
     gta: {
       name: 'GTA VI // VSP VICE METROPOLIS & NEON HIGHWAY',
       category: 'DESIGN 06 // GTA 6 VSP CITY',
-      cameraZ: 125,
+      cameraZ: 95,
+      cameraY: 15,
+      lookY: 14,
     }
   };
 
@@ -955,34 +957,62 @@
     }
     group.add(buildingsGroup);
 
-    // 4. Central VSP Skyscraper Tower with Giant Rooftop Neon Sign
-    const vspTowerGroup = new THREE.Group();
-    const towerMesh = new THREE.Mesh(buildingGeo, bMatDark);
-    towerMesh.scale.set(32, 85, 24);
-    towerMesh.position.set(0, -15 + 85 / 2, -100);
-    vspTowerGroup.add(towerMesh);
+    // 4. Prominent Front-and-Center 3D VSP Highway Gateway & Archway
+    const signGroup = new THREE.Group();
 
-    // Rooftop 3D VSP Neon Typography
-    function buildGtaTube(points, color) {
+    function buildGtaTube(points, color, radius = 2.2) {
       const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
-      const tubeGeo = new THREE.TubeGeometry(curve, 32, 1.6, 8, false);
+      const tubeGeo = new THREE.TubeGeometry(curve, 48, radius, 10, false);
       const tubeMat = new THREE.MeshBasicMaterial({ color: color });
       return new THREE.Mesh(tubeGeo, tubeMat);
     }
 
-    const gtaV = buildGtaTube(V_PATH, hotPink);
-    const gtaS = buildGtaTube(S_PATH, sunsetGold);
-    const gtaP1 = buildGtaTube(P_SPINE, neonCyan);
-    const gtaP2 = buildGtaTube(P_LOOP, neonCyan);
+    const gtaV = buildGtaTube(V_PATH, hotPink, 2.2);
+    const gtaS = buildGtaTube(S_PATH, sunsetGold, 2.2);
+    const gtaP1 = buildGtaTube(P_SPINE, neonCyan, 2.2);
+    const gtaP2 = buildGtaTube(P_LOOP, neonCyan, 2.2);
 
-    const signGroup = new THREE.Group();
     signGroup.add(gtaV);
     signGroup.add(gtaS);
     signGroup.add(gtaP1);
     signGroup.add(gtaP2);
-    signGroup.scale.set(0.65, 0.65, 0.65);
-    signGroup.position.set(0, 75, -100);
-    vspTowerGroup.add(signGroup);
+
+    // Neon Highway Archway Gantry Frame
+    const gantryFrameGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-46, -15, 0),
+      new THREE.Vector3(-46, 26, 0),
+      new THREE.Vector3(46, 26, 0),
+      new THREE.Vector3(46, -15, 0)
+    ]);
+    const gantryFrameMat = new THREE.LineBasicMaterial({ color: hotPink, linewidth: 3 });
+    const gantryFrame = new THREE.Line(gantryFrameGeo, gantryFrameMat);
+    signGroup.add(gantryFrame);
+
+    const gantrySubFrameGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-44, -15, 0),
+      new THREE.Vector3(-44, 24, 0),
+      new THREE.Vector3(44, 24, 0),
+      new THREE.Vector3(44, -15, 0)
+    ]);
+    const gantrySubMat = new THREE.LineBasicMaterial({ color: neonCyan, linewidth: 1.5 });
+    signGroup.add(new THREE.Line(gantrySubFrameGeo, gantrySubMat));
+
+    // Position directly in front-and-center of the camera view
+    signGroup.position.set(0, 16, -15);
+    signGroup.scale.set(0.9, 0.9, 0.9);
+    group.add(signGroup);
+
+    // 4b. Background Skyscraper with Skyline Billboard
+    const vspTowerGroup = new THREE.Group();
+    const towerMesh = new THREE.Mesh(buildingGeo, bMatDark);
+    towerMesh.scale.set(38, 70, 24);
+    towerMesh.position.set(0, -15 + 70 / 2, -100);
+    vspTowerGroup.add(towerMesh);
+
+    const towerSign = signGroup.clone();
+    towerSign.scale.set(0.5, 0.5, 0.5);
+    towerSign.position.set(0, 52, -100);
+    vspTowerGroup.add(towerSign);
     group.add(vspTowerGroup);
 
     // 5. Speeding Traffic Light Trails
@@ -1102,11 +1132,13 @@
     activeGroup.userData = newDesignGroup.userData;
 
     // Update camera distance smoothly
-    const targetZ = designDirectory[designKey].cameraZ;
+    const targetZ = designDirectory[designKey].cameraZ || 110;
+    const targetY = designDirectory[designKey].cameraY || 10;
+    const lookY = designDirectory[designKey].lookY || 0;
     if (controls) {
-      controls.target.set(0, 0, 0);
+      controls.target.set(0, lookY, 0);
     }
-    camera.position.set(0, 10, targetZ);
+    camera.position.set(0, targetY, targetZ);
 
     // Update Top Corner Design Name HUD (Primary User Request!)
     updateTopCornerDesignName(designKey);
