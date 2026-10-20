@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>RSNA Knee: Rank 5827 to 923 - VSP</title>
+    <link
+      href="//fonts.googleapis.com/css?family=Nunito:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/style-starter.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="w3l-header" id="home">
+        <div class="container">
+          <nav class="navbar navbar-expand-lg navbar-dark pl-0 pr-0">
+            <a class="navbar-brand m-0" href="../index.html"
+              ><span class="fa fa-gamepad"></span> VSP
+            </a>
+            <span class="navbar-toggler-icon fa fa-bars"></span>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0" href="../index.html">Home</a>
+                  <a class="nav-link pl-0 pr-0" href="../blogs.html">Blogs</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <section class="w3l-about-bottom py-5" id="about">
+      <div class="container py-lg-5 py-md-3">
+        <div class="row middle-grids">
+          <div class="col-lg-12 advantage-grid-info">
+            <div class="advantage_left">
+              <h1 class="font-weight" style="font-size: 2.8rem">
+                How We Went from Rank 5,827 to 923 in RSNA Knee Abnormality Detection
+              </h1>
+              <p class="mt-2 mb-4" style="color: #7df9ff">
+                <b>Competition:</b> RSNA Knee Abnormality Detection | <b>Metric:</b> Macro ROC-AUC (12 Pathologies) | <b>Jump:</b> 0.515 → 0.958 (+4,904 Leaderboard Positions)
+              </p>
+
+              <h2>1. The Problem & The Baseline Disaster (Rank 5,827 — AUC 0.515)</h2>
+              <p class="mt-2">
+                In the RSNA Knee Abnormality Detection competition on Kaggle, the goal is to evaluate 12 clinical abnormalities across multi-sequence MRI studies (Sagittal, Coronal, and Axial planes with both fluid-sensitive and non-fluid-sensitive acquisitions):
+                <br />
+                <i>ACL Tear, MCL Tear, Medial Meniscus Tear, Lateral Meniscus Tear, Medial Osteoarthritis, Lateral Osteoarthritis, Patellofemoral Osteoarthritis, Joint Effusion, Synovitis, Baker's Cyst, Bone Contusion, and Fracture.</i>
+              </p>
+              <p class="mt-2">
+                Our initial submission scored a modest <b>0.515 ROC-AUC</b>, hovering at Rank 5,827 out of 6,200+ teams. In medical imaging benchmarks, 0.515 essentially means random chance.
+              </p>
+              <p class="mt-2">
+                <b>Why did the early baseline fail?</b>
+                <br />
+                1. <b>DICOM Pixel Compression:</b> Kaggle's hidden test set contains compressed DICOM formats. Without offline decoders (<code>pylibjpeg</code> and <code>openjpeg</code>), standard readers fail silently, causing fallbacks to constant 0.5 predictions.
+                <br />
+                2. <b>Geometric Misalignment:</b> Medical MRIs are not standard 2D photos. Different MRI scanners use arbitrary slice ordering and coordinate spaces. Without normalizing physical coordinates via <code>ImageOrientationPatient</code> and <code>ImagePositionPatient</code> into canonical LPS (Left-Posterior-Superior) 3D space, models ingest flipped or inverted anatomies.
+                <br />
+                3. <b>Weak Label Noise:</b> The competition provides complex radiology reports with free text. Standard cross-entropy trained on raw binary labels fails to capture nuanced uncertainty across 12 co-occurring findings.
+              </p>
+
+              <h2 class="mt-4">2. The Engineering Strategy: Re-architecting from Scratch</h2>
+              <p class="mt-2">
+                To bridge the gap between 0.515 and top-tier performance, we orchestrated a multi-stage, multi-family ensemble combining different inductive biases:
+              </p>
+
+              <h3 class="mt-3">Stage 1: High-Resolution 2.5D MIL CoAtNet (384px)</h3>
+              <p class="mt-2">
+                - Built on <code>coatnet_rmlp_2_rw_384</code> pre-trained with Osteoarthritis Initiative (OAI) knee data and soft LLM report labels.
+                <br />
+                - Constructs an anatomically sorted 96-slice uint8 volume across 5 canonical series slots (Sagittal Fluid, Sagittal Non-Fluid, Coronal Fluid, Coronal Non-Fluid, Axial).
+                <br />
+                - Samples 94 overlapping 3-slice 2.5D evaluation windows cropped to 320px.
+                <br />
+                - Incorporates <b>Anatomical Left/Right Mirror TTA</b>: Evaluates both the scan and its anatomical mirror view (reversing sagittal slice channels and horizontally flipping coronal/axial slices), averaging probabilities in prediction space.
+                <br />
+                - Standalone performance: <b>0.949 AUC</b>.
+              </p>
+
+              <h3 class="mt-3">Stage 1b: Complementary 224px CoAtNet</h3>
+              <p class="mt-2">
+                - An independent checkpoint trained on a 0.8 center crop resized to 224px.
+                <br />
+                - Captures localized ligament and joint space details.
+                <br />
+                - Blended into the Raptor slot at a 35% weight: <code>0.65 × Rank(384px) + 0.35 × Rank(224px)</code>.
+              </p>
+
+              <h3 class="mt-3">Stage 2: 4-Fold Compact R6 ConvNeXt with 3D Anatomy V-Net</h3>
+              <p class="mt-2">
+                - While CoAtNet utilizes full-field global depth slices, the R6 ConvNeXt-Small pipeline uses a 3D <b>SKM-TEA Anatomy V-Net (<code>anatomy.pt</code>)</b> to locate exact anatomical landmarks of the knee joint.
+                <br />
+                - Extracts centered medial, lateral, and patellofemoral compartments at 352px crop.
+                <br />
+                - Evaluates across 4 cross-validation folds with <b>Flip TTA in logit space</b> (swapping medial and lateral predictions on flipped passes).
+                <br />
+                - Employs specialized secondary ridge stackers: a fluid volume model for Joint Effusion and a multi-compartment state model for Baker's cyst.
+              </p>
+
+              <h3 class="mt-3">Stage 3: Pathology-Specific Percentile Rank Blending</h3>
+              <p class="mt-2">
+                Because ROC-AUC depends purely on rank order rather than raw probabilities, direct probability averaging can degrade performance when model calibrations differ. Instead, predictions were converted to percentile ranks over non-failed studies.
+                <br />
+                Crucially, different model families specialize in different knee compartments. We utilized pathology-specific weights:
+              </p>
+              <ul>
+                <li><b>Synovitis:</b> 85% Raptor (trained with OAI effusion-synovitis labels) / 15% R6</li>
+                <li><b>Lateral OA:</b> 15% Raptor / 85% R6 (R6 has dedicated SKM-TEA bilateral coronal views)</li>
+                <li><b>PF OA:</b> 65% Raptor / 35% R6</li>
+                <li><b>Baker's Cyst:</b> 30% Raptor / 70% R6 (R6 utilizes popliteal fossa stackers)</li>
+                <li><b>Other Findings:</b> Balanced 50% / 50% blend</li>
+              </ul>
+
+              <h3 class="mt-3">Part B: 2.5D MIL ConvNeXt Reader with Study Transformer</h3>
+              <p class="mt-2">
+                As a third independent leg, we integrated a 2.5D ConvNeXt-Tiny reader coupled with a 2-layer Transformer Encoder across 6 anatomical plane slots, providing finding-specific attention pooling blended at calibrated residual weights (0.003 to 0.035).
+              </p>
+
+              <h2 class="mt-4">3. The Result: 0.515 → 0.958 (Rank 5827 → 923)</h2>
+              <p class="mt-2">
+                Upon submitting the unified 4-stage pipeline (Version 5), our public leaderboard score jumped to <b>0.95800</b>, propelling us past 4,904 teams directly into <b>Rank 923</b>.
+              </p>
+              <p class="mt-2">
+                <b>The 4th Decimal Lesson:</b>
+                <br />
+                Over 1,390 teams are clustered in the 0.958 band (spanning Ranks 212 to 1,610), where unrounded 4th and 5th decimal places dictate leaderboard rank. In our v5 run, an untested multi-scale resolution shift in Part B (<code>res+32, fov=0.88</code>) introduced an out-of-domain artifact on weights trained at 256px, slightly degrading unrounded precision. Pinpointing and correcting that resolution shift and updating to the V2 blend weights sets the foundation for breaking into the top ~200.
+              </p>
+
+              <h2 class="mt-4">4. Takeaways for Autonomous AI Pair Programming</h2>
+              <p class="mt-2">
+                This rapid turnaround highlights how agentic workflows transform competitive machine learning and complex engineering:
+                <br />
+                1. <b>Automated Diagnostics:</b> Moving beyond blind trial-and-error by reverse-engineering exact error mechanisms (DICOM compression, orientation matrices, calibration mismatch).
+                <br />
+                2. <b>Agent-Driven Compute:</b> Seamlessly connecting autonomous coding agents (like Antigravity, Claude Code, and Codex) to high-memory remote GPUs (such as Colab NVIDIA A100) via tools like <code>vspagent</code>.
+                <br />
+                3. <b>Ensemble Diversity:</b> Combining complementary model families (hybrid Convolution-Attention vs. Anchor-based ConvNeXt vs. Study Transformers) consistently outperforms single architectures on complex clinical imaging.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <section class="w3l-footers-1">
+        <div class="footer py-3">
+          <div class="container">
+            <div class="footer-content">
+              <div class="row">
+                <div class="col-lg-8 footer-left">
+                  <p class="m-0">
+                    &copy; 2025 All Rights Reserved | Design by VSP
+                  </p>
+                </div>
+                <div
+                  class="col-lg-4 footer-right text-lg-right text-center mt-lg-0 mt-3"
+                >
+                  <ul class="social m-0 p-0">
+                    <li>
+                      <a href="https://github.com/vishnusureshperumbavoor"
+                        ><span class="fa fa-github"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.linkedin.com/in/vishnu-suresh-perumbavoor-9a7a8223a/"
+                        ><span class="fa fa-linkedin"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a href="https://t.me/vishnusureshperumbavoor"
+                        ><span class="fa fa-telegram"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.instagram.com/vishnusureshperumbavoor/"
+                        ><span class="fa fa-instagram"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a href="http://www.twitter.com/vspeeeeee"
+                        ><span class="fa fa-twitter"></span
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </footer>
+  </body>
+</html>
+<style>
+  body {
+    background-color: #000;
+    color: #7cfc00;
+  }
+  ul li a {
+    color: #7df9ff;
+  }
+  h1, h2, h3, h4, h5 {
+    color: #fff;
+  }
+  code {
+    background-color: #1a1a1a;
+    color: #00ffcc;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+</style>
