@@ -164,8 +164,14 @@ body:hover #ambient-cursor-glow {
 }
 
 /* 7. Enhanced Timeline Hologram Accents */
+.w3l-content-photo-5 .content-left ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+
 .w3l-content-photo-5 .content-left ul li {
   position: relative;
+  list-style: none !important;
   padding-left: 20px;
   transition: transform 0.2s ease;
 }

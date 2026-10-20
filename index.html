@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+      content="width=device-width, initial-scale=1, maximum-scale=1, interactive-widget=resizes-content"
     />
     <meta
       property="og:title"
@@ -72,9 +72,14 @@
       .w3l-content-photo-5 .content-left h3 {
         color: #ffffff;
       }
+      .w3l-content-photo-5 .content-left ul {
+        list-style: none !important;
+        padding-left: 0 !important;
+      }
       .w3l-content-photo-5 .content-left ul li {
         color: #cbd5e1;
         margin-bottom: 12px;
+        list-style: none !important;
       }
       .w3l-content-photo-5 .content-left ul li b {
         color: #ffffff;
@@ -355,8 +360,8 @@
                 </li>
                 <li>
                   <b>2026:</b> Working on advanced radiology workflows. Created
-                  <b>Vibe ML Studio</b>, <b>3D DICOM Segmentation Viewer</b>,
-                  and <b>VSP Agents</b>.
+                  <b>Vibe ML Studio</b>, <b>Vibe MI Studio</b>, and
+                  <b>VSP Agents</b>.
                 </li>
               </ul>
             </div>
@@ -455,24 +460,20 @@
               </a>
             </div>
             <div class="col-lg-4 col-md-6 feature-grid">
-              <a
-                href="https://github.com/vishnusureshperumbavoor/segmentation-dicom-viewer"
-                target="_blank"
-              >
-                <div class="feature-body service2">
-                  <div class="feature-img">
-                    <span class="fa fa-cube icon-fea" aria-hidden="true"></span>
-                  </div>
-                  <div class="feature-info mt-4">
-                    <h3 class="feature-titel mb-2">3D DICOM SEG Viewer</h3>
-                    <p class="feature-text">
-                      High-performance web 3D viewer for DICOM Segmentations.
-                      Features VTK.js rendering, WASM-accelerated surface
-                      conversion, and STL export.
-                    </p>
-                  </div>
+              <div class="feature-body service2">
+                <div class="feature-img">
+                  <span class="fa fa-cube icon-fea" aria-hidden="true"></span>
                 </div>
-              </a>
+                <div class="feature-info mt-4">
+                  <h3 class="feature-titel mb-2">Vibe MI Studio</h3>
+                  <p class="feature-text">
+                    Web-native 2D/3D DICOM workstation with Cornerstone3D MPR,
+                    VTK.js 3D meshing, and TotalSegmentator for organ volumetry.
+                    Features clinical report generation using NVIDIA
+                    NV-Reason-CT (3D VLM) via Google Colab MCP connection.
+                  </p>
+                </div>
+              </div>
             </div>
             <div class="col-lg-4 col-md-6 feature-grid">
               <a
@@ -498,49 +499,52 @@
               </a>
             </div>
             <div class="col-lg-4 col-md-6 feature-grid">
-              <div class="feature-body service4">
-                <div class="feature-img">
-                  <span class="fa fa-robot icon-fea" aria-hidden="true"></span>
+              <a
+                href="https://github.com/vishnusureshperumbavoor/vspagent"
+                target="_blank"
+              >
+                <div class="feature-body service4">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-robot icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">VSP Agent</h3>
+                    <p class="feature-text">
+                      Hybrid agent harness &amp; cloud GPU execution runtime
+                      over MCP. Bridges local dev and coding agents to Google
+                      Colab GPUs (A100/T4) with zero local VRAM, persistent
+                      daemons, and automated sync.
+                    </p>
+                  </div>
                 </div>
-                <div class="feature-info mt-4">
-                  <h3 class="feature-titel mb-2">
-                    <a
-                      href="https://github.com/vishnusureshperumbavoor/vspagent"
-                      target="_blank"
-                      style="color: inherit"
-                      >VSP Agent</a
-                    >
-                  </h3>
-                  <p class="feature-text">
-                    The engine powering VML Studio. Handles RAG, SFT,
-                    Distillation, GGUF/ONNX, and MCP. Soon with Image/Voice.
-                    Chat:
-                    <a href="https://t.me/VSPAgentBot" target="_blank"
-                      >@VSPAgentBot</a
-                    >.
-                  </p>
-                </div>
-              </div>
+              </a>
             </div>
             <div class="col-lg-4 col-md-6 feature-grid">
-              <div class="feature-body service5">
-                <div class="feature-img">
-                  <span
-                    class="fa fa-hospital-o icon-fea"
-                    aria-hidden="true"
-                  ></span>
+              <a
+                href="https://github.com/vishnusureshperumbavoor/vibe-rapper"
+                target="_blank"
+              >
+                <div class="feature-body service5">
+                  <div class="feature-img">
+                    <span
+                      class="fa fa-microphone icon-fea"
+                      aria-hidden="true"
+                    ></span>
+                  </div>
+                  <div class="feature-info mt-4">
+                    <h3 class="feature-titel mb-2">Vibe Rapper</h3>
+                    <p class="feature-text">
+                      AI vocal stem separation (Demucs) &amp; zero-shot voice
+                      cloning studio (Seed-VC). Live recording and auto-mixing
+                      over instrumental beats, powered by vspagent Colab MCP GPU
+                      orchestration.
+                    </p>
+                  </div>
                 </div>
-                <div class="feature-info mt-4">
-                  <h3 class="feature-titel mb-2">Company Projects</h3>
-                  <p class="feature-text">
-                    Worked on 3
-                    <b>OHIF & Cornerstone</b> related viewer projects. Built a
-                    3D segmentation platform with
-                    <b>VTK.js, DWV, and PolySeg WASM</b>. Currently working on
-                    advanced radiology workflows.
-                  </p>
-                </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>
@@ -1084,7 +1088,9 @@
               overflow: hidden;
               border-radius: 12px;
               box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-              transition: transform 0.3s ease, box-shadow 0.3s ease;
+              transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
               cursor: pointer;
               background: rgba(255, 255, 255, 0.03);
               height: 250px;
@@ -1107,109 +1113,257 @@
 
           <div class="row mt-4">
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://i.pinimg.com/1200x/a2/01/27/a2012720ab4ce9d6f8d70f4d83db8de7.jpg" class="img-fluid" alt="Gallery photo 1" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://i.pinimg.com/1200x/a2/01/27/a2012720ab4ce9d6f8d70f4d83db8de7.jpg"
+                  class="img-fluid"
+                  alt="Gallery photo 1"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://i.pinimg.com/1200x/0e/4e/69/0e4e6977153c00ac899c928042a01a35.jpg" class="img-fluid" alt="Gallery photo 2" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://i.pinimg.com/1200x/0e/4e/69/0e4e6977153c00ac899c928042a01a35.jpg"
+                  class="img-fluid"
+                  alt="Gallery photo 2"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://i.pinimg.com/736x/ec/db/7a/ecdb7a966a17343fbe06eb020674facb.jpg" class="img-fluid" alt="Gallery photo 3" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://i.pinimg.com/736x/ec/db/7a/ecdb7a966a17343fbe06eb020674facb.jpg"
+                  class="img-fluid"
+                  alt="Gallery photo 3"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://i.pinimg.com/736x/9d/6f/77/9d6f77d0d06dcb4666a7429f706b1bbd.jpg" class="img-fluid" alt="Gallery photo 4" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://i.pinimg.com/736x/9d/6f/77/9d6f77d0d06dcb4666a7429f706b1bbd.jpg"
+                  class="img-fluid"
+                  alt="Gallery photo 4"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://i.pinimg.com/1200x/8a/a1/b9/8aa1b92427f356eb2b5698eb5b744170.jpg" class="img-fluid" alt="Gallery photo 5" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://i.pinimg.com/1200x/8a/a1/b9/8aa1b92427f356eb2b5698eb5b744170.jpg"
+                  class="img-fluid"
+                  alt="Gallery photo 5"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://i.pinimg.com/736x/36/66/60/36666039a838ed2a7d84e6cd6a5399f6.jpg" class="img-fluid" alt="Gallery photo 6" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://i.pinimg.com/736x/36/66/60/36666039a838ed2a7d84e6cd6a5399f6.jpg"
+                  class="img-fluid"
+                  alt="Gallery photo 6"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://i.pinimg.com/736x/a9/c1/7b/a9c17baafb87be3cd972669bd9c133f0.jpg" class="img-fluid" alt="Gallery photo 7" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://i.pinimg.com/736x/a9/c1/7b/a9c17baafb87be3cd972669bd9c133f0.jpg"
+                  class="img-fluid"
+                  alt="Gallery photo 7"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://pbs.twimg.com/media/GCHIDlqWoAA9YCg?format=jpg&name=large" class="img-fluid" alt="Gallery photo 8" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://pbs.twimg.com/media/GCHIDlqWoAA9YCg?format=jpg&name=large"
+                  class="img-fluid"
+                  alt="Gallery photo 8"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://i.pinimg.com/1200x/93/5b/95/935b95e4dcdf01d9496d8277ee1c9576.jpg" class="img-fluid" alt="Gallery photo 9" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://i.pinimg.com/1200x/93/5b/95/935b95e4dcdf01d9496d8277ee1c9576.jpg"
+                  class="img-fluid"
+                  alt="Gallery photo 9"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="assets/images/vsp8.jpeg" class="img-fluid" alt="Gallery photo 10" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="assets/images/vsp8.jpeg"
+                  class="img-fluid"
+                  alt="Gallery photo 10"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://pbs.twimg.com/media/GCHN6QcXcAEb_zh?format=jpg&name=large" class="img-fluid" alt="Gallery photo 11" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://pbs.twimg.com/media/GCHN6QcXcAEb_zh?format=jpg&name=large"
+                  class="img-fluid"
+                  alt="Gallery photo 11"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://pbs.twimg.com/media/GCHN51IWIAA2Oi3?format=jpg&name=medium" class="img-fluid" alt="Gallery photo 12" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://pbs.twimg.com/media/GCHN51IWIAA2Oi3?format=jpg&name=medium"
+                  class="img-fluid"
+                  alt="Gallery photo 12"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://pbs.twimg.com/media/GCHOYKKWEAALch8?format=jpg&name=medium" class="img-fluid" alt="Gallery photo 13" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://pbs.twimg.com/media/GCHOYKKWEAALch8?format=jpg&name=medium"
+                  class="img-fluid"
+                  alt="Gallery photo 13"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://pbs.twimg.com/media/GCHMSRuWEAAC8VV?format=jpg&name=medium" class="img-fluid" alt="Gallery photo 14" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://pbs.twimg.com/media/GCHMSRuWEAAC8VV?format=jpg&name=medium"
+                  class="img-fluid"
+                  alt="Gallery photo 14"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="assets/images/vsp12.jpeg" class="img-fluid" alt="Gallery photo 15" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="assets/images/vsp12.jpeg"
+                  class="img-fluid"
+                  alt="Gallery photo 15"
+                />
               </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <div class="vsp-gallery-card" onclick="openGalleryModal(this.querySelector('img').src)">
-                <img src="https://pbs.twimg.com/media/HHUAM86aEAEKcrh?format=jpg&name=large" class="img-fluid" alt="Gallery photo 16" />
+              <div
+                class="vsp-gallery-card"
+                onclick="openGalleryModal(this.querySelector('img').src)"
+              >
+                <img
+                  src="https://pbs.twimg.com/media/HHUAM86aEAEKcrh?format=jpg&name=large"
+                  class="img-fluid"
+                  alt="Gallery photo 16"
+                />
               </div>
             </div>
           </div>
 
           <!-- Gallery Lightbox Modal -->
-          <div id="vspGalleryModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-              <div class="modal-content" style="background: rgba(15, 23, 42, 0.96); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; backdrop-filter: blur(12px);">
-                <div class="modal-header" style="border-bottom: none; padding: 15px 20px 0;">
-                  <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 0.9; font-size: 2rem; outline: none;">
+          <div
+            id="vspGalleryModal"
+            class="modal fade"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+          >
+            <div
+              class="modal-dialog modal-dialog-centered modal-lg"
+              role="document"
+            >
+              <div
+                class="modal-content"
+                style="
+                  background: rgba(15, 23, 42, 0.96);
+                  border: 1px solid rgba(255, 255, 255, 0.15);
+                  border-radius: 16px;
+                  backdrop-filter: blur(12px);
+                "
+              >
+                <div
+                  class="modal-header"
+                  style="border-bottom: none; padding: 15px 20px 0"
+                >
+                  <button
+                    type="button"
+                    class="close text-white"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    style="opacity: 0.9; font-size: 2rem; outline: none"
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body text-center p-3">
-                  <img id="vspGalleryModalImg" src="" class="img-fluid" style="max-height: 80vh; border-radius: 10px; object-fit: contain;" alt="Enlarged gallery view" />
+                  <img
+                    id="vspGalleryModalImg"
+                    src=""
+                    class="img-fluid"
+                    style="
+                      max-height: 80vh;
+                      border-radius: 10px;
+                      object-fit: contain;
+                    "
+                    alt="Enlarged gallery view"
+                  />
                 </div>
               </div>
             </div>
           </div>
           <script>
             function openGalleryModal(src) {
-              var modalImg = document.getElementById('vspGalleryModalImg');
+              var modalImg = document.getElementById("vspGalleryModalImg");
               if (modalImg) {
                 modalImg.src = src;
-                if (window.$ && typeof window.$.fn.modal === 'function') {
-                  $('#vspGalleryModal').modal('show');
+                if (window.$ && typeof window.$.fn.modal === "function") {
+                  $("#vspGalleryModal").modal("show");
                 }
               }
             }
@@ -1240,12 +1394,28 @@
     <div class="vspbot">
       <header>
         <div class="d-flex align-items-center">
-          <button type="button" class="btn btn-sm text-white p-0 mr-2 vspbot-close-btn" aria-label="Back" onclick="document.body.classList.remove('show-vspbot')" style="background: none; border: none; font-size: 1.1rem; color: #00d679 !important; cursor: pointer;">
+          <button
+            type="button"
+            class="btn btn-sm text-white p-0 mr-2 vspbot-close-btn"
+            aria-label="Back"
+            onclick="document.body.classList.remove('show-vspbot')"
+            style="
+              background: none;
+              border: none;
+              font-size: 1.1rem;
+              color: #00d679 !important;
+              cursor: pointer;
+            "
+          >
             <i class="fa-solid fa-arrow-left"></i>
           </button>
-          <h2 style="margin: 0; font-size: 1.1rem;">Chat with VSP Bot</h2>
+          <h2 style="margin: 0; font-size: 1.1rem">Chat with VSP Bot</h2>
         </div>
-        <span class="fa-solid fa-xmark" onclick="document.body.classList.remove('show-vspbot')" style="cursor: pointer;"></span>
+        <span
+          class="fa-solid fa-xmark"
+          onclick="document.body.classList.remove('show-vspbot')"
+          style="cursor: pointer"
+        ></span>
       </header>
       <ul class="chatbox" id="vspbot-chatbox">
         <li class="chat incoming">

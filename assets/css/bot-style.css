@@ -868,36 +868,102 @@ button#vspbot-delete-model.vspbot-delete-btn:disabled,
   color: #00d679;
 }
 
-/* Mobile Responsiveness */
+/* Mobile Responsiveness & Keyboard Handling */
 @media (max-width: 768px) {
-  .vspbot-page-wrap {
-    padding: 0;
-    min-height: calc(100vh - 60px);
-    min-height: calc(100dvh - 60px);
+  body.vspbot-full-page {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: var(--vsp-visual-height, 100dvh) !important;
+    max-height: var(--vsp-visual-height, 100dvh) !important;
+    min-height: 0 !important;
+    padding-top: 60px !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
   }
+
+  .vspbot-page-wrap {
+    padding: 0 !important;
+    width: 100% !important;
+    height: calc(var(--vsp-visual-height, 100dvh) - 60px) !important;
+    min-height: 0 !important;
+    max-height: calc(var(--vsp-visual-height, 100dvh) - 60px) !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
   .vspbot.vspbot-expanded {
     width: 100% !important;
-    height: calc(100vh - 60px) !important;
-    height: calc(100dvh - 60px) !important;
-    max-height: none !important;
+    height: 100% !important;
+    max-height: 100% !important;
     min-height: 0 !important;
     border-radius: 0 !important;
     border: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
   }
+
+  .vspbot.vspbot-expanded .chatbox {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    padding: 10px 14px 10px !important;
+  }
+
+  .vspbot-expanded .chat-input,
+  .vspbot.vspbot-expanded .chat-input {
+    position: relative !important;
+    bottom: 0 !important;
+    flex-shrink: 0 !important;
+    padding: 8px 12px !important;
+    background: #0f141d !important;
+    border-top: 1px solid #1a2230 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .chat-input textarea,
+  .vspbot.vspbot-expanded .chat-input textarea {
+    font-size: 16px !important; /* Critical: prevents iOS Safari auto-zoom on input focus */
+    line-height: 1.4 !important;
+    height: 38px !important;
+  }
+
   .vspbot-telemetry-tray {
     border-radius: 0 !important;
-    padding: 9px 14px;
+    padding: 8px 12px !important;
+    flex-shrink: 0 !important;
   }
+
   .chat {
     max-width: 90% !important;
   }
+
   .vspbot-prompt-chips-wrap {
     margin-left: 0;
   }
+
   .vspbot-status-pill {
     max-width: 100%;
     order: 3;
     width: 100%;
     justify-content: center;
+  }
+
+  /* When virtual keyboard is open, maximize chat space */
+  body.keyboard-open .vspbot-telemetry-tray,
+  body.keyboard-open .chat-input-footer-note {
+    display: none !important;
+  }
+
+  body.keyboard-open .vspbot-prompt-chips-wrap {
+    display: none !important;
   }
 }

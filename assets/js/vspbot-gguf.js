@@ -557,3 +557,91 @@ document.querySelectorAll(".vspbot-chip").forEach((chip) => {
     }
   });
 });
+
+// Mobile Virtual Keyboard & Visual Viewport Synchronization
+function initMobileViewportSync() {
+  const isMobile = () => window.innerWidth <= 768;
+
+  const updateViewport = () => {
+    if (!isMobile()) {
+      document.documentElement.style.removeProperty("--vsp-visual-height");
+      document.body.classList.remove("keyboard-open");
+      return;
+    }
+
+    const vv = window.visualViewport;
+    const visualHeight = vv ? Math.round(vv.height) : window.innerHeight;
+    document.documentElement.style.setProperty("--vsp-visual-height", `${visualHeight}px`);
+
+    const activeEl = document.activeElement;
+    const isInputActive =
+      activeEl &&
+      (activeEl === inputEl ||
+        activeEl.tagName === "TEXTAREA" ||
+        activeEl.tagName === "INPUT");
+
+    const isKeyboardVisible =
+      isInputActive ||
+      (window.screen && window.screen.availHeight - visualHeight > 140);
+
+    if (isKeyboardVisible && isInputActive) {
+      document.body.classList.add("keyboard-open");
+      if (chatbox) {
+        requestAnimationFrame(() => {
+          chatbox.scrollTop = chatbox.scrollHeight;
+        });
+      }
+    } else if (!isInputActive) {
+      document.body.classList.remove("keyboard-open");
+    }
+  };
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", updateViewport);
+    window.visualViewport.addEventListener("scroll", () => {
+      if (
+        document.body.classList.contains("keyboard-open") ||
+        document.body.classList.contains("vspbot-full-page")
+      ) {
+        window.scrollTo(0, 0);
+      }
+      updateViewport();
+    });
+  } else {
+    window.addEventListener("resize", updateViewport);
+  }
+
+  if (inputEl) {
+    inputEl.addEventListener("focus", () => {
+      if (isMobile()) {
+        document.body.classList.add("keyboard-open");
+        window.scrollTo(0, 0);
+        setTimeout(() => {
+          updateViewport();
+          if (chatbox) chatbox.scrollTop = chatbox.scrollHeight;
+        }, 100);
+      }
+    });
+
+    inputEl.addEventListener("blur", () => {
+      if (isMobile()) {
+        setTimeout(() => {
+          const activeEl = document.activeElement;
+          if (
+            !activeEl ||
+            (activeEl !== inputEl && activeEl.tagName !== "TEXTAREA")
+          ) {
+            document.body.classList.remove("keyboard-open");
+            updateViewport();
+            window.scrollTo(0, 0);
+          }
+        }, 100);
+      }
+    });
+  }
+
+  // Initial calculation
+  updateViewport();
+}
+
+initMobileViewportSync();
