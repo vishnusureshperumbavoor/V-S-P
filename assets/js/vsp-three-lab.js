@@ -57,6 +57,11 @@
       name: 'ORBITAL VSP GYROSCOPE & RADAR CORE',
       category: 'DESIGN 04 // ROTATIONAL GIMBAL',
       cameraZ: 115,
+    },
+    water: {
+      name: 'AQUATIC VSP FLUID RIPPLE & CAUSTICS MATRIX',
+      category: 'DESIGN 05 // WATER & WAVE DYNAMICS',
+      cameraZ: 120,
     }
   };
 
@@ -694,6 +699,158 @@
   }
 
   // ==========================================================================
+  // 6b. Design 5: AQUATIC VSP FLUID RIPPLE & CAUSTICS MATRIX
+  // 3D Liquid mesh with Gerstner ocean waves, water droplets & buoyant VSP text
+  // ==========================================================================
+  function createWaterDesign() {
+    const group = new THREE.Group();
+    const theme = themes[activeThemeIndex];
+
+    // 1. Water Fluid Plane
+    const width = 180;
+    const height = 180;
+    const segs = 70;
+    const waterGeo = new THREE.PlaneGeometry(width, height, segs, segs);
+    const posAttr = waterGeo.attributes.position;
+    const originalZ = new Float32Array(posAttr.count);
+    for (let i = 0; i < posAttr.count; i++) {
+      originalZ[i] = posAttr.getZ(i);
+    }
+
+    const waterMat = new THREE.MeshStandardMaterial({
+      color: 0x051b2c,
+      emissive: theme.primary,
+      emissiveIntensity: 0.18,
+      roughness: 0.12,
+      metalness: 0.85,
+      flatShading: true,
+      side: THREE.DoubleSide
+    });
+    const waterMesh = new THREE.Mesh(waterGeo, waterMat);
+    waterMesh.rotation.x = -Math.PI / 2.3;
+    waterMesh.position.y = -10;
+    group.add(waterMesh);
+
+    // Glowing wireframe caustics overlay
+    const causticsMat = new THREE.MeshBasicMaterial({
+      color: theme.secondary,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.28
+    });
+    const causticsMesh = new THREE.Mesh(waterGeo, causticsMat);
+    causticsMesh.rotation.x = -Math.PI / 2.3;
+    causticsMesh.position.y = -9.8;
+    group.add(causticsMesh);
+
+    // 2. Buoyant Glowing VSP Typography Monogram
+    const vspTextGroup = new THREE.Group();
+
+    function buildWaterTube(points, color = theme.secondary) {
+      const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
+      const tubeGeo = new THREE.TubeGeometry(curve, 48, 2.2, 12, false);
+      const tubeMat = new THREE.MeshStandardMaterial({
+        color: 0x002233,
+        emissive: color,
+        emissiveIntensity: 0.7,
+        roughness: 0.1,
+        metalness: 0.95
+      });
+      return new THREE.Mesh(tubeGeo, tubeMat);
+    }
+
+    const letterV = buildWaterTube(V_PATH, theme.primary);
+    const letterS = buildWaterTube(S_PATH, theme.secondary);
+    const letterP1 = buildWaterTube(P_SPINE, theme.primary);
+    const letterP2 = buildWaterTube(P_LOOP, theme.primary);
+
+    vspTextGroup.add(letterV);
+    vspTextGroup.add(letterS);
+    vspTextGroup.add(letterP1);
+    vspTextGroup.add(letterP2);
+    vspTextGroup.position.set(0, 4, 10);
+    group.add(vspTextGroup);
+
+    // 3. Dynamic Water Droplets / Splash Particles
+    const dropGeo = new THREE.SphereGeometry(0.8, 8, 8);
+    const dropMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      emissive: theme.secondary,
+      emissiveIntensity: 0.6,
+      roughness: 0.1,
+      metalness: 0.9
+    });
+    const drops = [];
+    const dropCount = 45;
+    for (let i = 0; i < dropCount; i++) {
+      const dropMesh = new THREE.Mesh(dropGeo, dropMat);
+      dropMesh.position.set(
+        (Math.random() - 0.5) * 90,
+        Math.random() * 25 - 5,
+        (Math.random() - 0.5) * 40
+      );
+      group.add(dropMesh);
+      drops.push({
+        mesh: dropMesh,
+        speedY: 0.15 + Math.random() * 0.25,
+        baseY: -8,
+        maxY: 12 + Math.random() * 15,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+
+    // Ripple state
+    let rippleCenter = new THREE.Vector2(0, 0);
+
+    group.userData = {
+      animate: function (time) {
+        // Liquid Wave equation across grid vertices
+        const pos = waterGeo.attributes.position;
+        const count = pos.count;
+
+        // Interaction coordinates
+        if (mouse.x > -500) {
+          rippleCenter.x += (mouse.x * 40 - rippleCenter.x) * 0.05;
+          rippleCenter.y += (mouse.y * 40 - rippleCenter.y) * 0.05;
+        }
+
+        for (let i = 0; i < count; i++) {
+          const vx = pos.getX(i);
+          const vy = pos.getY(i);
+
+          // Rolling ocean swells + interactive ripple rings
+          const wave1 = Math.sin(vx * 0.08 + time * 2.2) * Math.cos(vy * 0.08 + time * 1.8) * 3.6;
+          const distFromMouse = Math.hypot(vx - rippleCenter.x, vy - rippleCenter.y);
+          const ripple = Math.sin(distFromMouse * 0.2 - time * 3.5) * Math.max(0, 2.5 - distFromMouse * 0.035);
+
+          pos.setZ(i, wave1 + ripple);
+        }
+        waterGeo.computeVertexNormals();
+        pos.needsUpdate = true;
+
+        // Bobbing buoyant VSP letters with wave sway
+        const bob = Math.sin(time * 2.2) * 2.8;
+        const pitch = Math.sin(time * 1.5) * 0.08;
+        const roll = Math.cos(time * 1.8) * 0.06;
+        vspTextGroup.position.y = 4 + bob;
+        vspTextGroup.rotation.x = pitch;
+        vspTextGroup.rotation.z = roll;
+
+        // Animate splashing water droplets
+        drops.forEach((d) => {
+          d.mesh.position.y += d.speedY;
+          if (d.mesh.position.y > d.maxY) {
+            d.mesh.position.y = d.baseY;
+          }
+          d.mesh.position.x += Math.sin(time * 3 + d.phase) * 0.08;
+        });
+      }
+    };
+
+    return group;
+  }
+
+  // ==========================================================================
   // 7. Design Switcher & Cleanup Engine
   // ==========================================================================
   function loadDesign(designKey) {
@@ -728,6 +885,9 @@
         break;
       case 'radar':
         newDesignGroup = createRadarDesign();
+        break;
+      case 'water':
+        newDesignGroup = createWaterDesign();
         break;
       default:
         newDesignGroup = createMatrixDesign();
