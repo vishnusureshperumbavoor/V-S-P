@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Autonomous Hacker News & Subreddit Publishing for AI Agents - VSP</title>
+    <link
+      href="//fonts.googleapis.com/css?family=Nunito:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/style-starter.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="w3l-header" id="home">
+        <div class="container">
+          <nav class="navbar navbar-expand-lg navbar-dark pl-0 pr-0">
+            <a class="navbar-brand m-0" href="../index.html"
+              ><span class="fa fa-gamepad"></span> VSP
+            </a>
+            <span class="navbar-toggler-icon fa fa-bars"></span>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0" href="../index.html">Home</a>
+                  <a class="nav-link pl-0 pr-0" href="../blogs.html">Blogs</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <section class="w3l-about-bottom py-5" id="about">
+      <div class="container py-lg-5 py-md-3">
+        <div class="row middle-grids">
+          <div class="col-lg-12 advantage-grid-info">
+            <div class="advantage_left">
+              <h1 class="font-weight" style="font-size: 2.8rem">
+                Architecting Autonomous Hacker News & Subreddit Publishing for AI Agents
+              </h1>
+              <p class="mt-2 mb-4" style="color: #7df9ff">
+                <b>Topic:</b> Agentic DevRel & Content Distribution | <b>Target Platforms:</b> Hacker News & Reddit | <b>Tooling:</b> vspagent, Antigravity, Claude Code
+              </p>
+
+              <h2>1. The "Last Mile" Bottleneck in AI Pair Programming</h2>
+              <p class="mt-2">
+                Modern AI coding agents—such as Google DeepMind's Antigravity, Anthropic's Claude Code, and OpenAI's Codex—can inspect codebases, write unit tests, debug runtime issues, and even train models on remote GPUs via MCP (Model Context Protocol).
+              </p>
+              <p class="mt-2">
+                However, once an agent achieves a breakthrough (such as reverse-engineering a complex 3D medical pipeline and jumping 4,900+ ranks on a competitive leaderboard), <b>the workflow grinds to a halt at the sharing phase</b>. Developers are forced back into manual friction: opening browser tabs, switching formatting between Markdown and rich text, taking screenshots, and copy-pasting technical summaries into developer communities.
+              </p>
+              <p class="mt-2">
+                We designed an implementation blueprint to eliminate this friction entirely, enabling an agent to write, package, and publish technical case studies directly to <b>Hacker News</b> and targeted <b>Subreddits</b> without manual copy-pasting.
+              </p>
+
+              <h2 class="mt-4">2. Hacker News ("Show HN"): The Link-and-Anchor Model</h2>
+              <p class="mt-2">
+                Unlike traditional blogging platforms (such as Medium or WordPress), Hacker News (<code>news.ycombinator.com</code>) does not host long-form formatted articles. It functions as a minimalist link-aggregation and discussion forum.
+              </p>
+              <p class="mt-2">
+                <b>The Implementation Strategy:</b>
+              </p>
+              <ul>
+                <li><b>Step 1 — Autonomous Static Asset Generation:</b> The agent compiles its working findings into a clean, lightning-fast static HTML page (hosted via GitHub Pages or a personal site) containing architecture diagrams, benchmarks, and reproducible code links.</li>
+                <li><b>Step 2 — Headless Browser Dispatch:</b> Because Hacker News deliberately provides no public write API to prevent spam, automated posting relies on authenticated browser sessions (using Antigravity's <code>/browser</code> engine or Playwright with exported session cookies). The agent navigates to <code>/submit</code>, enters the "Show HN" title and the target URL, and executes the submission.</li>
+                <li><b>Step 3 — The Author's "First Comment" Blueprint:</b> A successful Show HN requires an immediate explanatory comment from the author detailing the backstory, technical architecture, and motivation. The agent autonomously drafts and posts this comment within 60 seconds of submission.</li>
+              </ul>
+
+              <h2 class="mt-4">3. Subreddit Distribution: Native Long-Form Markdown</h2>
+              <p class="mt-2">
+                Reddit presents the opposite architectural challenge: subreddits like <code>r/MachineLearning</code>, <code>r/LocalLLaMA</code>, and <code>r/ClaudeAI</code> thrive on comprehensive, self-contained Markdown posts directly inside the platform rather than bare external link redirects.
+              </p>
+              <p class="mt-2">
+                <b>Our Dual-Mode Architecture:</b>
+              </p>
+              <h3 class="mt-3">Mode A: Headless API Publishing (PRAW / OAuth2)</h3>
+              <p class="mt-2">
+                When Reddit API credentials (<code>client_id</code>, <code>client_secret</code>, <code>refresh_token</code>) are available in the workspace environment, the agent invokes a streamlined Python backend via <code>praw</code>:
+                <br />
+                - Enforces strict subreddit submission rules (e.g., adding mandatory <code>[P]</code> Project tags for <code>r/MachineLearning</code>).
+                <br />
+                - Converts local media links into Reddit-compatible asset embeds.
+                <br />
+                - Dispatches the complete Markdown payload with zero UI overhead.
+              </p>
+              <h3 class="mt-3">Mode B: In-Browser Agentic Submission (Zero API Key Setup)</h3>
+              <p class="mt-2">
+                If the user has not configured Reddit API keys, the agent utilizes existing browser credentials:
+                <br />
+                - Opens <code>reddit.com/r/{target_sub}/submit</code> in the connected browser instance.
+                <br />
+                - Automatically toggles the editor to <b>Markdown Mode</b> to prevent rich-text escaping bugs.
+                <br />
+                - Populates the title, body, and appropriate post flair before submitting.
+              </p>
+
+              <h2 class="mt-4">4. Integrating into the `vspagent` Ecosystem</h2>
+              <p class="mt-2">
+                We are incorporating this workflow directly into the <code>vspagent</code> command-line suite as a native publishing command:
+              </p>
+              <p class="mt-2">
+                <code>vspagent publish --source ./V-S-P/blogs/rsna-knee.html --targets hn,reddit:r/MachineLearning</code>
+              </p>
+              <p class="mt-2">
+                Under the hood, <code>vspagent</code> handles:
+                <br />
+                1. <b>Format Translation:</b> Translating static HTML articles into clean Markdown and structured Hacker News comments.
+                <br />
+                2. <b>Asset Validation:</b> Ensuring image links and code repositories referenced in the post are publicly accessible.
+                <br />
+                3. <b>Trajectory Extraction:</b> Automatically synthesizing key metrics (e.g., from 0.515 to 0.958) straight from agent task logs.
+              </p>
+
+              <h2 class="mt-4">5. Human-in-the-Loop Governance: "Draft First, Review, Then Push"</h2>
+              <p class="mt-2">
+                A critical principle in autonomous publishing is safety and user control. Fully autonomous posting without human verification risks publishing unfinished drafts or unreviewed code.
+              </p>
+              <p class="mt-2">
+                Our protocol enforces a strict two-phase gate:
+                <br />
+                - <b>Phase 1 (Local Draft):</b> The agent writes all articles, updates site navigation, and stages local git commits without pushing to remote or submitting to external platforms.
+                <br />
+                - <b>Phase 2 (User Sign-Off):</b> Only upon explicit user confirmation does the agent trigger remote Git pushes, Hacker News submissions, or Subreddit dispatches.
+              </p>
+              <p class="mt-2">
+                By bridging autonomous code execution on high-end GPUs with automated, human-reviewed community distribution, we close the loop from idea to implementation to public technical impact.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <section class="w3l-footers-1">
+        <div class="footer py-3">
+          <div class="container">
+            <div class="footer-content">
+              <div class="row">
+                <div class="col-lg-8 footer-left">
+                  <p class="m-0">
+                    &copy; 2025 All Rights Reserved | Design by VSP
+                  </p>
+                </div>
+                <div
+                  class="col-lg-4 footer-right text-lg-right text-center mt-lg-0 mt-3"
+                >
+                  <ul class="social m-0 p-0">
+                    <li>
+                      <a href="https://github.com/vishnusureshperumbavoor"
+                        ><span class="fa fa-github"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.linkedin.com/in/vishnu-suresh-perumbavoor-9a7a8223a/"
+                        ><span class="fa fa-linkedin"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a href="https://t.me/vishnusureshperumbavoor"
+                        ><span class="fa fa-telegram"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.instagram.com/vishnusureshperumbavoor/"
+                        ><span class="fa fa-instagram"></span
+                      ></a>
+                    </li>
+                    <li>
+                      <a href="http://www.twitter.com/vspeeeeee"
+                        ><span class="fa fa-twitter"></span
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </footer>
+  </body>
+</html>
+<style>
+  body {
+    background-color: #000;
+    color: #7cfc00;
+  }
+  ul li a {
+    color: #7df9ff;
+  }
+  h1, h2, h3, h4, h5 {
+    color: #fff;
+  }
+  code {
+    background-color: #1a1a1a;
+    color: #00ffcc;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+</style>
