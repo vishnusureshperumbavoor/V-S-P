@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta property="og:title" content="VSP 3D Lab | Three.js Visuals & Kinetic Typography" />
+  <meta property="og:description" content="Interactive 3D laboratory and kinetic typography animations of VSP powered by Three.js and WebGL." />
+  <title>VSP 3D Lab | Interactive Three.js Typography & Visuals</title>
+  <link rel="icon" href="./assets/images/vsp3.jpeg" type="image/png" />
+
+  <!-- Google fonts -->
+  <link href="//fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- Base Template CSS -->
+  <link rel="stylesheet" href="assets/css/style-starter.css" />
+  <!-- Dedicated 3D Lab CSS -->
+  <link rel="stylesheet" href="assets/css/vsp-lab.css" />
+</head>
+
+<body class="vsp-lab-page">
+  <!-- Shared Navigation Topbar Header -->
+  <header id="vsp-header"></header>
+
+  <!-- Top Corner Design Name HUD (Small text indicator requested) -->
+  <aside class="vsp-design-hud" id="vsp-design-hud" aria-live="polite">
+    <div class="vsp-hud-corner-bracket tl"></div>
+    <div class="vsp-hud-corner-bracket br"></div>
+    <div class="vsp-hud-status">
+      <span class="vsp-hud-dot"></span>
+      <span class="vsp-hud-category">DESIGN 01 // WIREFRAME HUD</span>
+    </div>
+    <h1 class="vsp-hud-title" id="vsp-design-name">CYBERNETIC 3D VSP HOLOGRAPHIC MATRIX</h1>
+    <div class="vsp-hud-specs">
+      <span><i class="fa-solid fa-cube"></i> THREE.JS R128</span>
+      <span>•</span>
+      <span>WEBGL2 SHADERS</span>
+      <span>•</span>
+      <span>60 FPS</span>
+    </div>
+  </aside>
+
+  <!-- Top Right Telemetry HUD -->
+  <aside class="vsp-telemetry-hud" aria-hidden="true">
+    <div class="vsp-telemetry-row"><span>STATUS:</span> <strong>ONLINE // 3D</strong></div>
+    <div class="vsp-telemetry-row"><span>FPS:</span> <strong id="vsp-hud-fps">60</strong></div>
+    <div class="vsp-telemetry-row"><span>ELEMENTS:</span> <strong id="vsp-hud-polys">--</strong></div>
+  </aside>
+
+  <!-- Three.js Canvas Viewport -->
+  <main id="vsp-three-viewport" aria-label="Interactive 3D Three.js Canvas"></main>
+
+  <!-- Cyber Vignette Overlay -->
+  <div class="vsp-cyber-vignette" aria-hidden="true"></div>
+
+  <!-- Interactive Controls & Switcher Dock -->
+  <nav class="vsp-lab-controls" aria-label="3D Design Controls">
+    <div class="vsp-switcher-bar" role="tablist">
+      <button class="vsp-mode-btn active" data-design="matrix" type="button" role="tab" aria-selected="true">
+        <i class="fa-solid fa-cube"></i> 01 // Cyber Matrix
+      </button>
+      <button class="vsp-mode-btn" data-design="swarm" type="button" role="tab" aria-selected="false">
+        <i class="fa-solid fa-atom"></i> 02 // Quantum Swarm
+      </button>
+      <button class="vsp-mode-btn" data-design="synaptic" type="button" role="tab" aria-selected="false">
+        <i class="fa-solid fa-network-wired"></i> 03 // Synaptic Lattice
+      </button>
+      <button class="vsp-mode-btn" data-design="radar" type="button" role="tab" aria-selected="false">
+        <i class="fa-solid fa-crosshairs"></i> 04 // Orbital Radar
+      </button>
+    </div>
+
+    <div class="vsp-util-bar">
+      <button id="vsp-toggle-spin" class="vsp-util-btn active" type="button" aria-label="Toggle Auto-Spin">
+        <i class="fa-solid fa-rotate"></i> Auto-Spin: ON
+      </button>
+      <button id="vsp-toggle-theme" class="vsp-util-btn" type="button" aria-label="Change Color Theme">
+        <i class="fa-solid fa-palette"></i> Theme: EMERALD
+      </button>
+      <span class="vsp-controls-hint">
+        <i class="fa-solid fa-arrows-up-down-left-right"></i> Drag to rotate • Scroll to zoom
+      </span>
+    </div>
+  </nav>
+
+  <!-- Navigation / Footer Component Engine -->
+  <script src="assets/js/nav-footer.js"></script>
+
+  <!-- Three.js & Controls -->
+  <script src="assets/js/three.min.js"></script>
+  <script src="assets/js/OrbitControls.js"></script>
+
+  <!-- VSP 3D Laboratory Engine -->
+  <script src="assets/js/vsp-three-lab.js"></script>
+</body>
+</html>

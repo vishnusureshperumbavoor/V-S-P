@@ -31,6 +31,9 @@
     if (path.includes('bot')) {
       return 'bot';
     }
+    if (path.includes('vsp') || path.includes('lab')) {
+      return 'vsp';
+    }
     return 'home';
   }
 
@@ -44,6 +47,7 @@
     const homeActive = active === 'home' ? 'active' : '';
     const botActive = active === 'bot' ? 'active' : '';
     const blogActive = active === 'blogs' ? 'active' : '';
+    const vspActive = active === 'vsp' ? 'active' : '';
 
     headerContainer.innerHTML = `
       <div class="w3l-header fixed-top" id="home">
@@ -78,6 +82,11 @@
                 <li class="nav-item mr-lg-4">
                   <a class="nav-link pl-0 pr-0 ${blogActive}" href="${root}blogs.html" title="Blogs" aria-label="Blogs">
                     <span class="fa-solid fa-newspaper"></span>
+                  </a>
+                </li>
+                <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0 ${vspActive}" href="${root}vsp.html" title="VSP 3D Lab" aria-label="VSP 3D Lab">
+                    <span class="fa-solid fa-cube"></span>
                   </a>
                 </li>
               </ul>
