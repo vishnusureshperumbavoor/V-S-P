@@ -1,0 +1,40 @@
+<!-- Common Header / Topbar Component -->
+<div class="w3l-header fixed-top" id="home">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark pl-0 pr-0">
+      <a class="navbar-brand m-0" href="{{ROOT}}index.html">
+        <span class="fa fa-gamepad"></span> VSP
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation menu"
+      >
+        <span class="navbar-toggler-icon fa fa-bars"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item mr-lg-4">
+            <a class="nav-link pl-0 pr-0 {{HOME_ACTIVE}}" href="{{ROOT}}index.html" title="Home" aria-label="Home">
+              <span class="fa-solid fa-house"></span>
+            </a>
+          </li>
+          <li class="nav-item mr-lg-4">
+            <a class="nav-link pl-0 pr-0 {{BOT_ACTIVE}}" href="{{ROOT}}bot/" title="Bot" aria-label="Bot">
+              <span class="fa-solid fa-robot"></span>
+            </a>
+          </li>
+          <li class="nav-item mr-lg-4">
+            <a class="nav-link pl-0 pr-0 {{BLOG_ACTIVE}}" href="{{ROOT}}blogs.html" title="Blogs" aria-label="Blogs">
+              <span class="fa-solid fa-newspaper"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>

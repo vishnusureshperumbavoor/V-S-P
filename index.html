@@ -187,66 +187,7 @@
     <!-- Interactive Neural Constellation / Synaptic Particle Mesh -->
     <canvas id="neural-mesh"></canvas>
     <!-- header -->
-    <header>
-      <div class="w3l-header fixed-top" id="home">
-        <div class="container">
-          <nav class="navbar navbar-expand-lg navbar-dark pl-0 pr-0">
-            <a class="navbar-brand m-0" href="index.html"
-              ><span class="fa fa-gamepad"></span> VSP
-            </a>
-            <!-- if logo is image enable this   
-            <a class="navbar-brand" href="#index.html">
-                <img src="image-path" alt="Your logo" title="Your logo" style="height:35px;" />
-            </a> -->
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation menu"
-            >
-              <span class="navbar-toggler-icon fa fa-bars"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="bot/" title="Bot" aria-label="Bot">
-                    <span class="fa-solid fa-robot"></span>
-                  </a>
-                </li>
-                <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#about" title="About" aria-label="About">
-                    <span class="fa-solid fa-user"></span>
-                  </a>
-                </li>
-                <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#services" title="Projects" aria-label="Projects">
-                    <span class="fa-solid fa-laptop-code"></span>
-                  </a>
-                </li>
-                <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#events" title="Events" aria-label="Events">
-                    <span class="fa-solid fa-calendar-days"></span>
-                  </a>
-                </li>
-                <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#gallery-vsp" title="Gallery" aria-label="Gallery">
-                    <span class="fa-solid fa-images"></span>
-                  </a>
-                </li>
-                <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="blogs.html" title="Blogs" aria-label="Blogs">
-                    <span class="fa-solid fa-newspaper"></span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <header id="vsp-header"></header>
     <!-- //header -->
     <!--  Main banner section -->
     <section class="w3l-main-banner mt-5">
@@ -1162,71 +1103,7 @@
     </section>
 
     <!-- Footer -->
-    <footer>
-      <section class="w3l-footers-1">
-        <div class="footer py-3">
-          <div class="container">
-            <div class="footer-content">
-              <div class="row">
-                <div class="col-lg-8 footer-left">
-                  <p class="m-0">
-                    &copy; 2026 All Rights Reserved | Vishnu Suresh Perumbavoor
-                    (VSP)
-                  </p>
-                </div>
-                <div
-                  class="col-lg-4 footer-right text-lg-right text-center mt-lg-0 mt-3"
-                >
-                  <ul class="social m-0 p-0">
-                    <li>
-                      <a href="https://github.com/vishnusureshperumbavoor"
-                        ><span class="fa fa-github"></span
-                      ></a>
-                    </li>
-                    <li>
-                      <a
-                        href="https://huggingface.co/vishnusureshperumbavoor"
-                        target="_blank"
-                        ><span style="font-size: 1.2em">🤗</span></a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        href="https://www.linkedin.com/in/vishnu-suresh-perumbavoor-9a7a8223a/"
-                        ><span class="fa fa-linkedin"></span
-                      ></a>
-                    </li>
-                    <!-- <li>
-                      <a href="https://t.me/vishnusureshperumbavoor"
-                        ><span class="fa fa-telegram"></span
-                      ></a>
-                    </li> -->
-                    <li>
-                      <a
-                        href="https://www.instagram.com/vishnusureshperumbavoor/"
-                        ><span class="fa fa-instagram"></span
-                      ></a>
-                    </li>
-                    <li>
-                      <a href="http://www.twitter.com/vspeeeeee"
-                        ><span class="fa fa-twitter"></span
-                      ></a>
-                    </li>
-                    <li>
-                      <a
-                        href="https://www.youtube.com/@vishnusureshperumbavoor/videos"
-                        ><span class="fa fa-youtube-square p-2"></span
-                      ></a>
-                    </li>
-                    <!-- <li><a href="#facebook"><span class="fa fa-facebook"></span></a></li> -->
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </footer>
+    <footer id="vsp-footer"></footer>
     <!-- //Footer -->
 
     <!-- customer service conversational bot -->
@@ -1422,6 +1299,8 @@
     <script src="assets/js/bootstrap.min.js"></script>
     <!--  //bootstrap js -->
 
+    <!-- Common Header & Footer Component -->
+    <script src="assets/js/nav-footer.js"></script>
     <!-- Cyber & Futuristic Effects Engine -->
     <script src="assets/js/cyber-effects.js"></script>
   </body>
