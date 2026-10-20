@@ -251,52 +251,6 @@ body.vsp-lab-page {
   color: var(--vsp-neon-green);
 }
 
-/* Utility action buttons in dock */
-.vsp-util-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.vsp-util-btn {
-  background: rgba(13, 17, 23, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #cbd5e1;
-  padding: 5px 12px;
-  border-radius: 8px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.68rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.vsp-util-btn:hover {
-  border-color: var(--vsp-cyan);
-  color: #ffffff;
-}
-
-.vsp-util-btn.active {
-  border-color: var(--vsp-neon-green);
-  color: var(--vsp-neon-green);
-}
-
-.vsp-controls-hint {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.68rem;
-  color: #64748b;
-  letter-spacing: 0.5px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.vsp-controls-hint i {
-  color: var(--vsp-neon-green);
-}
-
 /* ==========================================================================
    TOP RIGHT QUICK HUD (FPS / Telemetry)
    ========================================================================== */
