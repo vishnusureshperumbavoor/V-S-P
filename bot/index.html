@@ -20,29 +20,13 @@
   <main class="vspbot-page-wrap">
     <div class="vspbot vspbot-expanded">
       
-      <!-- Top HUD Header -->
-      <header class="vspbot-hud-header">
-        <div class="vspbot-brand-group">
-          <div class="vspbot-avatar-badge" aria-hidden="true">
-            <i class="fa-solid fa-robot"></i>
-          </div>
-          <div class="vspbot-title-group">
-            <h2>VSP AI Assistant</h2>
-            <span class="vspbot-subtitle">Local Browser Engine (WASM • GGUF)</span>
-          </div>
-        </div>
-
-        <span id="vspbot-status" style="display: none;" aria-live="polite"></span>
-
-        <div class="vspbot-header-meta">
-          <span class="vspbot-live-pill"><i class="fa-solid fa-bolt"></i> 100% In-Browser</span>
-        </div>
-      </header>
+      <span id="vspbot-status" style="display: none;" aria-live="polite"></span>
 
       <!-- Persistent Model Telemetry & Storage Tray (Always Visible) -->
       <div id="vspbot-progress-wrap" class="vspbot-telemetry-tray">
         <div class="telemetry-meta-row">
           <div class="telemetry-meta-left">
+            <span class="vspbot-live-pill"><i class="fa-solid fa-bolt"></i> 100% In-Browser</span>
             <span class="telemetry-item" id="vspbot-model-size">
               <i class="fa-solid fa-microchip"></i> Model: ~380 MB
             </span>

@@ -59,8 +59,6 @@
             <button
               class="navbar-toggler"
               type="button"
-              data-toggle="collapse"
-              data-target="#navbarNav"
               aria-controls="navbarNav"
               aria-expanded="false"
               aria-label="Toggle navigation menu"
@@ -71,22 +69,26 @@
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item mr-lg-4">
                   <a class="nav-link pl-0 pr-0 ${homeActive}" href="${root}index.html" title="Home" aria-label="Home">
-                    <span class="fa-solid fa-house"></span>
+                    <span class="fa-solid fa-house nav-icon"></span>
+                    <span class="nav-text">Home</span>
                   </a>
                 </li>
                 <li class="nav-item mr-lg-4">
                   <a class="nav-link pl-0 pr-0 ${botActive}" href="${root}bot/" title="Bot" aria-label="Bot">
-                    <span class="fa-solid fa-robot"></span>
+                    <span class="fa-solid fa-robot nav-icon"></span>
+                    <span class="nav-text">Bot</span>
                   </a>
                 </li>
                 <li class="nav-item mr-lg-4">
                   <a class="nav-link pl-0 pr-0 ${blogActive}" href="${root}blogs.html" title="Blogs" aria-label="Blogs">
-                    <span class="fa-solid fa-newspaper"></span>
+                    <span class="fa-solid fa-newspaper nav-icon"></span>
+                    <span class="nav-text">Blogs</span>
                   </a>
                 </li>
                 <li class="nav-item mr-lg-4">
                   <a class="nav-link pl-0 pr-0 ${vspActive}" href="${root}vsp.html" title="VSP 3D Lab" aria-label="VSP 3D Lab">
-                    <span class="fa-solid fa-cube"></span>
+                    <span class="fa-solid fa-cube nav-icon"></span>
+                    <span class="nav-text">3D Lab</span>
                   </a>
                 </li>
               </ul>
@@ -96,12 +98,34 @@
       </div>
     `;
 
-    // Ensure vanilla mobile toggle works even without jQuery/Bootstrap loaded
+    // Resilient vanilla mobile toggle - immune to Bootstrap data-api interference
     const toggler = headerContainer.querySelector('.navbar-toggler');
     const collapseNav = headerContainer.querySelector('#navbarNav');
     if (toggler && collapseNav) {
-      toggler.addEventListener('click', () => {
-        collapseNav.classList.toggle('show');
+      toggler.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = collapseNav.classList.toggle('show');
+        toggler.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        document.body.classList.toggle('noscroll', isOpen);
+      });
+
+      // Close menu when tapping outside header
+      document.addEventListener('click', (e) => {
+        if (collapseNav.classList.contains('show') && !headerContainer.contains(e.target)) {
+          collapseNav.classList.remove('show');
+          toggler.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('noscroll');
+        }
+      });
+
+      // Close menu when tapping any navigation link
+      collapseNav.querySelectorAll('.nav-link').forEach((link) => {
+        link.addEventListener('click', () => {
+          collapseNav.classList.remove('show');
+          toggler.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('noscroll');
+        });
       });
     }
   }

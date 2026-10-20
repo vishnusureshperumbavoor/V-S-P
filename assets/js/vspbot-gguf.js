@@ -432,16 +432,25 @@ async function sendMessage() {
 state.cacheCheck = initializeModelUi();
 
 if (toggler) {
-  toggler.addEventListener("click", () => {
+  const handleToggle = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     bodyElement.classList.toggle("show-vspbot");
-    firstIcon?.classList.toggle("hidden");
-    closeIcon?.classList.toggle("hidden");
-  });
+  };
+  toggler.addEventListener("click", handleToggle);
 }
 
-closeIconHeader?.addEventListener("click", () => {
-  bodyElement.classList.remove("show-vspbot");
-});
+if (closeIconHeader) {
+  closeIconHeader.addEventListener("click", (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    bodyElement.classList.remove("show-vspbot");
+  });
+}
 
 sendBtn?.addEventListener("click", sendMessage);
 

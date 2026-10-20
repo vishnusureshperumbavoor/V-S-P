@@ -9718,20 +9718,113 @@ a.navbar-brand span.fa {
   background-color: none !important; }
 
 @media screen and (max-width: 991px) {
-  .navbar-collapse {
-    background: #1f242ccf;
-    padding: 20px 20px;
-    z-index: 10;
-    height: 100vh;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    -moz-backdrop-filter: blur(2px);
-    transition: .3s ease; }
+  .w3l-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 60px !important;
+    z-index: 100000 !important;
+  }
+
+  .w3l-header .navbar {
+    position: relative !important;
+    height: 60px !important;
+  }
+
+  .w3l-header .navbar-collapse {
+    position: absolute !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: calc(100vh - 60px) !important;
+    max-height: calc(100dvh - 60px) !important;
+    overflow-y: auto !important;
+    background: rgba(10, 14, 22, 0.98) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.9) !important;
+    padding: 16px 20px !important;
+    z-index: 100001 !important;
+    display: none !important;
+    transition: none !important;
+  }
+
+  .w3l-header .navbar-collapse.show {
+    display: block !important;
+  }
+
+  .w3l-header .navbar-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .w3l-header .nav-item {
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .w3l-header .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    padding: 12px 18px !important;
+    font-size: 1.05rem !important;
+    font-weight: 600 !important;
+    color: #e2e8f0 !important;
+    border-radius: 10px !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    touch-action: manipulation;
+  }
+
+  .w3l-header .nav-link:hover,
+  .w3l-header .nav-link:active,
+  .w3l-header .nav-link.active {
+    background: rgba(0, 214, 121, 0.16) !important;
+    border-color: rgba(0, 214, 121, 0.45) !important;
+    color: #00d679 !important;
+  }
+
+  .w3l-header .nav-link span.nav-icon {
+    font-size: 1.2rem !important;
+    width: 26px !important;
+    text-align: center !important;
+    color: #00d679 !important;
+  }
+
+  .w3l-header .nav-link span.nav-text {
+    font-size: 1rem !important;
+    letter-spacing: 0.5px !important;
+    color: inherit !important;
+  }
+
   .navbar-dark .navbar-toggler {
     border-color: var(--primary) !important;
     background: #161a1f;
     padding: 6px 10px;
-    outline: none; } }
+    outline: none;
+    cursor: pointer !important;
+    touch-action: manipulation;
+    z-index: 100002 !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .w3l-header .nav-link span.nav-text {
+    display: none !important;
+  }
+}
 
 @media screen and (max-width: 600px) {
   .navbar {
@@ -10395,66 +10488,79 @@ section.w3l-grid-quote h3 {
     display: inline-block;
 }
 
-/* Add this CSS to show the x icon when show-vspbot class is present */
-.show-vspbot .fa-xmark {
-    display: inline-block;
-}
-
-/* Add this CSS to hide the comment icon when show-vspbot class is present */
-.show-vspbot .vspbot-toggler .fa-robot {
-    display: none;
-}
-
-.show-vspbot .vspbot{
-  transform:scale(1);
-  opacity:1;
-  pointer-events:auto;
-}
-
-.vspbot-toggler{
-  position:fixed;
-  bottom:40px;
-  right:40px;
-  width:60px;
-  height:60px;
+/* VSP Bot Floating Widget Toggler & Container */
+.vspbot-toggler {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 58px;
+  height: 58px;
   background-color: var(--primary);
-  border:none;
-  outline:none;
+  border: none;
+  outline: none;
   display: flex;
   justify-content: center;
-  border-radius:50%;
+  border-radius: 50%;
   align-items: center;
-  /* box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1), */
-              /* 0 32px 64px -48px rgba(0, 0, 0, 0.1); */
-  cursor:pointer;
-  /* transition: all 0.3s ease-in-out; */
-  /* z-index: 1000; */
+  cursor: pointer !important;
+  z-index: 100005 !important;
+  box-shadow: 0 4px 20px rgba(0, 214, 121, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.vspbot-toggler span{
-  position:absolute;
+.vspbot-toggler:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 24px rgba(0, 214, 121, 0.55);
 }
 
-/* .vspbot-toggler span:first-child,
-.vspbot-toggler span:last-child{
-  opacity:0;
-} */
-
-.vspbot-toggler span:last-child{
-  opacity:1;
+.vspbot-toggler span {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.35rem;
+  color: #06080d;
 }
 
-.vspbot {
-  position:fixed;
-  bottom:110px;
-  right:40px;
-  width:420px;
+.vspbot-toggler .fa-xmark {
+  display: none !important;
+}
+
+.vspbot-toggler .fa-robot {
+  display: block !important;
+}
+
+.show-vspbot .vspbot-toggler .fa-robot {
+  display: none !important;
+}
+
+.show-vspbot .vspbot-toggler .fa-xmark {
+  display: block !important;
+}
+
+.vspbot:not(.vspbot-expanded) {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  width: 420px;
+  max-width: calc(100vw - 32px);
   background-color: #101216;
   border: 1px solid #1e2633;
-  overflow:hidden;
-  border-radius:15px;
-  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.5),
-              0 32px 64px -48px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  transform: scale(0.65);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  z-index: 100004 !important;
+}
+
+.show-vspbot .vspbot:not(.vspbot-expanded) {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
   transform: scale(0.5);
   opacity: 0;
   pointer-events: none;
@@ -11564,11 +11670,7 @@ span.sicon {
 }
 
 #vspbot-progress-wrap {
-  display: none;
-}
-
-#vspbot-progress-wrap.is-visible {
-  display: flex;
+  display: flex !important;
 }
 
 .vspbot-delete-btn {
@@ -11576,14 +11678,17 @@ span.sicon {
   align-items: center;
   gap: 6px;
   margin-top: 8px;
-  padding: 5px 12px;
+  padding: 6px 14px;
   background: #1c1315;
   color: #f87171;
   border: 1px solid #4a1d24;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
-  cursor: pointer;
+  cursor: pointer !important;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 5;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -11602,11 +11707,33 @@ span.sicon {
 
 /* vspbot mobile layout fix */
 @media (max-width: 768px) {
-  .vspbot,
-  .vspbot.vspbot-expanded {
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
+  .vspbot-toggler {
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 52px !important;
+    height: 52px !important;
+    z-index: 100005 !important;
+  }
+
+  body:not(.show-vspbot) .vspbot:not(.vspbot-expanded) {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  body.show-vspbot .vspbot:not(.vspbot-expanded) {
+    display: flex !important;
+    flex-direction: column !important;
+    position: fixed !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 88vh !important;
+    height: 88dvh !important;
+    border-radius: 20px 20px 0 0 !important;
+    border-bottom: none !important;
+    z-index: 100004 !important;
+    pointer-events: auto !important;
   }
 
   .vspbot header,
