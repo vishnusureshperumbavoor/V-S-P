@@ -64,8 +64,8 @@
       cameraZ: 120,
     },
     hologram: {
-      name: 'VOLUMETRIC VSP & CYBERNETIC AI HOLOGRAM',
-      category: 'DESIGN 06 // HOLOGRAPHIC AI AVATAR',
+      name: 'VOLUMETRIC VSP SCI-FI HOLOGRAPHIC EMITTER',
+      category: 'DESIGN 06 // HOLOGRAPHIC PROJECTION',
       cameraZ: 110,
     }
   };
@@ -917,99 +917,18 @@
     beamCone.position.y = 4;
     group.add(beamCone);
 
-    // 3. Volumetric 3D Hologram Woman (AI Guide & Custodian)
-    const womanGroup = new THREE.Group();
-
-    const holoAvatarWire = new THREE.MeshBasicMaterial({
-      color: holoCyan,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.82,
-      blending: THREE.AdditiveBlending
-    });
-
-    const holoAvatarCore = new THREE.MeshStandardMaterial({
-      color: 0x001520,
-      emissive: holoCyan,
-      emissiveIntensity: 0.55,
-      roughness: 0.2,
-      metalness: 0.9,
-      transparent: true,
-      opacity: 0.65
-    });
-
-    function createAvatarMesh(geo) {
-      const g = new THREE.Group();
-      g.add(new THREE.Mesh(geo, holoAvatarWire));
-      g.add(new THREE.Mesh(geo, holoAvatarCore));
-      return g;
-    }
-
-    // Head
-    const head = createAvatarMesh(new THREE.SphereGeometry(2.4, 16, 16));
-    head.position.set(0, 16.5, -4);
-    womanGroup.add(head);
-
-    // Hair Silhouette
-    const hair = createAvatarMesh(new THREE.SphereGeometry(2.7, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.7));
-    hair.position.set(0, 17, -4.6);
-    hair.rotation.x = 0.25;
-    womanGroup.add(hair);
-
-    // Neck & Torso
-    const neck = createAvatarMesh(new THREE.CylinderGeometry(0.85, 1.1, 2.2, 12));
-    neck.position.set(0, 14.4, -4);
-    womanGroup.add(neck);
-
-    const torso = createAvatarMesh(new THREE.CylinderGeometry(2.3, 1.6, 7.5, 16));
-    torso.position.set(0, 9.8, -4);
-    womanGroup.add(torso);
-
-    // Flowing Holographic Gown
-    const gown = createAvatarMesh(new THREE.CylinderGeometry(1.7, 8.5, 20, 24, 6, true));
-    gown.position.set(0, -4.2, -4);
-    womanGroup.add(gown);
-
-    // Left Arm & Forearm (gesturing towards floating VSP)
-    const armL1 = createAvatarMesh(new THREE.CylinderGeometry(0.48, 0.42, 6, 8));
-    armL1.position.set(-3.4, 10.2, -2.5);
-    armL1.rotation.z = Math.PI / 4.2;
-    armL1.rotation.x = -Math.PI / 5;
-    womanGroup.add(armL1);
-
-    const armL2 = createAvatarMesh(new THREE.CylinderGeometry(0.4, 0.32, 6, 8));
-    armL2.position.set(-5.6, 7.5, 1.5);
-    armL2.rotation.x = -Math.PI / 3;
-    armL2.rotation.z = -Math.PI / 7;
-    womanGroup.add(armL2);
-
-    // Right Arm & Forearm (gesturing towards floating VSP)
-    const armR1 = createAvatarMesh(new THREE.CylinderGeometry(0.48, 0.42, 6, 8));
-    armR1.position.set(3.4, 10.2, -2.5);
-    armR1.rotation.z = -Math.PI / 4.2;
-    armR1.rotation.x = -Math.PI / 5;
-    womanGroup.add(armR1);
-
-    const armR2 = createAvatarMesh(new THREE.CylinderGeometry(0.4, 0.32, 6, 8));
-    armR2.position.set(5.6, 7.5, 1.5);
-    armR2.rotation.x = -Math.PI / 3;
-    armR2.rotation.z = Math.PI / 7;
-    womanGroup.add(armR2);
-
-    group.add(womanGroup);
-
-    // 4. Volumetric Floating VSP Hologram Monogram (projected in front of her hands)
+    // 3. Volumetric Floating VSP Hologram Monogram
     const holoLettersGroup = new THREE.Group();
 
     function buildHoloTube(points, color) {
       const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
-      const tubeGeo = new THREE.TubeGeometry(curve, 54, 1.9, 10, false);
+      const tubeGeo = new THREE.TubeGeometry(curve, 54, 2.0, 10, false);
       
       const wireMat = new THREE.MeshBasicMaterial({
         color: color,
         wireframe: true,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.88,
         blending: THREE.AdditiveBlending
       });
       const wireMesh = new THREE.Mesh(tubeGeo, wireMat);
@@ -1041,8 +960,7 @@
     holoLettersGroup.add(holoS);
     holoLettersGroup.add(holoP1);
     holoLettersGroup.add(holoP2);
-    holoLettersGroup.scale.set(0.72, 0.72, 0.72);
-    holoLettersGroup.position.set(0, 6.5, 6);
+    holoLettersGroup.position.set(0, 4, 0);
     group.add(holoLettersGroup);
 
     // 4. Moving Hologram Scanline Plane
@@ -1115,26 +1033,17 @@
         // Authentic Sci-Fi Hologram Glitch & Jitter
         const isGlitching = Math.random() > 0.95;
         if (isGlitching) {
-          const jitterX = (Math.random() - 0.5) * 1.6;
-          const jitterZ = (Math.random() - 0.5) * 1.2;
-          womanGroup.position.x = jitterX;
-          womanGroup.position.z = jitterZ;
-          holoLettersGroup.position.x = jitterX;
-          holoLettersGroup.position.z = 6 + jitterZ;
+          holoLettersGroup.position.x = (Math.random() - 0.5) * 1.6;
+          holoLettersGroup.position.z = (Math.random() - 0.5) * 1.2;
           beamCone.material.opacity = 0.05 + Math.random() * 0.15;
         } else {
-          womanGroup.position.x = 0;
-          womanGroup.position.z = 0;
           holoLettersGroup.position.x = 0;
-          holoLettersGroup.position.z = 6;
+          holoLettersGroup.position.z = 0;
           beamCone.material.opacity = 0.12;
         }
 
-        // Gentle floating harmonic breath & hover
-        womanGroup.position.y = Math.sin(time * 1.8) * 0.8;
-        womanGroup.rotation.y = Math.sin(time * 0.7) * 0.08;
-        holoLettersGroup.position.y = 6.5 + Math.sin(time * 2.2) * 1.0;
-        holoLettersGroup.rotation.y = Math.sin(time * 1.2) * 0.12;
+        // Gentle floating hover
+        holoLettersGroup.position.y = 4 + Math.sin(time * 2) * 1.2;
       }
     };
 
