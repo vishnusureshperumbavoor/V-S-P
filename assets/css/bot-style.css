@@ -605,19 +605,29 @@ button#vspbot-delete-model.is-hidden,
 }
 
 /* Compact Model Bar Row inside Welcome Bubble */
-.vspbot-model-bar {
+.vspbot-model-bar-wrap {
   display: flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 10px !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
   margin: 4px 0 !important;
-  padding: 5px 12px !important;
+  max-width: 100% !important;
+}
+
+.vspbot-model-bar {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 5px 11px !important;
   background: rgba(15, 23, 42, 0.8) !important;
   border: 1px solid #1e293b !important;
   border-radius: 8px !important;
   width: fit-content !important;
   max-width: 100% !important;
-  white-space: nowrap !important;
+  box-sizing: border-box !important;
 }
 
 .vspbot-model-info {
@@ -953,6 +963,25 @@ button#vspbot-delete-model.is-hidden,
 
   .chat {
     max-width: 90% !important;
+  }
+
+  .chat.incoming > .chat-bubble {
+    padding: 11px 14px !important;
+  }
+
+  .vspbot-model-bar-wrap {
+    gap: 6px !important;
+    margin: 3px 0 !important;
+  }
+
+  .vspbot-model-bar {
+    padding: 4px 9px !important;
+    gap: 6px !important;
+  }
+
+  .vspbot-model-info {
+    font-size: 0.77rem !important;
+    gap: 6px !important;
   }
 
   .vspbot-prompt-chips-wrap {

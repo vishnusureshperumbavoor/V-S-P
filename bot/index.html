@@ -54,10 +54,14 @@
           <span class="fa-solid fa-robot"></span>
           <div class="chat-bubble vspbot-welcome-bubble">
             <p class="vspbot-welcome-text">Hi, I'm <strong>VSP Bot</strong> — an autonomous AI assistant running locally in your browser via WebAssembly (100% private).</p>
-            <div class="vspbot-model-bar" id="vspbot-model-cta">
-              <span class="vspbot-model-info" id="vspbot-model-size"><i class="fa-solid fa-microchip"></i> Local GGUF (380 MB)</span>
-              <span class="vspbot-model-info" id="vspbot-storage-info"><i class="fa-solid fa-database"></i> Storage: IndexedDB</span>
-              <button id="vspbot-preload-btn" class="vspbot-download-chip" type="button" title="Preload model (380 MB)" aria-label="Preload Model"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+            <div class="vspbot-model-bar-wrap" id="vspbot-model-cta">
+              <div class="vspbot-model-bar">
+                <span class="vspbot-model-info" id="vspbot-model-size"><i class="fa-solid fa-microchip"></i> Local GGUF (380 MB)</span>
+                <button id="vspbot-preload-btn" class="vspbot-download-chip" type="button" title="Preload model (380 MB)" aria-label="Preload Model"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+              </div>
+              <div class="vspbot-model-bar vspbot-storage-bar">
+                <span class="vspbot-model-info" id="vspbot-storage-info"><i class="fa-solid fa-database"></i> Storage: IndexedDB</span>
+              </div>
             </div>
             <p class="vspbot-welcome-hint"><i class="fa-solid fa-bolt vspbot-bolt" aria-hidden="true"></i> Ask about VSP's machine learning research, Kaggle solutions, sovereign AI, or technical projects.</p>
           </div>
