@@ -37,6 +37,20 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/style-starter.css" />
 
+    <style>
+      .navbar-dark .navbar-nav .nav-link {
+        font-size: 1.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.25s ease, transform 0.25s ease;
+      }
+      .navbar-dark .navbar-nav .nav-link:hover {
+        color: var(--primary) !important;
+        transform: translateY(-2px);
+      }
+    </style>
+
     <!-- JSON-LD for AI Agents -->
     <script type="application/ld+json">
       {
@@ -97,22 +111,34 @@
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="bot/">Bot</a>
+                  <a class="nav-link pl-0 pr-0" href="bot/" title="Bot" aria-label="Bot">
+                    <span class="fa-solid fa-robot"></span>
+                  </a>
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#about">About</a>
+                  <a class="nav-link pl-0 pr-0" href="#about" title="About" aria-label="About">
+                    <span class="fa-solid fa-user"></span>
+                  </a>
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#services">Projects</a>
+                  <a class="nav-link pl-0 pr-0" href="#services" title="Projects" aria-label="Projects">
+                    <span class="fa-solid fa-laptop-code"></span>
+                  </a>
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#events">Events</a>
+                  <a class="nav-link pl-0 pr-0" href="#events" title="Events" aria-label="Events">
+                    <span class="fa-solid fa-calendar-days"></span>
+                  </a>
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="#gallery-vsp">Gallery</a>
+                  <a class="nav-link pl-0 pr-0" href="#gallery-vsp" title="Gallery" aria-label="Gallery">
+                    <span class="fa-solid fa-images"></span>
+                  </a>
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0" href="blogs.html">Blogs</a>
+                  <a class="nav-link pl-0 pr-0" href="blogs.html" title="Blogs" aria-label="Blogs">
+                    <span class="fa-solid fa-newspaper"></span>
+                  </a>
                 </li>
               </ul>
             </div>
