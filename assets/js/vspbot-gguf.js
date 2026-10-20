@@ -106,34 +106,43 @@ function setStatus(message) {
 }
 
 function setProgress(percent) {
-  if (!progressBarEl || !progressPercentEl) return;
   const safePercent = Math.max(0, Math.min(100, Math.round(percent)));
-  progressBarEl.style.width = `${safePercent}%`;
-  progressPercentEl.textContent = `${safePercent}%`;
+  const progressRows = document.querySelectorAll(".vspbot-progress-row");
+
+  // Show progress bar ONLY during active downloading (between 1% and 99%)
+  // Hidden at 0% and 100%
+  const isDownloading = safePercent > 0 && safePercent < 100;
+
+  progressRows.forEach((row) => {
+    if (isDownloading) {
+      row.classList.remove("is-hidden");
+      row.style.display = "flex";
+    } else {
+      row.classList.add("is-hidden");
+      row.style.display = "none";
+    }
+  });
+
+  if (progressBarEl) {
+    progressBarEl.style.width = `${safePercent}%`;
+  }
+  if (progressPercentEl) {
+    progressPercentEl.textContent = `${safePercent}%`;
+  }
 }
 
 function setDownloadMeta({ loaded = null, total = null } = {}) {
   if (modelSizeEl) {
     if (Number.isFinite(total) && total > 0) {
-      modelSizeEl.innerHTML = `<i class="fa-solid fa-microchip"></i> Model: ${formatBytes(total)} (GGUF Q4_K_M)`;
+      modelSizeEl.innerHTML = `<i class="fa-solid fa-microchip"></i> Local GGUF (${formatBytes(total)})`;
     } else {
-      modelSizeEl.innerHTML = `<i class="fa-solid fa-microchip"></i> Model: ~${formatBytes(MODEL_SIZE_HINT_BYTES)} (GGUF Q4_K_M)`;
-    }
-  }
-
-  if (downloadedEl) {
-    if (Number.isFinite(loaded) && loaded >= 0) {
-      const totalText =
-        Number.isFinite(total) && total > 0 ? formatBytes(total) : "...";
-      downloadedEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Downloaded: ${formatBytes(loaded)} / ${totalText}`;
-    } else {
-      downloadedEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Status: Ready on demand`;
+      modelSizeEl.innerHTML = `<i class="fa-solid fa-microchip"></i> Local GGUF (~${formatBytes(MODEL_SIZE_HINT_BYTES)})`;
     }
   }
 
   if (storageInfoEl) {
     storageInfoEl.innerHTML =
-      `<i class="fa-solid fa-database"></i> Storage: IndexedDB (Client-Side)`;
+      `<i class="fa-solid fa-database"></i> Storage: IndexedDB`;
   }
 }
 
@@ -203,8 +212,16 @@ function cleanupLegacyStorageKeys() {
 function updateDownloadButtonsUi(statusState, percent = null) {
   const preloadBtn = document.getElementById("vspbot-preload-btn");
   const trayDownloadBtn = document.getElementById("vspbot-download-model-btn");
+  const deleteBtns = document.querySelectorAll("#vspbot-delete-model");
 
   if (statusState === "cached" || statusState === "ready") {
+    // Model is downloaded/cached: SHOW delete button
+    deleteBtns.forEach((btn) => {
+      btn.classList.remove("is-hidden");
+      btn.style.display = "inline-flex";
+      btn.disabled = false;
+    });
+
     if (preloadBtn) {
       preloadBtn.className = "vspbot-download-chip is-cached";
       preloadBtn.disabled = true;
@@ -218,6 +235,12 @@ function updateDownloadButtonsUi(statusState, percent = null) {
       trayDownloadBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
     }
   } else if (statusState === "loading") {
+    // Downloading: HIDE delete button
+    deleteBtns.forEach((btn) => {
+      btn.classList.add("is-hidden");
+      btn.style.display = "none";
+    });
+
     const pctText = percent !== null ? ` ${percent}%` : "";
     if (preloadBtn) {
       preloadBtn.className = "vspbot-download-chip is-loading";
@@ -232,7 +255,12 @@ function updateDownloadButtonsUi(statusState, percent = null) {
       trayDownloadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
     }
   } else {
-    // idle / not downloaded
+    // idle / not downloaded: HIDE delete button completely
+    deleteBtns.forEach((btn) => {
+      btn.classList.add("is-hidden");
+      btn.style.display = "none";
+    });
+
     if (preloadBtn) {
       preloadBtn.className = "vspbot-download-chip";
       preloadBtn.disabled = false;
@@ -506,7 +534,6 @@ async function clearCachedModel() {
     setDownloadMeta({ loaded: 0, total: null });
     setStatus("Cached model purged. Click 'Download Model' or send a message.");
     showProgressPanel(true);
-    if (downloadedEl) downloadedEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Status: Cache cleared (0 B)`;
     updateDownloadButtonsUi("idle");
   } catch (err) {
     console.error("Error clearing model cache:", err);
@@ -516,8 +543,9 @@ async function clearCachedModel() {
   }
 }
 
-const deleteModelBtn = document.getElementById("vspbot-delete-model");
-deleteModelBtn?.addEventListener("click", clearCachedModel);
+document.querySelectorAll("#vspbot-delete-model").forEach((btn) => {
+  btn.addEventListener("click", clearCachedModel);
+});
 window.clearCachedModel = clearCachedModel;
 
 // Manual Pre-Download Buttons (Preload Card & Telemetry Tray)

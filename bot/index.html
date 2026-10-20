@@ -26,31 +26,21 @@
       <div id="vspbot-progress-wrap" class="vspbot-telemetry-tray">
         <div class="telemetry-meta-row">
           <div class="telemetry-meta-left">
-            <span class="vspbot-live-pill"><i class="fa-solid fa-bolt"></i> 100% In-Browser</span>
-            <span class="telemetry-item" id="vspbot-model-size">
-              <i class="fa-solid fa-microchip"></i> Model: ~380 MB
-            </span>
-            <span class="telemetry-item" id="vspbot-downloaded">
-              <i class="fa-solid fa-circle-down"></i> Status: Ready on demand
-            </span>
-            <span class="telemetry-item" id="vspbot-storage-info">
-              <i class="fa-solid fa-database"></i> Storage: IndexedDB (Private)
+            <span class="telemetry-item" style="color: #f8fafc; font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em;">
+              <i class="fa-solid fa-robot" style="color: #00d679; margin-right: 6px;"></i> VSP AI Assistant
             </span>
           </div>
           <div class="telemetry-meta-actions">
-            <a href="../index.html" class="vspbot-tray-icon-btn" title="Back to Portfolio Home" aria-label="Back to Home" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; color: #00d679;">
-              <i class="fa-solid fa-house"></i>
-            </a>
             <button id="vspbot-download-model-btn" class="vspbot-tray-icon-btn" type="button" title="Download model weights into browser storage (380 MB)" aria-label="Download Model">
               <i class="fa-solid fa-cloud-arrow-down"></i>
             </button>
-            <button id="vspbot-delete-model" class="vspbot-tray-icon-btn vspbot-delete-btn" type="button" title="Clear cached model from browser storage" aria-label="Clear Model Cache">
+            <button id="vspbot-delete-model" class="vspbot-tray-icon-btn vspbot-delete-btn is-hidden" type="button" title="Clear cached model from browser storage" aria-label="Clear Model Cache" style="display: none;">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
         </div>
 
-        <div class="vspbot-progress-row">
+        <div class="vspbot-progress-row is-hidden" id="vspbot-progress-row" style="display: none;">
           <div class="vspbot-progress">
             <div class="vspbot-progress-bar" id="vspbot-progress-bar" style="width: 0%"></div>
           </div>
@@ -65,10 +55,11 @@
           <div class="chat-bubble vspbot-welcome-bubble">
             <p class="vspbot-welcome-text">Hi, I'm <strong>VSP Bot</strong> — an autonomous AI assistant running locally in your browser via WebAssembly (100% private).</p>
             <div class="vspbot-model-bar" id="vspbot-model-cta">
-              <span class="vspbot-model-info"><i class="fa-solid fa-microchip"></i> Local GGUF (380 MB)</span>
+              <span class="vspbot-model-info" id="vspbot-model-size"><i class="fa-solid fa-microchip"></i> Local GGUF (380 MB)</span>
+              <span class="vspbot-model-info" id="vspbot-storage-info"><i class="fa-solid fa-database"></i> Storage: IndexedDB</span>
               <button id="vspbot-preload-btn" class="vspbot-download-chip" type="button" title="Preload model (380 MB)" aria-label="Preload Model"><i class="fa-solid fa-cloud-arrow-down"></i></button>
             </div>
-            <p class="vspbot-welcome-hint"><i class="fa-solid fa-bolt vspbot-bolt" aria-hidden="true"></i> Ask about Vishnu's machine learning research, Kaggle solutions, sovereign AI, or technical projects.</p>
+            <p class="vspbot-welcome-hint"><i class="fa-solid fa-bolt vspbot-bolt" aria-hidden="true"></i> Ask about VSP's machine learning research, Kaggle solutions, sovereign AI, or technical projects.</p>
           </div>
         </li>
 
@@ -94,7 +85,7 @@
       <!-- Chat Input Dock -->
       <div class="chat-input">
         <div class="chat-input-bar">
-          <textarea id="user-input" placeholder="Ask VSP Bot anything... (Enter to send, Shift+Enter for newline)" rows="1" required></textarea>
+          <textarea id="user-input" placeholder="Ask VSP Bot anything..." rows="1" required></textarea>
           <button id="vspbot-send" type="button" aria-label="Send message" title="Send message">
             <span class="fa-regular fa-paper-plane"></span>
           </button>

@@ -103,6 +103,14 @@ footer {
   line-height: 1.5;
 }
 
+.hn-date {
+  color: #00d679;
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-right: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
 /* Pagination Footer Bar */
 .hn-pagination {
   display: flex;

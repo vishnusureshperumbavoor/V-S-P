@@ -452,6 +452,15 @@ button#vspbot-delete-model.vspbot-delete-btn:disabled,
   box-shadow: none !important;
 }
 
+button#vspbot-delete-model.is-hidden,
+.vspbot.vspbot-expanded .vspbot-delete-btn.is-hidden {
+  display: none !important;
+}
+
+.vspbot-progress-row.is-hidden {
+  display: none !important;
+}
+
 .telemetry-meta-actions button i,
 .telemetry-meta-actions button span {
   font-size: 0.85rem !important;

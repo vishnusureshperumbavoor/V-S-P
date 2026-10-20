@@ -1434,26 +1434,28 @@
           class="chat incoming vspbot-download-message"
           id="vspbot-progress-wrap"
         >
-          <span class="fa-solid fa-download"></span>
+          <span class="fa-solid fa-microchip"></span>
           <div class="vspbot-download-meta">
             <p id="vspbot-model-size">
-              Model size: approx 230 MB (will auto-detect)
+              Model: ~380.0 MB (GGUF Q4_K_M)
             </p>
-            <p id="vspbot-downloaded">Downloaded: waiting to start</p>
-            <p id="vspbot-storage-info">Storage location: IndexedDB</p>
-            <div class="vspbot-progress">
-              <div
-                class="vspbot-progress-bar"
-                id="vspbot-progress-bar"
-                style="width: 0%"
-              ></div>
+            <p id="vspbot-storage-info">Storage: IndexedDB</p>
+            <div class="vspbot-progress-row is-hidden" id="vspbot-widget-progress-row" style="display: none;">
+              <div class="vspbot-progress">
+                <div
+                  class="vspbot-progress-bar"
+                  id="vspbot-progress-bar"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <p id="vspbot-progress-percent">0%</p>
             </div>
-            <p id="vspbot-progress-percent">0%</p>
             <button
               id="vspbot-delete-model"
-              class="vspbot-delete-btn"
+              class="vspbot-delete-btn is-hidden"
               type="button"
               title="Delete downloaded model from browser storage"
+              style="display: none;"
             >
               <span class="fa-solid fa-trash-can"></span> Clear Cached Model
             </button>

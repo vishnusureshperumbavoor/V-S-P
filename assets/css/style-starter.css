@@ -11818,6 +11818,15 @@ span.sicon {
   transform: translateY(0);
 }
 
+button#vspbot-delete-model.is-hidden,
+.vspbot-delete-btn.is-hidden {
+  display: none !important;
+}
+
+.vspbot-progress-row.is-hidden {
+  display: none !important;
+}
+
 /* vspbot mobile layout fix */
 @media (max-width: 768px) {
   .vspbot-toggler {
