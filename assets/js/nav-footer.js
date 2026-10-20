@@ -49,8 +49,19 @@
     const blogActive = active === 'blogs' ? 'active' : '';
     const vspActive = active === 'vsp' ? 'active' : '';
 
+    let backTarget = `${root}index.html`;
+    let backTitle = 'Back to Home';
+
+    const path = window.location.pathname.toLowerCase();
+    const isInsideBlogsDir = path.includes('/blogs/') || (path.includes('blogs/') && !path.endsWith('blogs.html'));
+
+    if (isInsideBlogsDir) {
+      backTarget = `${root}blogs.html`;
+      backTitle = 'Back to Blogs';
+    }
+
     const backButtonHtml = active !== 'home' ? `
-      <a href="${root}index.html" class="vsp-nav-back-btn mr-2" title="Back to Home" aria-label="Back to Home">
+      <a href="${backTarget}" class="vsp-nav-back-btn mr-2" title="${backTitle}" aria-label="${backTitle}">
         <i class="fa-solid fa-arrow-left"></i>
       </a>
     ` : '';
