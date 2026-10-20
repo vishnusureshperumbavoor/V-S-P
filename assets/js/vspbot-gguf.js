@@ -115,9 +115,9 @@ function setProgress(percent) {
 function setDownloadMeta({ loaded = null, total = null } = {}) {
   if (modelSizeEl) {
     if (Number.isFinite(total) && total > 0) {
-      modelSizeEl.textContent = `Model size: ${formatBytes(total)}`;
+      modelSizeEl.innerHTML = `<i class="fa-solid fa-microchip"></i> Model: ${formatBytes(total)} (GGUF Q4_K_M)`;
     } else {
-      modelSizeEl.textContent = `Model size: approx ${formatBytes(MODEL_SIZE_HINT_BYTES)} (will auto-detect)`;
+      modelSizeEl.innerHTML = `<i class="fa-solid fa-microchip"></i> Model: ~${formatBytes(MODEL_SIZE_HINT_BYTES)} (GGUF Q4_K_M)`;
     }
   }
 
@@ -125,21 +125,30 @@ function setDownloadMeta({ loaded = null, total = null } = {}) {
     if (Number.isFinite(loaded) && loaded >= 0) {
       const totalText =
         Number.isFinite(total) && total > 0 ? formatBytes(total) : "...";
-      downloadedEl.textContent = `Downloaded: ${formatBytes(loaded)} / ${totalText}`;
+      downloadedEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Downloaded: ${formatBytes(loaded)} / ${totalText}`;
     } else {
-      downloadedEl.textContent = "Downloaded: waiting to start";
+      downloadedEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Status: Ready on demand`;
     }
   }
 
   if (storageInfoEl) {
-    storageInfoEl.textContent =
-      "Storage location: IndexedDB";
+    storageInfoEl.innerHTML =
+      `<i class="fa-solid fa-database"></i> Storage: IndexedDB (Client-Side)`;
   }
 }
 
 function showProgressPanel(show) {
   if (!progressWrapEl) return;
-  progressWrapEl.classList.toggle("is-visible", show);
+  const diagBtn = document.getElementById("vspbot-diag-toggle");
+  if (show) {
+    progressWrapEl.classList.remove("is-collapsed");
+    progressWrapEl.classList.add("is-visible");
+    diagBtn?.classList.add("is-active");
+  } else {
+    progressWrapEl.classList.add("is-collapsed");
+    progressWrapEl.classList.remove("is-visible");
+    diagBtn?.classList.remove("is-active");
+  }
 }
 
 function addMessage(role, content, extraClass = "") {
@@ -199,10 +208,57 @@ function cleanupLegacyStorageKeys() {
   } catch (_e) {}
 }
 
+function updateDownloadButtonsUi(statusState, percent = null) {
+  const preloadBtn = document.getElementById("vspbot-preload-btn");
+  const trayDownloadBtn = document.getElementById("vspbot-download-model-btn");
+
+  if (statusState === "cached" || statusState === "ready") {
+    if (preloadBtn) {
+      preloadBtn.className = "vspbot-download-chip is-cached";
+      preloadBtn.disabled = true;
+      preloadBtn.title = "Model ready in browser storage";
+      preloadBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+    }
+    if (trayDownloadBtn) {
+      trayDownloadBtn.className = "vspbot-tray-icon-btn";
+      trayDownloadBtn.disabled = true;
+      trayDownloadBtn.title = "Model cached & ready in browser storage";
+      trayDownloadBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+    }
+  } else if (statusState === "loading") {
+    const pctText = percent !== null ? ` ${percent}%` : "";
+    if (preloadBtn) {
+      preloadBtn.className = "vspbot-download-chip is-loading";
+      preloadBtn.disabled = true;
+      preloadBtn.title = `Downloading model...${pctText}`;
+      preloadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span class="vspbot-btn-pct">${pctText}</span>`;
+    }
+    if (trayDownloadBtn) {
+      trayDownloadBtn.className = "vspbot-tray-icon-btn";
+      trayDownloadBtn.disabled = true;
+      trayDownloadBtn.title = `Downloading model...${pctText}`;
+      trayDownloadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+    }
+  } else {
+    // idle / not downloaded
+    if (preloadBtn) {
+      preloadBtn.className = "vspbot-download-chip";
+      preloadBtn.disabled = false;
+      preloadBtn.title = "Download model weights (380 MB)";
+      preloadBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i>`;
+    }
+    if (trayDownloadBtn) {
+      trayDownloadBtn.className = "vspbot-tray-icon-btn";
+      trayDownloadBtn.disabled = false;
+      trayDownloadBtn.title = "Download model weights into browser storage (380 MB)";
+      trayDownloadBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i>`;
+    }
+  }
+}
+
 async function initializeModelUi() {
   cleanupLegacyStorageKeys();
-  showProgressPanel(true);
-  setStatus("Checking local model cache...");
+  setStatus("Checking model cache...");
 
   state.hasCachedModelHint = readCachedModelHint();
   const cachedSize = getCachedModelSize();
@@ -216,12 +272,14 @@ async function initializeModelUi() {
       cachedSize || state.modelTotalBytes || MODEL_SIZE_HINT_BYTES;
     setDownloadMeta({ loaded: sizeToUse, total: sizeToUse });
     setProgress(100);
-    setStatus("VSP Bot is ready");
+    setStatus("Model Cached • Ready in Browser");
     markModelCached(sizeToUse);
+    updateDownloadButtonsUi("cached");
   } else {
     setDownloadMeta();
     setProgress(0);
-    setStatus("Model not loaded yet. Send a message to start local loading.");
+    setStatus("Ready to download • Local WASM LLM");
+    updateDownloadButtonsUi("idle");
   }
 }
 
@@ -230,10 +288,11 @@ async function loadModel() {
   if (state.loading) return state.loading;
 
   state.loading = (async () => {
+    updateDownloadButtonsUi("loading", 0);
     setDownloadMeta();
     showProgressPanel(true);
     setProgress(0);
-    setStatus("Downloading local model... 0%");
+    setStatus("Downloading model weights... 0%");
 
     state.wllama = new Wllama(WasmFromCDN, {
       logger: LoggerWithoutDebug,
@@ -253,7 +312,8 @@ async function loadModel() {
         const percent = total ? Math.round((loaded / total) * 100) : 0;
         setProgress(percent);
         setDownloadMeta({ loaded, total });
-        setStatus(`Downloading local model... ${percent}%`);
+        setStatus(`Downloading model weights... ${percent}%`);
+        updateDownloadButtonsUi("loading", percent);
       },
     });
 
@@ -264,8 +324,12 @@ async function loadModel() {
     setStatus("VSP Bot is ready");
     markModelCached(finalSize);
     state.hasCachedModelHint = true;
-    showProgressPanel(true);
-  })();
+    updateDownloadButtonsUi("ready");
+  })().catch((err) => {
+    state.loading = null;
+    updateDownloadButtonsUi("idle");
+    throw err;
+  });
 
   return state.loading;
 }
@@ -279,6 +343,7 @@ async function sendMessage() {
   }
 
   inputEl.value = "";
+  inputEl.style.height = "38px";
   sendBtn.disabled = true;
   addMessage("user", text);
 
@@ -395,9 +460,19 @@ inputEl?.addEventListener("keydown", (event) => {
   }
 });
 
+inputEl?.addEventListener("input", () => {
+  inputEl.style.height = "auto";
+  inputEl.style.height = `${Math.min(Math.max(inputEl.scrollHeight, 38), 120)}px`;
+});
+
 window.sendMessage = sendMessage;
 
 async function clearCachedModel() {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete the cached GGUF model weights (~380 MB) from your browser storage?"
+  );
+  if (!confirmed) return;
+
   const btn = document.getElementById("vspbot-delete-model");
   if (btn) btn.disabled = true;
   setStatus("Purging cached model from browser storage...");
@@ -428,9 +503,10 @@ async function clearCachedModel() {
     state.messages = [];
     setProgress(0);
     setDownloadMeta({ loaded: 0, total: null });
-    setStatus("Cached model purged. Send a message to download fresh weights.");
+    setStatus("Cached model purged. Click 'Download Model' or send a message.");
     showProgressPanel(true);
-    if (downloadedEl) downloadedEl.textContent = "Downloaded: 0 B (Cache Cleared)";
+    if (downloadedEl) downloadedEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Status: Cache cleared (0 B)`;
+    updateDownloadButtonsUi("idle");
   } catch (err) {
     console.error("Error clearing model cache:", err);
     setStatus("Failed to clear cache: " + err.message);
@@ -442,3 +518,41 @@ async function clearCachedModel() {
 const deleteModelBtn = document.getElementById("vspbot-delete-model");
 deleteModelBtn?.addEventListener("click", clearCachedModel);
 window.clearCachedModel = clearCachedModel;
+
+// Manual Pre-Download Buttons (Preload Card & Telemetry Tray)
+const preloadBtn = document.getElementById("vspbot-preload-btn");
+const trayDownloadBtn = document.getElementById("vspbot-download-model-btn");
+
+async function handleManualDownload() {
+  if (state.modelReady || state.loading) return;
+  try {
+    showProgressPanel(true);
+    await loadModel();
+  } catch (err) {
+    console.error("Manual model download error:", err);
+    setStatus("Model download failed: " + err.message);
+  }
+}
+
+preloadBtn?.addEventListener("click", handleManualDownload);
+trayDownloadBtn?.addEventListener("click", handleManualDownload);
+
+// Diagnostic & Storage HUD toggle button
+const diagToggleBtn = document.getElementById("vspbot-diag-toggle");
+if (diagToggleBtn && progressWrapEl) {
+  diagToggleBtn.addEventListener("click", () => {
+    const isCollapsed = progressWrapEl.classList.contains("is-collapsed");
+    showProgressPanel(isCollapsed);
+  });
+}
+
+// Quick Suggestion Chips
+document.querySelectorAll(".vspbot-chip").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    const promptText = chip.getAttribute("data-prompt") || chip.textContent.trim();
+    if (inputEl && promptText) {
+      inputEl.value = promptText;
+      sendMessage();
+    }
+  });
+});

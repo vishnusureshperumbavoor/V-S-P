@@ -4,59 +4,133 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>VSP Bot | Chat with VSP Bot</title>
+  <title>VSP Bot | Intelligent In-Browser Assistant</title>
   <link rel="icon" href="../assets/images/vsp3.jpeg" type="image/png" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="../assets/css/style-starter.css" />
+  <link rel="stylesheet" href="../assets/css/bot-style.css" />
 </head>
 
 <body class="vspbot-full-page">
   <main class="vspbot-page-wrap">
     <div class="vspbot vspbot-expanded">
-      <header>
-        <h2>Chat with VSP Bot</h2>
-        <a href="../index.html" class="vspbot-home-link" aria-label="Back to home">Home</a>
+      
+      <!-- Top HUD Header -->
+      <header class="vspbot-hud-header">
+        <div class="vspbot-brand-group">
+          <div class="vspbot-avatar-badge" aria-hidden="true">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div class="vspbot-title-group">
+            <h2>VSP AI Assistant</h2>
+            <span class="vspbot-subtitle">Local Browser Engine (WASM • GGUF)</span>
+          </div>
+        </div>
+
+        <span id="vspbot-status" style="display: none;" aria-live="polite"></span>
+
+        <nav class="vspbot-nav-actions" aria-label="Navigation">
+          <button id="vspbot-diag-toggle" class="vspbot-hud-btn" type="button" title="View model telemetry & cache settings">
+            <i class="fa-solid fa-hard-drive"></i>
+            <span>Engine</span>
+          </button>
+          <span class="vspbot-nav-divider" aria-hidden="true"></span>
+          <a href="../index.html" class="vspbot-nav-icon" title="Home" aria-label="Home">
+            <i class="fa-solid fa-house"></i>
+          </a>
+          <a href="../bot/" class="vspbot-nav-icon active" title="VSP Bot (Current Page)" aria-label="VSP Bot" aria-current="page">
+            <i class="fa-solid fa-robot"></i>
+          </a>
+          <a href="../blogs.html" class="vspbot-nav-icon" title="Blogs" aria-label="Blogs">
+            <i class="fa-solid fa-newspaper"></i>
+          </a>
+        </nav>
       </header>
+
+      <!-- Collapsible / Docked Telemetry & Storage Tray -->
+      <div id="vspbot-progress-wrap" class="vspbot-telemetry-tray is-collapsed">
+        <div class="telemetry-meta-row">
+          <div class="telemetry-meta-left">
+            <span class="telemetry-item" id="vspbot-model-size">
+              <i class="fa-solid fa-microchip"></i> Model: ~380 MB
+            </span>
+            <span class="telemetry-item" id="vspbot-downloaded">
+              <i class="fa-solid fa-circle-down"></i> Status: Ready on demand
+            </span>
+            <span class="telemetry-item" id="vspbot-storage-info">
+              <i class="fa-solid fa-database"></i> Storage: IndexedDB (Private)
+            </span>
+          </div>
+          <div class="telemetry-meta-actions">
+            <button id="vspbot-download-model-btn" class="vspbot-tray-icon-btn" type="button" title="Download model weights into browser storage (380 MB)" aria-label="Download Model">
+              <i class="fa-solid fa-cloud-arrow-down"></i>
+            </button>
+            <button id="vspbot-delete-model" class="vspbot-tray-icon-btn vspbot-delete-btn" type="button" title="Clear cached model from browser storage" aria-label="Clear Model Cache">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="vspbot-progress-row">
+          <div class="vspbot-progress">
+            <div class="vspbot-progress-bar" id="vspbot-progress-bar" style="width: 0%"></div>
+          </div>
+          <span class="vspbot-progress-percent" id="vspbot-progress-percent">0%</span>
+        </div>
+      </div>
+
+      <!-- Main Chat Stream -->
       <ul class="chatbox" id="vspbot-chatbox">
         <li class="chat incoming">
           <span class="fa-solid fa-robot"></span>
-          <p>
-            Hi, I am VSP Bot, running locally in your browser. Model status
-            and storage details are shown below.
-          </p>
-        </li>
-        <li class="chat incoming vspbot-status-message">
-          <span class="fa-solid fa-microchip"></span>
-          <p id="vspbot-status">VSP Bot is ready</p>
-        </li>
-        <li class="chat incoming vspbot-download-message" id="vspbot-progress-wrap">
-          <span class="fa-solid fa-download"></span>
-          <div class="vspbot-download-meta">
-            <p id="vspbot-model-size">
-              Model size: approx 230 MB (will auto-detect)
-            </p>
-            <p id="vspbot-downloaded">Downloaded: waiting to start</p>
-            <p id="vspbot-storage-info">
-              Storage location: IndexedDB
-            </p>
-            <div class="vspbot-progress">
-              <div class="vspbot-progress-bar" id="vspbot-progress-bar" style="width: 0%"></div>
+          <div class="chat-bubble vspbot-welcome-bubble">
+            <p class="vspbot-welcome-text">Hi, I'm <strong>VSP Bot</strong> — an autonomous AI assistant running locally in your browser via WebAssembly (100% private).</p>
+            <div class="vspbot-model-bar" id="vspbot-model-cta">
+              <span class="vspbot-model-info"><i class="fa-solid fa-microchip"></i> Local GGUF (380 MB)</span>
+              <button id="vspbot-preload-btn" class="vspbot-download-chip" type="button" title="Preload model (380 MB)" aria-label="Preload Model"><i class="fa-solid fa-cloud-arrow-down"></i></button>
             </div>
-            <p id="vspbot-progress-percent">0%</p>
-            <button id="vspbot-delete-model" class="vspbot-delete-btn" type="button" title="Delete downloaded model from browser storage">
-              <span class="fa-solid fa-trash-can"></span> Clear Cached Model
+            <p class="vspbot-welcome-hint"><i class="fa-solid fa-bolt vspbot-bolt" aria-hidden="true"></i> Ask about Vishnu's machine learning research, Kaggle solutions, sovereign AI, or technical projects.</p>
+          </div>
+        </li>
+
+        <li class="vspbot-prompt-chips-wrap">
+          <span class="vspbot-chips-label">Quick topics to ask:</span>
+          <div class="vspbot-prompt-chips">
+            <button class="vspbot-chip" type="button" data-prompt="Tell me about your 3D MRI pipeline and how you jumped 4,900 ranks in RSNA Knee.">
+              🔬 RSNA Knee (3D MRI)
+            </button>
+            <button class="vspbot-chip" type="button" data-prompt="What is Vibe ML Studio and what can developers build with it?">
+              🚀 Vibe ML Studio
+            </button>
+            <button class="vspbot-chip" type="button" data-prompt="What project did you build for the Vaiga 2023 Hackathon?">
+              🏆 Vaiga Hackathon Winner
+            </button>
+            <button class="vspbot-chip" type="button" data-prompt="What are your core technical skills and AI stack?">
+              💻 Tech Stack & Experience
             </button>
           </div>
         </li>
       </ul>
+
+      <!-- Chat Input Dock -->
       <div class="chat-input">
-        <textarea id="user-input" placeholder="Ask VSP Bot..." required></textarea>
-        <button id="vspbot-send" type="button" aria-label="Send message">
-          <span class="fa-regular fa-paper-plane"></span>
-        </button>
+        <div class="chat-input-bar">
+          <textarea id="user-input" placeholder="Ask VSP Bot anything... (Enter to send, Shift+Enter for newline)" rows="1" required></textarea>
+          <button id="vspbot-send" type="button" aria-label="Send message" title="Send message">
+            <span class="fa-regular fa-paper-plane"></span>
+          </button>
+        </div>
+        <p class="chat-input-footer-note">
+          <span><i class="fa-solid fa-shield-halved"></i> 100% Private In-Browser WASM</span>
+          <span>•</span>
+          <span>Quantized GGUF LLM</span>
+          <span>•</span>
+          <span>Zero Data Sent to Servers</span>
+        </p>
       </div>
+
     </div>
   </main>
 

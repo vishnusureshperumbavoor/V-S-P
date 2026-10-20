@@ -1,0 +1,865 @@
+/* ==========================================================================
+   VSP AI Bot - Futuristic Full-Page Interface
+   Dark glassmorphic styling, ambient cyber glow, clean HUD telemetry
+   ========================================================================== */
+
+/* Full-page Background & Container */
+body.vspbot-full-page {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #06080d;
+  color: #cbd5e1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.vspbot-page-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  height: 100vh;
+  position: relative;
+}
+
+/* Ambient Radial Glows behind the Chatbot */
+.vspbot-page-wrap::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0, 214, 121, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.vspbot-page-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 15%;
+  right: 20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(125, 249, 255, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Main Chatbot Shell (Overrides legacy floating widget styles) */
+.vspbot.vspbot-expanded {
+  position: relative !important;
+  bottom: auto !important;
+  right: auto !important;
+  transform: none !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 10;
+  width: min(100%, 980px) !important;
+  height: min(92vh, 880px) !important;
+  background: rgba(13, 17, 23, 0.92) !important;
+  border: 1px solid #1e2634 !important;
+  border-radius: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 214, 121, 0.08) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Header HUD */
+.vspbot-expanded header.vspbot-hud-header,
+.vspbot.vspbot-expanded header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 22px !important;
+  background: #101622 !important;
+  border-bottom: 1px solid #1e2634 !important;
+  flex-shrink: 0 !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+  text-align: left !important;
+  color: #cbd5e1 !important;
+  position: relative !important;
+}
+
+.vspbot-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vspbot-avatar-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(0, 214, 121, 0.15);
+  border: 1px solid rgba(0, 214, 121, 0.4);
+  color: #00d679;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  box-shadow: 0 0 12px rgba(0, 214, 121, 0.2);
+  flex-shrink: 0;
+}
+
+.vspbot-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.vspbot-title-group h2,
+.vspbot.vspbot-expanded header h2 {
+  margin: 0 !important;
+  font-size: 1.08rem !important;
+  font-weight: 700 !important;
+  color: #f8fafc !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.01em;
+}
+
+.vspbot-title-group .vspbot-subtitle {
+  font-size: 0.74rem;
+  color: #7df9ff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+/* Status Pill */
+.vspbot-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid #1e2634;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  max-width: 380px;
+}
+
+.vspbot-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00d679;
+  box-shadow: 0 0 8px #00d679;
+  animation: vspPulse 1.8s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes vspPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
+}
+
+#vspbot-status {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #cbd5e1;
+}
+
+/* Header Action Buttons & Navigation Icons */
+.vspbot-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vspbot-nav-divider {
+  width: 1px;
+  height: 22px;
+  background: #1e2634;
+  margin: 0 4px;
+}
+
+.vspbot-nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: #141b26;
+  border: 1px solid #222d3e;
+  color: #94a3b8;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.vspbot-nav-icon:hover {
+  background: #1b2535;
+  border-color: #00d679;
+  color: #00d679;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 214, 121, 0.2);
+}
+
+.vspbot-nav-icon.active {
+  background: rgba(0, 214, 121, 0.16);
+  border-color: #00d679;
+  color: #00d679;
+  box-shadow: 0 0 14px rgba(0, 214, 121, 0.3);
+}
+
+.vspbot-nav-icon.active::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  width: 14px;
+  height: 3px;
+  background: #00d679;
+  border-radius: 999px;
+  box-shadow: 0 0 6px #00d679;
+}
+
+.vspbot-hud-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #151c27;
+  border: 1px solid #232d3d;
+  color: #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+.vspbot-hud-btn i {
+  font-size: 0.85rem;
+}
+
+.vspbot-hud-btn:hover {
+  background: #1e2736;
+  border-color: #7df9ff;
+  color: #7df9ff;
+  transform: translateY(-1px);
+}
+
+.vspbot-hud-btn.is-active {
+  background: rgba(125, 249, 255, 0.15);
+  border-color: #7df9ff;
+  color: #7df9ff;
+}
+
+.vspbot-hud-home:hover {
+  border-color: #7df9ff;
+  color: #7df9ff;
+}
+
+/* Telemetry & Progress Tray */
+.vspbot-telemetry-tray {
+  background: #0d121b;
+  border-bottom: 1px solid #19202c;
+  padding: 10px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+}
+
+.vspbot-telemetry-tray.is-collapsed {
+  display: none;
+}
+
+.telemetry-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.telemetry-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.telemetry-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #94a3b8;
+}
+
+.telemetry-item i {
+  color: #7df9ff;
+}
+
+/* Modern Progress Bar */
+.vspbot-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vspbot-progress {
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: #192230;
+  overflow: hidden;
+  margin: 0;
+}
+
+.vspbot-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00d679, #7df9ff);
+  box-shadow: 0 0 10px rgba(0, 214, 121, 0.6);
+  transition: width 0.25s ease-out;
+}
+
+.vspbot-progress-percent {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #00d679;
+  min-width: 38px;
+  text-align: right;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Telemetry Meta Actions (Icon & Tooltip Only - Strictly Same Horizontal Line) */
+.telemetry-meta-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.vspbot-tray-icon-btn,
+button#vspbot-download-model-btn,
+button#vspbot-delete-model.vspbot-delete-btn,
+.vspbot.vspbot-expanded .vspbot-delete-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  border-radius: 6px !important;
+  background: rgba(0, 214, 121, 0.14) !important;
+  border: 1px solid rgba(0, 214, 121, 0.35) !important;
+  color: #00d679 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  vertical-align: middle !important;
+}
+
+button#vspbot-download-model-btn:hover:not(:disabled) {
+  background: #00d679 !important;
+  border-color: #00d679 !important;
+  color: #06080d !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 10px rgba(0, 214, 121, 0.4) !important;
+}
+
+button#vspbot-download-model-btn:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+button#vspbot-delete-model.vspbot-delete-btn,
+.vspbot.vspbot-expanded .vspbot-delete-btn {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  color: #f87171 !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+}
+
+button#vspbot-delete-model.vspbot-delete-btn:hover:not(:disabled),
+.vspbot.vspbot-expanded .vspbot-delete-btn:hover:not(:disabled) {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4) !important;
+}
+
+button#vspbot-delete-model.vspbot-delete-btn:disabled,
+.vspbot.vspbot-expanded .vspbot-delete-btn:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.telemetry-meta-actions button i,
+.telemetry-meta-actions button span {
+  font-size: 0.85rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+}
+
+/* Chatbox Area */
+.vspbot.vspbot-expanded .chatbox {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  padding: 24px 24px 16px 24px !important;
+  background-color: #090c12 !important;
+  list-style: none !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar Styling */
+.chatbox::-webkit-scrollbar {
+  width: 6px;
+}
+.chatbox::-webkit-scrollbar-track {
+  background: #090c12;
+}
+.chatbox::-webkit-scrollbar-thumb {
+  background: #1e2634;
+  border-radius: 4px;
+}
+.chatbox::-webkit-scrollbar-thumb:hover {
+  background: #2a3547;
+}
+
+/* Chat Message Bubbles */
+.chat {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  max-width: 82% !important;
+  animation: fadeInMsg 0.25s ease-out;
+}
+
+@keyframes fadeInMsg {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat.incoming {
+  align-self: flex-start !important;
+}
+
+.vspbot.vspbot-expanded .incoming > span:first-child,
+.chat.incoming > span.fa-robot {
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  border-radius: 10px !important;
+  background: #141c28 !important;
+  border: 1px solid rgba(0, 214, 121, 0.3) !important;
+  color: #00d679 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.95rem !important;
+  flex-shrink: 0 !important;
+  margin: 2px 0 0 0 !important;
+  align-self: flex-start !important;
+}
+
+.vspbot.vspbot-expanded .incoming > p,
+.chat.incoming > p,
+.chat.incoming > .chat-bubble {
+  margin: 0 !important;
+  padding: 13px 18px !important;
+  background: #111622 !important;
+  border: 1px solid #1c2536 !important;
+  border-radius: 4px 16px 16px 16px !important;
+  color: #f1f5f9 !important;
+  font-size: 0.92rem !important;
+  line-height: 1.55 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+  max-width: 100% !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+.chat.outgoing {
+  align-self: flex-end !important;
+  flex-direction: row-reverse !important;
+  justify-content: flex-end !important;
+}
+
+.vspbot.vspbot-expanded .outgoing p,
+.chat.outgoing p {
+  margin: 0 !important;
+  padding: 13px 18px !important;
+  background: linear-gradient(135deg, rgba(0, 214, 121, 0.22), rgba(13, 27, 42, 0.95)) !important;
+  border: 1px solid rgba(0, 214, 121, 0.45) !important;
+  border-radius: 16px 4px 16px 16px !important;
+  color: #ffffff !important;
+  font-size: 0.92rem !important;
+  line-height: 1.55 !important;
+  box-shadow: 0 4px 14px rgba(0, 214, 121, 0.12) !important;
+  max-width: 100% !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+/* Welcome Card Bubble inside First Message (Zero Unwanted Spacing) */
+.vspbot-welcome-bubble {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.vspbot-welcome-bubble p {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #cbd5e1 !important;
+  line-height: 1.48 !important;
+  font-size: 0.91rem !important;
+  white-space: normal !important;
+}
+
+.vspbot-welcome-bubble strong {
+  color: #00d679;
+}
+
+/* Compact Model Bar Row inside Welcome Bubble */
+.vspbot-model-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  margin: 4px 0 !important;
+  padding: 5px 12px !important;
+  background: rgba(15, 23, 42, 0.8) !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 8px !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+}
+
+.vspbot-model-info {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  font-size: 0.8rem !important;
+  color: #cbd5e1 !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+}
+
+.vspbot-model-info i {
+  color: #7df9ff !important;
+  font-size: 0.85rem !important;
+}
+
+/* Download Icon Button - Sleek Mini Chip */
+.vspbot-download-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 6px !important;
+  background: rgba(0, 214, 121, 0.18) !important;
+  border: 1px solid rgba(0, 214, 121, 0.45) !important;
+  color: #00d679 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.vspbot-download-chip:hover:not(:disabled) {
+  background: #00d679 !important;
+  color: #06080d !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 10px rgba(0, 214, 121, 0.5) !important;
+}
+
+.vspbot-download-chip.is-cached {
+  background: rgba(0, 214, 121, 0.12) !important;
+  border-color: rgba(0, 214, 121, 0.35) !important;
+  color: #00d679 !important;
+  cursor: default !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.vspbot-download-chip.is-loading {
+  width: auto !important;
+  padding: 0 8px !important;
+  background: #141c28 !important;
+  border-color: #7df9ff !important;
+  color: #7df9ff !important;
+  cursor: wait !important;
+}
+
+.vspbot-download-chip.is-loading .vspbot-btn-pct {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  font-family: monospace !important;
+  margin-left: 4px !important;
+}
+
+/* Prompt Hint Line - Thunder Icon strictly inline with text */
+.vspbot-welcome-hint {
+  font-size: 0.82rem !important;
+  color: #94a3b8 !important;
+  line-height: 1.45 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: normal !important;
+}
+
+.vspbot-welcome-hint .vspbot-bolt {
+  color: #7df9ff !important;
+  margin-right: 5px !important;
+  display: inline !important;
+  vertical-align: baseline !important;
+}
+}
+
+/* Quick Suggestion Prompt Chips */
+.vspbot-prompt-chips-wrap {
+  margin: 4px 0 10px 46px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+
+.vspbot-chips-label {
+  font-size: 0.74rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.vspbot-prompt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vspbot-chip {
+  background: #111722;
+  border: 1px solid #1f2a3a;
+  color: #cbd5e1;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  outline: none;
+}
+
+.vspbot-chip:hover {
+  background: #182232;
+  border-color: #00d679;
+  color: #00d679;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 214, 121, 0.18);
+}
+
+/* Generation Token Speed Indicator */
+.vspbot-token-speed {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  color: #7df9ff;
+  margin-top: 6px;
+  margin-left: 6px;
+  opacity: 0.9;
+}
+
+/* Thinking Pulse Indicator */
+.chat.thinking p::after {
+  content: '...';
+  display: inline-block;
+  animation: thinkDots 1.2s infinite;
+}
+
+@keyframes thinkDots {
+  0% { content: '.'; }
+  33% { content: '..'; }
+  66% { content: '...'; }
+}
+
+/* Chat Input Dock */
+.vspbot-expanded .chat-input,
+.vspbot.vspbot-expanded .chat-input {
+  position: relative !important;
+  bottom: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 14px 22px 14px 22px !important;
+  background: #0f141d !important;
+  border-top: 1px solid #1a2230 !important;
+  flex-shrink: 0 !important;
+  gap: 9px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.chat-input-bar {
+  display: flex;
+  align-items: center;
+  background: #090c12;
+  border: 1px solid #202b3a;
+  border-radius: 14px;
+  padding: 5px 8px 5px 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.chat-input-bar:focus-within {
+  border-color: #00d679;
+  box-shadow: 0 0 16px rgba(0, 214, 121, 0.22);
+}
+
+.chat-input textarea,
+.vspbot.vspbot-expanded .chat-input textarea {
+  flex: 1 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: #f8fafc !important;
+  font-size: 0.92rem !important;
+  font-family: inherit !important;
+  resize: none !important;
+  height: 38px !important;
+  max-height: 120px !important;
+  padding: 8px 0 !important;
+  line-height: 1.4 !important;
+  box-shadow: none !important;
+}
+
+.chat-input textarea::placeholder {
+  color: #55657a;
+}
+
+.chat-input button#vspbot-send,
+.vspbot.vspbot-expanded .chat-input button#vspbot-send {
+  width: 38px !important;
+  height: 38px !important;
+  background: #00d679 !important;
+  border: none !important;
+  border-radius: 10px !important;
+  color: #000000 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  margin: 0 0 0 8px !important;
+}
+
+.chat-input button#vspbot-send:hover:not(:disabled) {
+  background: #7df9ff !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 14px rgba(125, 249, 255, 0.5);
+}
+
+.chat-input button#vspbot-send:disabled {
+  background: #1e2634 !important;
+  color: #4b5563 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.chat-input-footer-note {
+  font-size: 0.72rem;
+  color: #526173;
+  text-align: center;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chat-input-footer-note i {
+  color: #00d679;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .vspbot-page-wrap {
+    padding: 0;
+  }
+  .vspbot.vspbot-expanded {
+    width: 100% !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+  .chat {
+    max-width: 90% !important;
+  }
+  .vspbot-prompt-chips-wrap {
+    margin-left: 0;
+  }
+  .vspbot-status-pill {
+    max-width: 100%;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+}
