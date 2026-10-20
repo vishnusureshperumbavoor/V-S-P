@@ -40,33 +40,38 @@
   const designDirectory = {
     matrix: {
       name: 'CYBERNETIC 3D VSP HOLOGRAPHIC MATRIX',
-      category: 'DESIGN 01 // WIREFRAME HUD',
+      category: 'WIREFRAME HUD',
       cameraZ: 110,
     },
     swarm: {
       name: 'QUANTUM VSP PARTICLE SWARM & MORPH',
-      category: 'DESIGN 02 // KINETIC PARTICLES',
+      category: 'KINETIC PARTICLES',
       cameraZ: 95,
     },
     synaptic: {
       name: 'NEON SYNAPTIC VSP HYPER-LATTICE',
-      category: 'DESIGN 03 // NEURAL TOPOLOGY',
+      category: 'NEURAL TOPOLOGY',
       cameraZ: 105,
     },
     radar: {
       name: 'ORBITAL VSP GYROSCOPE & RADAR CORE',
-      category: 'DESIGN 04 // ROTATIONAL GIMBAL',
+      category: 'ROTATIONAL GIMBAL',
       cameraZ: 115,
     },
     water: {
       name: 'AQUATIC VSP FLUID RIPPLE & CAUSTICS MATRIX',
-      category: 'DESIGN 05 // WATER & WAVE DYNAMICS',
+      category: 'WATER & WAVE DYNAMICS',
       cameraZ: 120,
     },
     hologram: {
       name: 'VOLUMETRIC VSP SCI-FI HOLOGRAPHIC EMITTER',
-      category: 'DESIGN 06 // HOLOGRAPHIC PROJECTION',
+      category: 'HOLOGRAPHIC PROJECTION',
       cameraZ: 110,
+    },
+    avatar: {
+      name: 'ANIMATED 3D HUMAN GLB AVATAR (TEST)',
+      category: 'GLTF SKELETAL RIG',
+      cameraZ: 45,
     }
   };
 
@@ -1051,11 +1056,140 @@
   }
 
   // ==========================================================================
-  // 7. Design Switcher & Cleanup Engine
+  // Design 07: Real-Time Animated 3D Human Avatar (Michelle GLTF SkinnedMesh)
+  // ==========================================================================
+  let avatarMixer = null;
+
+  function createAvatarDesign() {
+    const group = new THREE.Group();
+
+    // 1. Cyber Holographic Studio Pedestal
+    const pedGeo = new THREE.CylinderGeometry(16, 20, 2, 48);
+    const pedMat = new THREE.MeshStandardMaterial({
+      color: 0x081018,
+      roughness: 0.3,
+      metalness: 0.8
+    });
+    const pedestal = new THREE.Mesh(pedGeo, pedMat);
+    pedestal.position.y = -21;
+    group.add(pedestal);
+
+    // Glowing Neon Concentric Rings on Platform
+    const ringMat1 = new THREE.LineDashedMaterial({ color: 0x00d679, dashSize: 4, gapSize: 3, linewidth: 2 });
+    const ringMat2 = new THREE.LineDashedMaterial({ color: 0x7df9ff, dashSize: 6, gapSize: 4, linewidth: 2 });
+    const rGeo1 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, 14, 0, Math.PI * 2, true).getPoints(64));
+    const rGeo2 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, 17, 0, Math.PI * 2, true).getPoints(64));
+    const ring1 = new THREE.Line(rGeo1, ringMat1);
+    const ring2 = new THREE.Line(rGeo2, ringMat2);
+    ring1.computeLineDistances();
+    ring2.computeLineDistances();
+    ring1.rotation.x = -Math.PI / 2;
+    ring2.rotation.x = -Math.PI / 2;
+    ring1.position.y = -19.9;
+    ring2.position.y = -19.9;
+    group.add(ring1);
+    group.add(ring2);
+
+    // 2. High-Performance Studio Lighting for Lifelike Skin Shading
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    keyLight.position.set(20, 30, 25);
+    group.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0x7df9ff, 1.3);
+    fillLight.position.set(-25, 15, -15);
+    group.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0x00d679, 1.8);
+    rimLight.position.set(0, 25, -25);
+    group.add(rimLight);
+
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0c1220, 0.9);
+    group.add(hemiLight);
+
+    // 3. Floating Neon VSP Monogram Halo above head
+    const vspHalo = new THREE.Group();
+    function buildHaloTube(points, color) {
+      const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
+      const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.6, 8, false);
+      const wireMat = new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity: 0.9 });
+      return new THREE.Mesh(tubeGeo, wireMat);
+    }
+    vspHalo.add(buildHaloTube(V_PATH, 0x00d679));
+    vspHalo.add(buildHaloTube(S_PATH, 0x7df9ff));
+    vspHalo.add(buildHaloTube(P_SPINE, 0x00d679));
+    vspHalo.add(buildHaloTube(P_LOOP, 0x00d679));
+    vspHalo.scale.set(0.24, 0.24, 0.24);
+    vspHalo.position.set(0, 16.5, 0);
+    group.add(vspHalo);
+
+    // 4. Load High-Detail Human GLB Model (Michelle)
+    if (typeof THREE.GLTFLoader !== 'undefined') {
+      const loader = new THREE.GLTFLoader();
+      loader.load(
+        'assets/models/Michelle.glb',
+        (gltf) => {
+          const model = gltf.scene;
+          // Scale & position character onto pedestal
+          model.scale.set(19, 19, 19);
+          model.position.set(0, -20, 0);
+
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+              if (child.material) {
+                child.material.roughness = Math.min(child.material.roughness || 0.5, 0.6);
+                child.material.needsUpdate = true;
+              }
+            }
+          });
+
+          group.add(model);
+
+          // Play realistic skeletal animation
+          if (gltf.animations && gltf.animations.length > 0) {
+            avatarMixer = new THREE.AnimationMixer(model);
+            const action = avatarMixer.clipAction(gltf.animations[0]);
+            action.play();
+          }
+
+          updateTelemetryStats();
+        },
+        undefined,
+        (err) => {
+          console.warn('Could not load Michelle.glb:', err);
+        }
+      );
+    }
+
+    // 5. Animation Routine
+    group.userData = {
+      animate: (time, delta) => {
+        if (avatarMixer && delta) {
+          avatarMixer.update(delta);
+        }
+        ring1.rotation.z = time * 0.3;
+        ring2.rotation.z = -time * 0.2;
+        vspHalo.rotation.y = time * 1.5;
+        vspHalo.position.y = 16.5 + Math.sin(time * 2.5) * 0.6;
+      }
+    };
+
+    return group;
+  }
+
+  // ==========================================================================
+  // 8. Design Switcher & Cleanup Engine
   // ==========================================================================
   function loadDesign(designKey) {
     if (!designDirectory[designKey]) return;
     currentDesign = designKey;
+
+    // Clean up avatar mixer if active
+    if (avatarMixer) {
+      avatarMixer.stopAllAction();
+      avatarMixer = null;
+    }
 
     // Dispose old geometries and materials to avoid WebGL memory leaks
     while (activeGroup.children.length > 0) {
@@ -1091,6 +1225,9 @@
         break;
       case 'hologram':
         newDesignGroup = createHologramDesign();
+        break;
+      case 'avatar':
+        newDesignGroup = createAvatarDesign();
         break;
       default:
         newDesignGroup = createMatrixDesign();
@@ -1157,6 +1294,7 @@
   function animate() {
     animationFrameId = requestAnimationFrame(animate);
 
+    const delta = clock.getDelta();
     const elapsedTime = clock.getElapsedTime();
 
     // Auto-spin scene
@@ -1166,7 +1304,7 @@
 
     // Call active design animation routine
     if (activeGroup.userData && typeof activeGroup.userData.animate === 'function') {
-      activeGroup.userData.animate(elapsedTime);
+      activeGroup.userData.animate(elapsedTime, delta);
     }
 
     // Update OrbitControls
