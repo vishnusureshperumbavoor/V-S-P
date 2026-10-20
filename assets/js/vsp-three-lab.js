@@ -62,6 +62,11 @@
       name: 'AQUATIC VSP FLUID RIPPLE & CAUSTICS MATRIX',
       category: 'DESIGN 05 // WATER & WAVE DYNAMICS',
       cameraZ: 120,
+    },
+    gta: {
+      name: 'GTA VI // VSP VICE METROPOLIS & NEON HIGHWAY',
+      category: 'DESIGN 06 // GTA 6 VSP CITY',
+      cameraZ: 125,
     }
   };
 
@@ -851,6 +856,203 @@
   }
 
   // ==========================================================================
+  // 6c. Design 06: GTA VI // VSP VICE METROPOLIS & NEON HIGHWAY
+  // Miami Vice City skyline, highway traffic light trails & giant VSP Tower
+  // ==========================================================================
+  function createGtaDesign() {
+    const group = new THREE.Group();
+    const hotPink = 0xff2a8d;
+    const neonCyan = 0x00f0ff;
+    const sunsetGold = 0xffaa00;
+
+    // 1. Synthwave Horizon Sunset Sun
+    const sunGeo = new THREE.CircleGeometry(45, 48);
+    const sunMat = new THREE.MeshBasicMaterial({
+      color: hotPink,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.95
+    });
+    const sun = new THREE.Mesh(sunGeo, sunMat);
+    sun.position.set(0, 20, -130);
+    group.add(sun);
+
+    // Sun horizontal scanline bars
+    for (let i = 0; i < 7; i++) {
+      const barGeo = new THREE.PlaneGeometry(92, 1.8 + i * 0.4);
+      const barMat = new THREE.MeshBasicMaterial({ color: 0x03060a });
+      const bar = new THREE.Mesh(barGeo, barMat);
+      bar.position.set(0, 2 + i * 4.5, -128);
+      group.add(bar);
+    }
+
+    // 2. Reflective Highway Grid Road
+    const roadGeo = new THREE.PlaneGeometry(50, 260);
+    const roadMat = new THREE.MeshStandardMaterial({
+      color: 0x080c14,
+      roughness: 0.2,
+      metalness: 0.8
+    });
+    const road = new THREE.Mesh(roadGeo, roadMat);
+    road.rotation.x = -Math.PI / 2;
+    road.position.set(0, -15, 0);
+    group.add(road);
+
+    // Highway neon divider strip
+    const dividerGeo = new THREE.PlaneGeometry(0.8, 260);
+    const dividerMat = new THREE.MeshBasicMaterial({ color: sunsetGold });
+    const divider = new THREE.Mesh(dividerGeo, dividerMat);
+    divider.rotation.x = -Math.PI / 2;
+    divider.position.set(0, -14.9, 0);
+    group.add(divider);
+
+    // Neon edge guard rails
+    const railMat1 = new THREE.LineBasicMaterial({ color: hotPink, linewidth: 2 });
+    const railMat2 = new THREE.LineBasicMaterial({ color: neonCyan, linewidth: 2 });
+    const rGeo1 = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-25, -14.5, -130), new THREE.Vector3(-25, -14.5, 130)]);
+    const rGeo2 = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(25, -14.5, -130), new THREE.Vector3(25, -14.5, 130)]);
+    group.add(new THREE.Line(rGeo1, railMat1));
+    group.add(new THREE.Line(rGeo2, railMat2));
+
+    // 3. Procedural Skyscrapers (City Skyline flanking the highway)
+    const buildingsGroup = new THREE.Group();
+    const buildingGeo = new THREE.BoxGeometry(1, 1, 1);
+
+    const bMatDark = new THREE.MeshStandardMaterial({
+      color: 0x0a0e17,
+      roughness: 0.3,
+      metalness: 0.8
+    });
+
+    const bMatPink = new THREE.MeshBasicMaterial({ color: hotPink, wireframe: true });
+    const bMatCyan = new THREE.MeshBasicMaterial({ color: neonCyan, wireframe: true });
+
+    // Seeded building generation along left & right sides
+    for (let side = -1; side <= 1; side += 2) {
+      for (let z = -110; z <= 100; z += 18) {
+        for (let row = 0; row < 2; row++) {
+          const height = 25 + Math.abs(Math.sin(z * 0.3 + row) * 45);
+          const width = 12 + Math.abs(Math.cos(z * 0.2) * 6);
+          const depth = 14 + Math.abs(Math.sin(z * 0.5) * 6);
+
+          const posX = side * (35 + row * 20 + Math.random() * 4);
+          const posZ = z + (Math.random() - 0.5) * 6;
+          const posY = -15 + height / 2;
+
+          const building = new THREE.Mesh(buildingGeo, bMatDark);
+          building.scale.set(width, height, depth);
+          building.position.set(posX, posY, posZ);
+          buildingsGroup.add(building);
+
+          // Neon rooftop accent
+          const roofEdgeMat = (z % 4 === 0) ? bMatPink : bMatCyan;
+          const roofWire = new THREE.Mesh(buildingGeo, roofEdgeMat);
+          roofWire.scale.set(width + 0.2, height + 0.2, depth + 0.2);
+          roofWire.position.copy(building.position);
+          buildingsGroup.add(roofWire);
+        }
+      }
+    }
+    group.add(buildingsGroup);
+
+    // 4. Central VSP Skyscraper Tower with Giant Rooftop Neon Sign
+    const vspTowerGroup = new THREE.Group();
+    const towerMesh = new THREE.Mesh(buildingGeo, bMatDark);
+    towerMesh.scale.set(32, 85, 24);
+    towerMesh.position.set(0, -15 + 85 / 2, -100);
+    vspTowerGroup.add(towerMesh);
+
+    // Rooftop 3D VSP Neon Typography
+    function buildGtaTube(points, color) {
+      const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
+      const tubeGeo = new THREE.TubeGeometry(curve, 32, 1.6, 8, false);
+      const tubeMat = new THREE.MeshBasicMaterial({ color: color });
+      return new THREE.Mesh(tubeGeo, tubeMat);
+    }
+
+    const gtaV = buildGtaTube(V_PATH, hotPink);
+    const gtaS = buildGtaTube(S_PATH, sunsetGold);
+    const gtaP1 = buildGtaTube(P_SPINE, neonCyan);
+    const gtaP2 = buildGtaTube(P_LOOP, neonCyan);
+
+    const signGroup = new THREE.Group();
+    signGroup.add(gtaV);
+    signGroup.add(gtaS);
+    signGroup.add(gtaP1);
+    signGroup.add(gtaP2);
+    signGroup.scale.set(0.65, 0.65, 0.65);
+    signGroup.position.set(0, 75, -100);
+    vspTowerGroup.add(signGroup);
+    group.add(vspTowerGroup);
+
+    // 5. Speeding Traffic Light Trails
+    const carTrails = [];
+    const trailGeo = new THREE.BoxGeometry(0.8, 0.4, 6);
+    const headLightMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const tailLightMat = new THREE.MeshBasicMaterial({ color: 0xff1144 });
+
+    for (let i = 0; i < 24; i++) {
+      const isSouthbound = i % 2 === 0;
+      const trailMat = isSouthbound ? tailLightMat : headLightMat;
+      const mesh = new THREE.Mesh(trailGeo, trailMat);
+
+      const laneX = isSouthbound ? -(4 + Math.random() * 8) : (4 + Math.random() * 8);
+      const startZ = (Math.random() - 0.5) * 220;
+      mesh.position.set(laneX, -14.4, startZ);
+      group.add(mesh);
+
+      carTrails.push({
+        mesh: mesh,
+        speed: (isSouthbound ? 1 : -1) * (1.2 + Math.random() * 1.5),
+        isSouthbound: isSouthbound
+      });
+    }
+
+    // 6. Neon Palm Trees lining Ocean Drive
+    const palmMat = new THREE.MeshBasicMaterial({ color: neonCyan });
+    const trunkMat = new THREE.MeshBasicMaterial({ color: 0x221133 });
+
+    for (let pz = -80; pz <= 80; pz += 30) {
+      [-20, 20].forEach((px) => {
+        const trunkGeo = new THREE.CylinderGeometry(0.4, 0.6, 9, 6);
+        const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+        trunk.position.set(px, -10.5, pz);
+        group.add(trunk);
+
+        // Palm fronds
+        for (let a = 0; a < 5; a++) {
+          const frondGeo = new THREE.ConeGeometry(2.5, 0.4, 4);
+          const frond = new THREE.Mesh(frondGeo, palmMat);
+          frond.position.set(px, -6, pz);
+          frond.rotation.z = Math.PI / 3;
+          frond.rotation.y = (a * Math.PI * 2) / 5;
+          group.add(frond);
+        }
+      });
+    }
+
+    group.userData = {
+      animate: function (time) {
+        // Traffic speed animation
+        carTrails.forEach((c) => {
+          c.mesh.position.z += c.speed;
+          if (c.mesh.position.z > 120) c.mesh.position.z = -120;
+          if (c.mesh.position.z < -120) c.mesh.position.z = 120;
+        });
+
+        // Pulsing Neon VSP Rooftop Sign
+        const pulse = 1 + Math.sin(time * 4) * 0.08;
+        signGroup.scale.set(0.65 * pulse, 0.65 * pulse, 0.65 * pulse);
+
+        // Slow camera sway for cinematic cruising feel
+        sun.position.y = 20 + Math.sin(time * 0.8) * 1.5;
+      }
+    };
+
+    return group;
+  }
+
+  // ==========================================================================
   // 7. Design Switcher & Cleanup Engine
   // ==========================================================================
   function loadDesign(designKey) {
@@ -888,6 +1090,9 @@
         break;
       case 'water':
         newDesignGroup = createWaterDesign();
+        break;
+      case 'gta':
+        newDesignGroup = createGtaDesign();
         break;
       default:
         newDesignGroup = createMatrixDesign();
