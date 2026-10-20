@@ -9809,15 +9809,53 @@ a.navbar-brand span.fa {
     color: inherit !important;
   }
 
-  .navbar-dark .navbar-toggler {
-    border-color: var(--primary) !important;
-    background: #161a1f;
-    padding: 6px 10px;
-    outline: none;
+  .navbar-dark .navbar-toggler,
+  .w3l-header .navbar-toggler {
+    border-color: rgba(0, 214, 121, 0.45) !important;
+    background: rgba(18, 24, 34, 0.95) !important;
+    color: #00d679 !important;
+    padding: 7px 11px !important;
+    outline: none !important;
     cursor: pointer !important;
     touch-action: manipulation;
     z-index: 100002 !important;
+    margin-left: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
   }
+
+  .w3l-header .navbar-toggler i,
+  .w3l-header .navbar-toggler span,
+  .w3l-header .navbar-toggler .fa-bars {
+    color: #00d679 !important;
+    font-size: 1.25rem !important;
+    display: inline-block !important;
+  }
+}
+
+.vsp-nav-back-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #00d679 !important;
+  font-size: 0.95rem !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+}
+
+.vsp-nav-back-btn:hover,
+.vsp-nav-back-btn:active {
+  background: rgba(0, 214, 121, 0.15) !important;
+  border-color: rgba(0, 214, 121, 0.4) !important;
+  color: #00d679 !important;
+  transform: translateX(-2px) !important;
 }
 
 @media (min-width: 992px) {
@@ -9861,7 +9899,8 @@ a.navbar-brand span.fa {
   padding: 0;
   height: 60px;
   display: flex;
-  align-items: center; }
+  align-items: center;
+  justify-content: space-between; }
 
 .w3l-header .navbar-brand {
   font-size: 1.25rem;
@@ -10814,6 +10853,85 @@ section.w3l-grid-quote h3 {
   font-weight: 700;
   margin-bottom: 20px;
   text-transform: capitalize; }
+
+/* Blog Article Pages & Header Offset */
+header#vsp-header + .w3l-about-bottom,
+header + .w3l-about-bottom,
+.blog-article-section {
+  padding-top: 95px !important;
+}
+
+.blog-post-title,
+.w3l-about-bottom .advantage_left h1 {
+  font-size: 2.8rem;
+  line-height: 1.25;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+@media screen and (max-width: 991px) {
+  header#vsp-header + .w3l-about-bottom,
+  header + .w3l-about-bottom,
+  .blog-article-section,
+  .blog-feed-section {
+    padding-top: 85px !important;
+  }
+
+  .blog-post-title,
+  .w3l-about-bottom .advantage_left h1,
+  header#vsp-header + .w3l-about-bottom .advantage_left h1 {
+    font-size: 1.85rem !important;
+    line-height: 1.3 !important;
+    margin-top: 5px !important;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  header#vsp-header + .w3l-about-bottom,
+  header + .w3l-about-bottom,
+  .blog-article-section,
+  .blog-feed-section {
+    padding-top: 80px !important;
+  }
+
+  .blog-post-title,
+  .w3l-about-bottom .advantage_left h1,
+  header#vsp-header + .w3l-about-bottom .advantage_left h1 {
+    font-size: 1.6rem !important;
+    line-height: 1.3 !important;
+  }
+}
+
+/* ==========================================================================
+   Consistent Mobile Event Reading Pattern: Title & Description -> Images
+   ========================================================================== */
+@media screen and (max-width: 991px) {
+  .middle-grids {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Always show Title, Badges, and Story Narrative first */
+  .middle-grids .advantage-grid-info {
+    order: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  /* Always show Images directly underneath the story description */
+  .middle-grids .advantage-grid-info1 {
+    order: 2 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .middle-grids .advantage-grid-info1 .advantage_left1 {
+    margin-top: 0 !important;
+  }
+}
 
 .w3l-about-bottom .advantage_left p {
   font-size: 17px;

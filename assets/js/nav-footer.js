@@ -49,13 +49,22 @@
     const blogActive = active === 'blogs' ? 'active' : '';
     const vspActive = active === 'vsp' ? 'active' : '';
 
+    const backButtonHtml = active !== 'home' ? `
+      <a href="${root}index.html" class="vsp-nav-back-btn mr-2" title="Back to Home" aria-label="Back to Home">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+    ` : '';
+
     headerContainer.innerHTML = `
       <div class="w3l-header fixed-top" id="home">
         <div class="container">
           <nav class="navbar navbar-expand-lg navbar-dark pl-0 pr-0">
-            <a class="navbar-brand m-0" href="${root}index.html">
-              <span class="fa fa-gamepad"></span> VSP
-            </a>
+            <div class="d-flex align-items-center">
+              ${backButtonHtml}
+              <a class="navbar-brand m-0" href="${root}index.html">
+                <span class="fa fa-gamepad"></span> VSP
+              </a>
+            </div>
             <button
               class="navbar-toggler"
               type="button"
@@ -63,7 +72,7 @@
               aria-expanded="false"
               aria-label="Toggle navigation menu"
             >
-              <span class="navbar-toggler-icon fa fa-bars"></span>
+              <i class="fa-solid fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ml-auto">
