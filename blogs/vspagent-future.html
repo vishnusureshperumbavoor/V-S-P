@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>The Future of vspagent: Bridging AI Coding Agents to Deep ML & Remote GPUs - VSP</title>
+    <title>The Future of VSP Agent: Bridging AI Coding Agents to Deep ML & Remote GPUs - VSP</title>
     <link
       href="//fonts.googleapis.com/css?family=Nunito:400,700&display=swap"
       rel="stylesheet"
@@ -42,7 +42,7 @@
           <div class="col-lg-12 advantage-grid-info">
             <div class="advantage_left">
               <h1 class="font-weight" style="font-size: 2.8rem">
-                The Future of vspagent: Bridging AI Coding Agents to Deep ML & Remote GPUs
+                The Future of VSP Agent: Bridging AI Coding Agents to Deep ML & Remote GPUs
               </h1>
               <p class="mt-2 mb-4" style="color: #7df9ff">
                 <b>Focus:</b> Agentic ML Infrastructure | <b>Integrations:</b> Antigravity, Claude Code, Codex | <b>Author:</b> Vishnu Suresh Perumbavoor (VSP)
@@ -71,14 +71,14 @@
                 Coding agents operate locally in the developer's shell, but modern model training and inference require dedicated hardware: NVIDIA A100s, H100s, Google Colab sessions, and cloud clusters. Connecting local agents to remote environments via browser WebSockets or basic MCP bridges is notoriously fragile: idle browser tabs disconnect, WebSocket tools unregister, and long-running training loops block synchronous RPC calls until timeouts trigger.
               </p>
 
-              <h2 class="mt-4">3. The Upgrade Blueprint for `vspagent`</h2>
+              <h2 class="mt-4">3. The Upgrade Blueprint for VSP Agent (<code>vspagent</code>)</h2>
               <p class="mt-2">
-                To solve these friction points, we are evolving <b><code>vspagent</code></b> into a dedicated CLI and MCP toolkit tailored specifically for Antigravity, Claude Code, and Codex. The roadmap centers on three core pillars:
+                To solve these friction points, we are evolving <b>VSP Agent</b> (distributed via the <code>vspagent</code> package) into a dedicated CLI and MCP toolkit tailored specifically for Antigravity, Claude Code, and Codex. The roadmap centers on three core pillars:
               </p>
 
-              <h3 class="mt-3">Pillar 1: Deep Inspection & Deconstruction (`vspagent inspect`)</h3>
+              <h3 class="mt-3">Pillar 1: Deep Inspection & Deconstruction (<code>vspagent inspect</code>)</h3>
               <p class="mt-2">
-                Instead of forcing an agent to write custom probe scripts, <code>vspagent</code> provides deterministic, single-command X-ray capabilities:
+                Instead of forcing an agent to write custom probe scripts, the <code>vspagent</code> CLI provides deterministic, single-command X-ray capabilities:
               </p>
               <ul>
                 <li><b>Checkpoint & Weight X-Ray (<code>vspagent inspect-ckpt &lt;target&gt;</code>):</b> Streams file headers and metadata to extract architecture topology, layer parameters, <code>timm</code> or Hugging Face backbone matches, embedded training hyperparameters, and tensor dtypes without loading multi-gigabyte tensors into system RAM.</li>
@@ -86,7 +86,7 @@
                 <li><b>Dataset & Binary Cache Profiler (<code>vspagent inspect-data &lt;path&gt;</code>):</b> Summarizes token distributions, class balances, group-split keys, and potential train-validation leakage in a concise JSON/Markdown report optimized for LLM context limits.</li>
               </ul>
 
-              <h3 class="mt-3">Pillar 2: Agent-Native Remote GPU Execution (`vspagent compute`)</h3>
+              <h3 class="mt-3">Pillar 2: Agent-Native Remote GPU Execution (<code>vspagent compute</code>)</h3>
               <p class="mt-2">
                 Remote acceleration should be robust and non-blocking:
               </p>
@@ -96,9 +96,9 @@
                 <li><b>Zero-Config Workspace Sync (<code>vspagent sync</code>):</b> Enables the AI agent to edit clean code locally using language servers and local linters, while automatically mirroring delta changes to remote GPU storage and syncing trained weights (such as LoRA adapters or final checkpoints) back down.</li>
               </ul>
 
-              <h3 class="mt-3">Pillar 3: Universal Agent Integration (`SKILL.md` + MCP + CLI)</h3>
+              <h3 class="mt-3">Pillar 3: Universal Agent Integration (<code>SKILL.md</code> + MCP + CLI)</h3>
               <p class="mt-2">
-                For rapid adoption across Antigravity, Claude Code, and Codex, <code>vspagent</code> is built with zero-barrier interfaces:
+                For rapid adoption across Antigravity, Claude Code, and Codex, VSP Agent's CLI (<code>vspagent</code>) is built with zero-barrier interfaces:
               </p>
               <ul>
                 <li><b>CLI-First with Deterministic JSON:</b> Every command supports a <code>--json</code> flag, allowing coding agents to parse outputs reliably through standard terminal execution tools.</li>
@@ -107,7 +107,7 @@
 
               <h2 class="mt-4">4. What's Next</h2>
               <p class="mt-2">
-                By transforming <code>vspagent</code> into an agent-centric inspection and compute bridge, we eliminate the guesswork and friction in real-world ML. Autonomous agents will no longer be confined to surface-level script edits—they will possess the specialized tools to reverse-engineer, adapt, and scale state-of-the-art models on remote GPUs end-to-end.
+                By transforming VSP Agent (powered by the <code>vspagent</code> package) into an agent-centric inspection and compute bridge, we eliminate the guesswork and friction in real-world ML. Autonomous agents will no longer be confined to surface-level script edits—they will possess the specialized tools to reverse-engineer, adapt, and scale state-of-the-art models on remote GPUs end-to-end.
               </p>
             </div>
           </div>
