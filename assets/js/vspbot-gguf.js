@@ -137,18 +137,10 @@ function setDownloadMeta({ loaded = null, total = null } = {}) {
   }
 }
 
-function showProgressPanel(show) {
+function showProgressPanel(show = true) {
   if (!progressWrapEl) return;
-  const diagBtn = document.getElementById("vspbot-diag-toggle");
-  if (show) {
-    progressWrapEl.classList.remove("is-collapsed");
-    progressWrapEl.classList.add("is-visible");
-    diagBtn?.classList.add("is-active");
-  } else {
-    progressWrapEl.classList.add("is-collapsed");
-    progressWrapEl.classList.remove("is-visible");
-    diagBtn?.classList.remove("is-active");
-  }
+  progressWrapEl.classList.remove("is-collapsed");
+  progressWrapEl.classList.add("is-visible");
 }
 
 function addMessage(role, content, extraClass = "") {

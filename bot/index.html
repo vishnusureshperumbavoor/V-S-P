@@ -14,6 +14,9 @@
 </head>
 
 <body class="vspbot-full-page">
+  <!-- Shared Global Navigation Topbar Header -->
+  <header id="vsp-header"></header>
+
   <main class="vspbot-page-wrap">
     <div class="vspbot vspbot-expanded">
       
@@ -31,26 +34,13 @@
 
         <span id="vspbot-status" style="display: none;" aria-live="polite"></span>
 
-        <nav class="vspbot-nav-actions" aria-label="Navigation">
-          <button id="vspbot-diag-toggle" class="vspbot-hud-btn" type="button" title="View model telemetry & cache settings">
-            <i class="fa-solid fa-hard-drive"></i>
-            <span>Engine</span>
-          </button>
-          <span class="vspbot-nav-divider" aria-hidden="true"></span>
-          <a href="../index.html" class="vspbot-nav-icon" title="Home" aria-label="Home">
-            <i class="fa-solid fa-house"></i>
-          </a>
-          <a href="../bot/" class="vspbot-nav-icon active" title="VSP Bot (Current Page)" aria-label="VSP Bot" aria-current="page">
-            <i class="fa-solid fa-robot"></i>
-          </a>
-          <a href="../blogs.html" class="vspbot-nav-icon" title="Blogs" aria-label="Blogs">
-            <i class="fa-solid fa-newspaper"></i>
-          </a>
-        </nav>
+        <div class="vspbot-header-meta">
+          <span class="vspbot-live-pill"><i class="fa-solid fa-bolt"></i> 100% In-Browser</span>
+        </div>
       </header>
 
-      <!-- Collapsible / Docked Telemetry & Storage Tray -->
-      <div id="vspbot-progress-wrap" class="vspbot-telemetry-tray is-collapsed">
+      <!-- Persistent Model Telemetry & Storage Tray (Always Visible) -->
+      <div id="vspbot-progress-wrap" class="vspbot-telemetry-tray">
         <div class="telemetry-meta-row">
           <div class="telemetry-meta-left">
             <span class="telemetry-item" id="vspbot-model-size">
@@ -134,6 +124,7 @@
     </div>
   </main>
 
+  <script src="../assets/js/nav-footer.js"></script>
   <script type="module" src="../assets/js/vspbot-gguf.js"></script>
 </body>
 

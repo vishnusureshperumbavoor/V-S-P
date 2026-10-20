@@ -17,7 +17,7 @@
       }
     }
     const path = window.location.pathname;
-    if (path.includes('/blogs/')) {
+    if (path.includes('/blogs/') || path.includes('/bot/') || path.endsWith('/bot') || path.includes('/bot/index.html')) {
       return '../';
     }
     return './';
