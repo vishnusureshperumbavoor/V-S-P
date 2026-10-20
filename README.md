@@ -46,8 +46,5 @@ V-S-P/
 ├── bot/
 │   └── index.html                 # Dedicated full-page bot view
 ├── index.html                     # Main portfolio page with floating bot widget
-├── blogs.html                     # Tech articles and case studies
-├── events.html                    # Hackathons & achievements
-├── services.html                  # Engineering & consulting services
-└── contact.html                   # Contact & inquiries
+└── blogs.html                     # Tech articles and case studies
 ```
