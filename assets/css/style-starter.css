@@ -11781,3 +11781,15 @@ span.sicon {
   color: #000 !important;
 }
 /* /vspbot icon color override */
+
+/* Hugging Face Vector Icon Styling */
+.vsp-hf-icon {
+  display: inline-block;
+  vertical-align: -0.15em;
+  transition: color 0.25s ease, fill 0.25s ease, transform 0.25s ease;
+}
+
+a:hover .vsp-hf-icon {
+  fill: var(--primary) !important;
+  color: var(--primary) !important;
+}
