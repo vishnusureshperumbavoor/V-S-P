@@ -11240,27 +11240,8 @@ span.sicon {
   padding: 2rem; }
 
 .w3l-services-block-3 .feature-body:hover {
-  background-size: cover;
-  background-repeat: no-repeat, no-repeat, no-repeat;
-  background-position: bottom right, left, right; }
-
-.w3l-services-block-3 .service1:hover {
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.74), rgba(0, 0, 0, 0.67)), url(../images/g1.jpg); }
-
-.w3l-services-block-3 .service2:hover {
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.74), rgba(0, 0, 0, 0.67)), url(../images/g2.jpg); }
-
-.w3l-services-block-3 .service3:hover {
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.74), rgba(0, 0, 0, 0.67)), url(../images/g3.jpg); }
-
-.w3l-services-block-3 .service4:hover {
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.74), rgba(0, 0, 0, 0.67)), url(../images/g4.jpg); }
-
-.w3l-services-block-3 .service5:hover {
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.74), rgba(0, 0, 0, 0.67)), url(../images/g5.jpg); }
-
-.w3l-services-block-3 :hover .service6:hover {
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.74), rgba(0, 0, 0, 0.67)), url(../images/g6.jpg); }
+  background-color: #0d1117;
+  background-image: none; }
 
 .w3l-services-block-3 .feature-img span {
   font-size: 35px;

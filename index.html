@@ -36,11 +36,35 @@
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/style-starter.css" />
+    <!-- Cyber & Futuristic Effects CSS -->
+    <link rel="stylesheet" href="assets/css/cyber-effects.css" />
 
     <style>
       body {
         background-color: #000000;
         color: #cbd5e1;
+      }
+      #neural-mesh {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .w3l-header,
+      .w3l-main-banner,
+      .w3l-content-photo-5,
+      .w3l-about-bottom,
+      .w3l-services-block-3,
+      .w3l-gallery-7,
+      footer {
+        position: relative;
+        z-index: 1;
+      }
+      .banner-view {
+        background-color: transparent !important;
       }
       .navbar-dark .navbar-nav .nav-link {
         font-size: 1.25rem;
@@ -160,6 +184,8 @@
   </head>
 
   <body class="">
+    <!-- Interactive Neural Constellation / Synaptic Particle Mesh -->
+    <canvas id="neural-mesh"></canvas>
     <!-- header -->
     <header>
       <div class="w3l-header fixed-top" id="home">
@@ -277,13 +303,17 @@
                 class="col-lg-12 footer-right text-lg-center mt-lg-0 mt-3 pt-3"
                 style="font-weight: bold"
               >
-                <a href="#">
+                <div class="vsp-photo-wrapper">
+                  <div class="vsp-hud-bracket tl"></div>
+                  <div class="vsp-hud-bracket tr"></div>
+                  <div class="vsp-hud-bracket bl"></div>
+                  <div class="vsp-hud-bracket br"></div>
                   <img
                     src="https://pbs.twimg.com/media/GJU3WouWMAApbB0?format=jpg&name=large"
                     class="img-fluid"
                     alt="content-photo"
                   />
-                </a>
+                </div>
                 <!-- <a href="https://www.canva.com/design/DAFa5EB1Cfc/6u1GGKk_Ve2UUZq0XzWOTA/view?utm_content=DAFa5EB1Cfc&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink" target="_blank" class="btn-style btn-primary btn mt-lg-5 mt-4 download-cv-button mb-3">View Resume</a><br> -->
                 <div class="download-cv-icons">
                   <a
@@ -547,10 +577,10 @@
       id="events"
       style="padding-top: 100px"
     >
-      <div class="row-features">
-        <h3 style="font-weight: bold; text-align: center">Events</h3>
-      </div>
       <div class="container py-lg-5 py-md-3">
+        <div class="row-features text-center mb-4">
+          <h3 style="font-weight: bold">Events</h3>
+        </div>
         <div class="row middle-grids">
           <div class="col-lg-5 advantage-grid-info1">
             <div class="advantage_left1 mt-lg-0 mt-5">
@@ -971,6 +1001,13 @@
     </section>
     <!-- gallery-7 -->
     <section id="gallery-vsp" class="w3l-gallery-7">
+      <div class="gallery-cyber-stage">
+        <canvas id="gallery-fx-canvas"></canvas>
+        <div class="gallery-horizon-stage">
+          <div class="gallery-horizon-grid"></div>
+        </div>
+        <div class="gallery-horizon-glow"></div>
+      </div>
       <div class="gallery-7_sur py-5">
         <div class="container py-lg-5">
           <div class="row-features">
@@ -1123,164 +1160,6 @@
         </div>
       </div>
     </section>
-    <!-- //gallery-7 -->
-    <!-- iphone home block -->
-    <!-- <section class="w3l-blog py-5 text-center">
-    <div class="container py-lg-5">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="img-block">
-                    <a href="#img">
-                        <img src="assets/images/frame-mac.png" class="img-fluid" alt="image" />
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <h3>Passionate designer & developer who loves simplicity.</h3>
-                <h5 class="mt-3">Fusce fringilla tincidunt laoreet volutpat cras varius sit suscipit.</h5>
-                <p class="mt-4 mb-0"> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam totam id dolorem, nobis aperiam vero
-                    reprehenderit quae explicabo fugiat modi eius quos voluptatum ratione dolorum placeat aliquid rerum, at sapiente provident
-                    consequuntur. Vero sed hic omnis, odit in ipsam facilis beatae, assumenda dolore necessitatibus sequi?</p>
-                <a href="blog1.html" class="btn-style btn-primary btn mt-lg-5 mt-4">View my project</a>
-            </div>
-            <div class="col-lg-3 col-6 pl-md-3 pl-2 mt-lg-0 mt-md-5 mt-4">
-                <div class="img-block">
-                    <a href="#img">
-                        <img src="assets/images/p2.jpg" class="img-fluid" alt="image" />
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>  -->
-    <!-- //iphone home block -->
-    <!-- testimonial -->
-    <!-- <section class="w3l-quote-main" id="client">
-    <div class="quote py-5">
-        <div class="container py-lg-5">
-            <div class="row">
-                <div class="col-lg-9">
-                    <h4>" There are many variations of passages of Lorem Ipsum available, randomised words which don't look even slightly believable.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum sed dignissimos explicabo facilis incidunt maiores eos "</h4>
-                </div>
-                <div class="col-lg-3 mt-lg-0 mt-3 text-lg-center tablet-grid">
-                    <img src="assets/images/client1.jpg" alt="" class="img-fluid" />
-                    <div>
-                        <h6 class="mb-0 mt-lg-3">christopher robin</h6>
-                        <h5 class="mt-1">- UI/UX Designer </h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>  -->
-    <!-- //testimonial -->
-
-    <!-- home page blog-->
-    <!-- <section class="w3l-blog py-5">
-    <div class="container py-lg-5 py-md-3">
-        <div class="row">
-            <div class="col-lg-5">
-                <h3>I'm Available For Freelance Projects.</h3>
-                <h5 class="mt-3">Imagination is more important than knowledge </h5>
-                <p class="mt-4"> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore minima doloribus provident, quia, ipsam totam
-                    veniam iste ea temporibus non consequatur tenetur? Velit officiis laborum molestias ratione impedit, totam, praesentium a nulla
-                    fuga aliquam repellendus facilis consequuntur corrupti cum delectus, quia maiores accusamus animi obcaecati vel ipsum.</p>
-            </div>
-            <div class="col-lg-7 mt-lg-0 mt-4">
-                <div class="img-block">
-                    <a href="single.html">
-                        <img src="assets/images/g3.jpg" class="img-fluid" alt="image" />
-                        <span>A collection of Creative Website Design</span>
-                    </a>
-                </div>
-                <div class="img-block mt-3">
-                    <a href="single.html"> <img src="assets/images/g2.jpg" class="img-fluid" alt="image" />
-                        <span>Personalized Portfolio work</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section> -->
-    <!-- //home page blog-->
-    <!-- freelance hire me -->
-    <!-- <section class="w3l-grid-quote py-5">
-      <div class="container py-lg-3">
-        <h6>I'am available to change the world</h6>
-        <h3>Let's work together indeed!</h3>
-        <a href="contact.html" class="btn-style btn-primary btn">Get quotes</a>
-        <a href="contact.html" class="btn btn-style btn-light ml-2">Hire me</a>
-      </div>
-    </section> -->
-    <!-- //freelance hire me -->
-
-    <!-- contact form -->
-    <!-- <section class="w3l-contacts-12 py-5" id="contact" style="padding-top:100px;">
-      <div class="container py-md-3">
-        <div class="contacts12-main">
-          <div class="title-section">
-            <h3 class="main-title-w3 mb-md-5 mb-4">
-              Want to get in touch? <br />Find me on
-              <a href="tel:+12-331-456-789" class="editContent">phone</a>,
-              <a
-                href="mailto:vishnusureshperumbavoor@gmail.com"
-                class="editContent"
-                >email</a
-              >,
-              <a href="https://twitter.com/vspeeeeee" class="editContent"
-                >twitter</a
-              >
-              or <a href="#linkedin" class="editContent">linkedin</a>.
-            </h3>
-          </div>
-
-          <form name="google-sheet" method="post">
-            <div class="main-input">
-              <input
-                type="text"
-                name="Name"
-                placeholder="Enter your name"
-                class="contact-input"
-                required=""
-              />
-              <input
-                type="email"
-                name="Email"
-                placeholder="Enter your mail"
-                class="contact-input"
-                required=""
-              />
-              <input
-                type="text"
-                name="Subject"
-                placeholder="Subject"
-                class="contact-input"
-              />
-              <textarea
-                class="contact-textarea contact-input"
-                name="Message"
-                placeholder="Enter your message"
-                required=""
-              ></textarea>
-            </div>
-            <div class="text-right">
-              <button
-                type="submit"
-                value="submit"
-                name="submit"
-                class="btn-primary btn btn-style"
-                onClick="myFunction()"
-              >
-                Send
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </section> -->
 
     <!-- Footer -->
     <footer>
@@ -1542,5 +1421,8 @@
     <!--  bootstrap js -->
     <script src="assets/js/bootstrap.min.js"></script>
     <!--  //bootstrap js -->
+
+    <!-- Cyber & Futuristic Effects Engine -->
+    <script src="assets/js/cyber-effects.js"></script>
   </body>
 </html>
