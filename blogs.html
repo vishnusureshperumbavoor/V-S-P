@@ -6,7 +6,9 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>VSP</title>
+    <title>Blogs | Vishnu Suresh Perumbavoor (VSP)</title>
+    <link rel="icon" href="./assets/images/vsp3.jpeg" type="image/png" />
+    <!-- google fonts -->
     <link
       href="//fonts.googleapis.com/css?family=Nunito:400,700&display=swap"
       rel="stylesheet"
@@ -19,12 +21,19 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <!-- Base & Starter CSS -->
     <link rel="stylesheet" href="assets/css/style-starter.css" />
+    <!-- Articles List Feed CSS -->
+    <link rel="stylesheet" href="assets/css/blog-layouts.css" />
 
     <style>
       body {
-        background-color: #000;
+        background-color: #000000;
         color: #cbd5e1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
       }
       .navbar-dark .navbar-nav .nav-link {
         font-size: 1.25rem;
@@ -37,197 +46,144 @@
         color: var(--primary) !important;
         transform: translateY(-2px);
       }
-      .w3l-services-block {
-        background: #000 !important;
+      .blog-feed-section {
+        padding-top: 140px;
+        flex: 1 0 auto;
       }
-      .service_grid_btm_left2 {
-        background: #0d1117 !important;
-        border: 1px solid #1e2633 !important;
-        border-radius: 8px !important;
-        transition: all 0.3s ease;
-      }
-      .service_grid_btm_left2 h5 {
-        color: #fff !important;
-      }
-      .service_grid_btm_left2 p {
-        color: #94a3b8 !important;
-      }
-      .service_grid_btm_left1:hover .service_grid_btm_left2 {
-        background: #141b24 !important;
-        border-color: var(--primary) !important;
-        transform: translateY(-4px);
+      footer#vsp-footer,
+      footer {
+        flex-shrink: 0;
+        margin-top: auto;
       }
     </style>
   </head>
 
   <body>
-    <!-- header -->
+    <!-- Common Header / Topbar Component -->
     <header id="vsp-header"></header>
-    <!-- //header -->
-    <!-- services block 2 -->
-    <div class="w3l-services-block py-5" id="classes">
-      <div class="container py-lg-5 py-md-3">
-        <div class="services-block_grids_bottom">
-          <div class="row">
-            <a
-              href="blogs/vspagent-future.html"
-              class="col-lg-4 col-md-6 service_grid_btm_left"
-            >
-              <div class="service_grid_btm_left1">
-                <div class="service_grid_btm_left2">
-                  <span
-                    class="fa fa-terminal editContent"
-                    aria-hidden="true"
-                  ></span>
-                  <h5>The Future of VSP Agent</h5>
-                  <p>
-                    Halting RSNA Knee: Building the universal reverse-engineering and remote GPU compute runtime for autonomous agents with the vspagent toolkit.
-                  </p>
-                </div>
-              </div>
-            </a>
 
-            <a
-              href="blogs/rsna-knee.html"
-              class="col-lg-4 col-md-6 service_grid_btm_left mt-md-0 mt-sm-5 mt-4"
-            >
-              <div class="service_grid_btm_left1">
-                <div class="service_grid_btm_left2">
-                  <span
-                    class="fa fa-heartbeat editContent"
-                    aria-hidden="true"
-                  ></span>
-                  <h5>RSNA Knee: Rank 5827 to 923</h5>
-                  <p>
-                    How we reverse-engineered a 3D medical MRI pipeline to jump
-                    4900+ ranks with multi-model MIL and rank blending.
-                  </p>
+    <!-- Main Blog Feed Container -->
+    <main class="blog-feed-section py-5">
+      <div class="container py-lg-4">
+        <div class="hn-theme">
+          <!-- Feed List -->
+          <ol class="hn-list">
+            <!-- Item 1 -->
+            <li class="hn-item">
+              <span class="hn-rank">1.</span>
+              <div class="hn-body">
+                <div class="hn-title-line">
+                  <a href="blogs/vspagent-future.html" class="hn-title">The Future of VSP Agent: Halting RSNA Knee and Building the Universal Agent Runtime</a>
+                  <span class="hn-domain">(vspagent)</span>
+                </div>
+                <div class="hn-subtext">
+                  Halting RSNA Knee: Building the universal reverse-engineering and remote GPU compute runtime for autonomous agents with the vspagent toolkit.
                 </div>
               </div>
-            </a>
+            </li>
 
-            <a
-              href="blogs/agentic-publishing.html"
-              class="col-lg-4 col-md-6 service_grid_btm_left mt-lg-0 mt-sm-5 mt-4"
-            >
-              <div class="service_grid_btm_left1">
-                <div class="service_grid_btm_left2">
-                  <span
-                    class="fa fa-share-alt editContent"
-                    aria-hidden="true"
-                  ></span>
-                  <h5>Autonomous Publishing for AI Agents</h5>
-                  <p>
-                    Architecting zero-friction blog, Hacker News, and Subreddit
-                    publishing pipelines for autonomous coding agents.
-                  </p>
+            <!-- Item 2 -->
+            <li class="hn-item">
+              <span class="hn-rank">2.</span>
+              <div class="hn-body">
+                <div class="hn-title-line">
+                  <a href="blogs/rsna-knee.html" class="hn-title">RSNA Knee: Jumping 4,900+ Ranks from 5827 to 923 via 3D MRI Multi-Model MIL</a>
+                  <span class="hn-domain">(medical-ai)</span>
+                </div>
+                <div class="hn-subtext">
+                  How we reverse-engineered a 3D medical MRI pipeline to jump 4900+ ranks with multi-model MIL and rank blending across diverse study views.
                 </div>
               </div>
-            </a>
+            </li>
+
+            <!-- Item 3 -->
+            <li class="hn-item">
+              <span class="hn-rank">3.</span>
+              <div class="hn-body">
+                <div class="hn-title-line">
+                  <a href="blogs/agentic-publishing.html" class="hn-title">Autonomous Publishing for AI Agents: Zero-Friction Multi-Channel Syndication</a>
+                  <span class="hn-domain">(agentic-ai)</span>
+                </div>
+                <div class="hn-subtext">
+                  Architecting zero-friction blog and publication pipelines enabling autonomous coding agents to syndicate verified technical research.
+                </div>
+              </div>
+            </li>
+
+            <!-- Item 4 -->
+            <li class="hn-item">
+              <span class="hn-rank">4.</span>
+              <div class="hn-body">
+                <div class="hn-title-line">
+                  <a href="blogs/onnx.html" class="hn-title">ONNX: How an Interoperability Spec Evolved to Take Over Global AI Inference</a>
+                  <span class="hn-domain">(onnx)</span>
+                </div>
+                <div class="hn-subtext">
+                  How a technology introduced for model interoperability evolved into the bedrock of high-performance production inference worldwide.
+                </div>
+              </div>
+            </li>
+
+            <!-- Item 5 -->
+            <li class="hn-item">
+              <span class="hn-rank">5.</span>
+              <div class="hn-body">
+                <div class="hn-title-line">
+                  <a href="blogs/WorldIn2025.html" class="hn-title">The Frontier AI Landscape: OpenAI, Anthropic, Meta, xAI, China, and Llama-4</a>
+                  <span class="hn-domain">(frontier-ai)</span>
+                </div>
+                <div class="hn-subtext">
+                  OpenAI, Anthropic, Meta, xAI, China, Llama-4, GPT-5, Claude, Sora, and where the frontier intelligence curve heads next.
+                </div>
+              </div>
+            </li>
+
+            <!-- Item 6 -->
+            <li class="hn-item">
+              <span class="hn-rank">6.</span>
+              <div class="hn-body">
+                <div class="hn-title-line">
+                  <a href="blogs/ChristmasBattle.html" class="hn-title">The Christmas AI Battle: OpenAI vs Google Release Wars Analyzed</a>
+                  <span class="hn-domain">(industry)</span>
+                </div>
+                <div class="hn-subtext">
+                  OpenAI vs Google holiday model release showdown — multimodal capabilities, benchmark battles, and developer ecosystem capture.
+                </div>
+              </div>
+            </li>
+
+            <!-- Item 7 -->
+            <li class="hn-item">
+              <span class="hn-rank">7.</span>
+              <div class="hn-body">
+                <div class="hn-title-line">
+                  <a href="blogs/India2025.html" class="hn-title">Can India Build a Sovereign AI Model or Do We Even Need To?</a>
+                  <span class="hn-domain">(sovereign-ai)</span>
+                </div>
+                <div class="hn-subtext">
+                  Strategic blueprint, GPU compute realities, and what India needs to do to build sovereign models and become an AI superpower.
+                </div>
+              </div>
+            </li>
+          </ol>
+
+          <!-- Pagination Bar -->
+          <div class="hn-pagination">
+            <span class="hn-page-info">Showing 1 &ndash; 7 of 7 articles</span>
+            <div class="hn-page-controls">
+              <button class="hn-page-btn disabled" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+              <span class="hn-current-page">1</span>
+              <button class="hn-page-btn disabled" disabled>Next <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="w3l-services-block py-5" id="classes">
-      <div class="container py-lg-5 py-md-3">
-        <div class="services-block_grids_bottom">
-          <div class="row">
-            <a
-              href="blogs/onnx.html"
-              class="col-lg-4 col-md-6 service_grid_btm_left"
-            >
-              <div class="service_grid_btm_left1">
-                <div class="service_grid_btm_left2">
-                  <span
-                    class="fa fa-desktop editContent"
-                    aria-hidden="true"
-                  ></span>
-                  <h5>ONNX</h5>
-                  <p>
-                    How a technology which is introduced for interoperability
-                    now taking over the planet
-                  </p>
-                </div>
-              </div>
-            </a>
+    </main>
 
-            <a
-              href="blogs/WorldIn2025.html"
-              class="col-lg-4 col-md-6 service_grid_btm_left mt-md-0 mt-sm-5 mt-4"
-            >
-              <div class="service_grid_btm_left1">
-                <div class="service_grid_btm_left2">
-                  <span
-                    class="fa fa-camera-retro editContent"
-                    aria-hidden="true"
-                  ></span>
-                  <h5>World in 2025</h5>
-                  <p>
-                    OpenAI, Anthropic, Meta, xAI, China, Llama-4, GPT-5, Claude,
-                    Sora, Elon
-                  </p>
-                </div>
-              </div>
-            </a>
-
-            <a
-              href="blogs/ChristmasBattle.html"
-              class="col-lg-4 col-md-6 service_grid_btm_left mt-lg-0 mt-sm-5 mt-4"
-            >
-              <div class="service_grid_btm_left1">
-                <div class="service_grid_btm_left2">
-                  <span
-                    class="fa fa-apple editContent"
-                    aria-hidden="true"
-                  ></span>
-                  <h5>Christmas Battle</h5>
-                  <p>
-                    OpenAI vs Google Christmas battle. <br />
-                    Who won?
-                  </p>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="w3l-services-block py-5" id="classes">
-      <div class="container py-lg-5 py-md-3">
-        <div class="services-block_grids_bottom">
-          <div class="row">
-            <a
-              href="blogs/India2025.html"
-              class="col-lg-4 col-md-6 service_grid_btm_left"
-            >
-              <div class="service_grid_btm_left1">
-                <div class="service_grid_btm_left2">
-                  <span
-                    class="fa fa-globe editContent"
-                    aria-hidden="true"
-                  ></span>
-                  <h5>Can India build a sovereign model or do we need to?</h5>
-                  <p>What do we need to do to become AI superpower.</p>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Footer -->
+    <!-- Common Footer Component -->
     <footer id="vsp-footer"></footer>
-    <!-- //Footer -->
 
-    <!-- Common Header & Footer Component -->
+    <!-- Scripts -->
     <script src="assets/js/nav-footer.js"></script>
-    <!-- <button
-      onclick="topFunction()"
-      id="movetop"
-      class="editContent"
-      title="Go to top"
-    >
-      <span class="fa fa-angle-up"></span>
-    </button> -->
   </body>
 </html>
