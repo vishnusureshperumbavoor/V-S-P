@@ -84,9 +84,9 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #212529;
+  color: #cbd5e1;
   text-align: left;
-  background-color: #fff; }
+  background-color: #000000; }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
   outline: 0 !important; }
@@ -9581,10 +9581,10 @@ a.text-dark:hover, a.text-dark:focus {
 
 :root {
   --primary: #00d679;
-  --secondary: #010101;
-  --heading: #232527;
-  --para: #777;
-  --bg-light: #f8f9fa;
+  --secondary: #000000;
+  --heading: #ffffff;
+  --para: #94a3b8;
+  --bg-light: #0d1117;
   --card-curve: 6px; }
 
 html {
@@ -10419,11 +10419,12 @@ section.w3l-grid-quote h3 {
   bottom:110px;
   right:40px;
   width:420px;
-  background-color: #fff;
+  background-color: #101216;
+  border: 1px solid #1e2633;
   overflow:hidden;
   border-radius:15px;
-  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
-              0 32px 64px -48px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.5),
+              0 32px 64px -48px rgba(0, 0, 0, 0.5);
   transform: scale(0.5);
   opacity: 0;
   pointer-events: none;
@@ -10435,6 +10436,7 @@ section.w3l-grid-quote h3 {
   background-color: var(--primary);
   text-align:center;
   position: relative;
+  color: #000;
 }
 
 .vspbot header span{
@@ -10447,12 +10449,14 @@ section.w3l-grid-quote h3 {
 
 .vspbot header h2{
   font-weight: bolder;
+  color: #000;
 }
 
 .vspbot .chatbox{
   height:280px;
   padding:15px 20px 70px;
   overflow-y:auto;
+  background-color: #080a0d;
 }
 
 .vspbot .chat{
@@ -10463,15 +10467,17 @@ section.w3l-grid-quote h3 {
   padding:12px 16px;
   border-radius:10px 10px 0px;
   background-color: var(--primary);
+  color: #000;
+  font-weight: 500;
   max-width: 75%;
- 
 }
 
 .vspbot .incoming p{
   margin:5px 0 0 0;
-  color:#000;
+  color:#e2e8f0;
   padding:12px 16px;
-  background-color: #f2f2f2;
+  background-color: #151b24;
+  border: 1px solid #202937;
   border-radius:15px 15px 15px 0px;
   max-width: 82%;
   white-space: pre-wrap;
@@ -10528,10 +10534,10 @@ section.w3l-grid-quote h3 {
 .vspbot .chat-input{
   position:absolute;
   bottom:0;
-  border-top:1px solid #ccc;
+  border-top:1px solid #1e2633;
   width:100%;
   padding:5px 20px;
-  background-color: #fff;
+  background-color: #101216;
   display: flex;
   gap:5px;
 }
@@ -10544,6 +10550,8 @@ section.w3l-grid-quote h3 {
   padding:16px 15px 16px 0px;
   height: 55px;
   width:100%;
+  background: transparent;
+  color: #ffffff;
 }
 
 .vspbot .chat-input textarea:valid ~ span{
@@ -11082,7 +11090,7 @@ span.sicon {
 /*-- //services --*/
 /*-- w3l-services-block --*/
 .w3l-services-block {
-  background: #f8f9fa; }
+  background: #000000; }
 
 .w3l-services-block h3 {
   color: #fff; }
@@ -11100,11 +11108,11 @@ span.sicon {
 
 .agileits_w3l-services-block_grid {
   padding: 2em;
-  border: 1px solid #999;
-  border-left: 3px solid #999;
+  border: 1px solid #232936;
+  border-left: 3px solid var(--primary);
   text-align: left;
   border-right: none;
-  background: #fff;
+  background: #0d1117;
   transition: .5s ease-in;
   -webkit-transition: .5s ease-in;
   -moz-transition: .5s ease-in;
@@ -11113,7 +11121,7 @@ span.sicon {
 
 .agileits_w3l-services-block_grid h5 {
   font-size: 1.5em;
-  color: #000;
+  color: #ffffff;
   margin: 0em 0 .5em;
   transition: .5s ease-in;
   -webkit-transition: .5s ease-in;
@@ -11180,11 +11188,15 @@ span.sicon {
 
 .service_grid_btm_left2 {
   padding: 2em 1em;
-  border: none;
-  background: #fff;
+  border: 1px solid #1e2633;
+  background: #0d1117;
   text-align: center;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px; }
+  border-radius: 8px;
+  transition: all 0.3s ease; }
+
+.service_grid_btm_left1:hover .service_grid_btm_left2 {
+  background: #131923;
+  border-color: var(--primary); }
 
 .service_grid_btm_left1:hover {
   cursor: default; }
@@ -11433,7 +11445,7 @@ span.sicon {
 /* vspbot expanded page */
 .vspbot-full-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #07131f 0%, #0e2a3a 45%, #143047 100%);
+  background: #020406;
 }
 
 .vspbot-page-wrap {
@@ -11454,12 +11466,15 @@ span.sicon {
   right: auto;
   bottom: auto;
   border-radius: 20px;
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35);
+  background-color: #101216;
+  border: 1px solid #1e2633;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.7);
 }
 
 .vspbot.vspbot-expanded .chatbox {
   height: calc(100% - 150px);
   padding-bottom: 20px;
+  background-color: #080a0d;
 }
 
 .vspbot-home-link {
@@ -11473,7 +11488,7 @@ span.sicon {
   text-decoration: none;
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 768px) {
@@ -11500,20 +11515,21 @@ span.sicon {
 
 .vspbot-download-message .vspbot-download-meta {
   margin: 5px 0 0 0;
-  color: #1e293b;
+  color: #e2e8f0;
   padding: 12px 16px;
-  background-color: #f2f2f2;
+  background-color: #151b24;
+  border: 1px solid #202937;
   border-radius: 15px 15px 15px 0px;
   max-width: 82%;
   width: 100%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .vspbot-download-message .vspbot-download-meta p {
   margin: 0 0 6px 0;
   font-size: 12px;
   line-height: 18px;
-  color: #334155;
+  color: #94a3b8;
 }
 
 .vspbot-download-message .vspbot-download-meta p:last-child {
@@ -11524,7 +11540,7 @@ span.sicon {
   width: 100%;
   height: 6px;
   border-radius: 999px;
-  background: #cbd5e1;
+  background: #232d3d;
   overflow: hidden;
   margin: 8px 0 6px;
 }
@@ -11550,23 +11566,23 @@ span.sicon {
   gap: 6px;
   margin-top: 8px;
   padding: 5px 12px;
-  background: #ffffff;
-  color: #dc2626;
-  border: 1px solid #e2e8f0;
+  background: #1c1315;
+  color: #f87171;
+  border: 1px solid #4a1d24;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .vspbot-delete-btn:hover {
-  background: #fef2f2;
-  border-color: #fca5a5;
-  color: #b91c1c;
+  background: #2b171a;
+  border-color: #7f1d1d;
+  color: #fca5a5;
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(220, 38, 38, 0.12);
+  box-shadow: 0 2px 5px rgba(220, 38, 38, 0.25);
 }
 
 .vspbot-delete-btn:active {
