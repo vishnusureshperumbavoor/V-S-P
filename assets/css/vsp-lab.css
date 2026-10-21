@@ -1,7 +1,7 @@
 /**
  * ============================================================================
  * VSP 3D Lab Stylesheet
- * Futuristic Cybernetic UI for Three.js 3D Visuals & Experiments
+ * Futuristic Cybernetic UI for Interactive 3D Visuals & Experiments
  * ============================================================================
  */
 
@@ -26,7 +26,7 @@ body.vsp-lab-page {
   user-select: none;
 }
 
-/* Three.js Canvas Container */
+/* 3D Canvas Container */
 #vsp-three-viewport {
   position: fixed;
   inset: 0;

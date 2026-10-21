@@ -1085,7 +1085,7 @@
     },
     robot: {
       id: 'robot',
-      name: 'ROBOT EXPRESSIVE // THREE.JS CYBER ANDROID',
+      name: 'ROBOT EXPRESSIVE // CYBER ANDROID',
       file: 'assets/models/RobotExpressive.glb',
       scale: 6.2,
       pos: [0, -19.9, 0],
