@@ -39,13 +39,6 @@
       <span class="vsp-hud-category">WIREFRAME HUD</span>
     </div>
     <h1 class="vsp-hud-title" id="vsp-design-name">CYBERNETIC 3D VSP HOLOGRAPHIC MATRIX</h1>
-    <div class="vsp-hud-specs">
-      <span><i class="fa-solid fa-cube"></i> THREE.JS R128</span>
-      <span>•</span>
-      <span>WEBGL2 SHADERS</span>
-      <span>•</span>
-      <span>60 FPS</span>
-    </div>
   </aside>
 
   <!-- Top Right Telemetry HUD -->
@@ -63,6 +56,32 @@
 
   <!-- Interactive Controls & Switcher Dock -->
   <nav class="vsp-lab-controls" aria-label="3D Design Controls">
+    <!-- Sub-bar for 3D Avatar Models & Actions (Only visible in 3D Avatar mode) -->
+    <div class="vsp-avatar-subbar" id="vsp-avatar-subbar" style="display: none;" role="region" aria-label="Avatar Roster and Actions">
+      <div class="vsp-subbar-group" id="vsp-avatar-models">
+        <button class="vsp-sub-btn active" data-avatar="michelle" type="button" title="Michelle (Dancer)">
+          <i class="fa-solid fa-person-dress"></i> Michelle
+        </button>
+        <button class="vsp-sub-btn" data-avatar="robot" type="button" title="Robot Expressive">
+          <i class="fa-solid fa-robot"></i> Robot
+        </button>
+        <button class="vsp-sub-btn" data-avatar="soldier" type="button" title="Vanguard Soldier">
+          <i class="fa-solid fa-person-rifle"></i> Soldier
+        </button>
+        <button class="vsp-sub-btn" data-avatar="xbot" type="button" title="Xbot Cyborg">
+          <i class="fa-solid fa-person-running"></i> Xbot
+        </button>
+        <button class="vsp-sub-btn" data-avatar="all" type="button" title="View All Side-by-Side">
+          <i class="fa-solid fa-users"></i> All Squad
+        </button>
+      </div>
+
+      <div class="vsp-subbar-divider" id="vsp-avatar-anim-divider" style="display: none;"></div>
+
+      <!-- Animation Action Buttons (dynamically updated) -->
+      <div class="vsp-subbar-group" id="vsp-avatar-anims"></div>
+    </div>
+
     <div class="vsp-switcher-bar" role="tablist">
       <button class="vsp-mode-btn active" data-design="matrix" type="button" role="tab" aria-selected="true">
         <i class="fa-solid fa-cube"></i> Cyber Matrix
@@ -94,6 +113,7 @@
   <!-- Three.js & Controls -->
   <script src="assets/js/three.min.js"></script>
   <script src="assets/js/OrbitControls.js"></script>
+  <script src="assets/js/DRACOLoader.js"></script>
   <script src="assets/js/GLTFLoader.js"></script>
 
   <!-- VSP 3D Laboratory Engine -->

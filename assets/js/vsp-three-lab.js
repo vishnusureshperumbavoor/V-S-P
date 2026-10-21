@@ -1056,15 +1056,129 @@
   }
 
   // ==========================================================================
-  // Design 07: Real-Time Animated 3D Human Avatar (Michelle GLTF SkinnedMesh)
+  // Design 07: Real-Time Animated 3D Human Avatar & Character Squad
   // ==========================================================================
-  let avatarMixer = null;
+  let avatarMixers = [];
+  let avatarActions = {};
+  let currentAvatarModel = 'michelle';
+
+  const AVATAR_CATALOG = {
+    michelle: {
+      id: 'michelle',
+      name: 'MICHELLE // MIXAMO DANCER',
+      file: 'assets/models/Michelle.glb',
+      scale: 19,
+      pos: [0, -20, 0],
+      haloPos: [0, 16.5, 0],
+      cameraZ: 48,
+      defaultAnim: 'SambaDance',
+      animLabels: { SambaDance: 'Dance' },
+      category: 'GLTF SKELETAL RIG • SAMBA DANCE'
+    },
+    robot: {
+      id: 'robot',
+      name: 'ROBOT EXPRESSIVE // THREE.JS CYBER ANDROID',
+      file: 'assets/models/RobotExpressive.glb',
+      scale: 6.2,
+      pos: [0, -19.9, 0],
+      haloPos: [0, 13.5, 0],
+      cameraZ: 44,
+      defaultAnim: 'Running',
+      animLabels: {
+        Running: 'Run',
+        Dance: 'Dance',
+        Wave: 'Wave',
+        Jump: 'Jump',
+        ThumbsUp: 'Thumbs Up',
+        Walking: 'Walk'
+      },
+      category: 'EXPRESSIVE RIG • SPRINT CYCLE'
+    },
+    soldier: {
+      id: 'soldier',
+      name: 'VANGUARD SOLDIER // TACTICAL OPERATIVE',
+      file: 'assets/models/Soldier.glb',
+      scale: 17.5,
+      pos: [0, -20, 0],
+      haloPos: [0, 16.5, 0],
+      cameraZ: 48,
+      defaultAnim: 'Run',
+      animLabels: { Run: 'Run', Walk: 'Walk' },
+      category: 'COMBAT RIG • TACTICAL RUN'
+    },
+    xbot: {
+      id: 'xbot',
+      name: 'XBOT // CYBERNETIC MANNEQUIN',
+      file: 'assets/models/Xbot.glb',
+      scale: 17.5,
+      pos: [0, -20, 0],
+      haloPos: [0, 16.5, 0],
+      cameraZ: 48,
+      defaultAnim: 'run',
+      animLabels: { run: 'Run', walk: 'Walk' },
+      category: 'FUTURISTIC CYBORG • SKELETAL RIG'
+    },
+    all: {
+      id: 'all',
+      name: 'ALL SQUAD // 4-CHARACTER 3D LINEUP',
+      category: 'MULTI-RIG 3D SHOWCASE',
+      cameraZ: 62
+    }
+  };
+
+  function renderAvatarActionButtons(cfg, anims, activeClipName) {
+    const animsContainer = document.getElementById('vsp-avatar-anims');
+    const dividerEl = document.getElementById('vsp-avatar-anim-divider');
+    if (!animsContainer) return;
+
+    animsContainer.innerHTML = '';
+
+    if (!anims || anims.length === 0 || !cfg.animLabels || Object.keys(cfg.animLabels).length === 0) {
+      if (dividerEl) dividerEl.style.display = 'none';
+      return;
+    }
+
+    if (dividerEl) dividerEl.style.display = 'block';
+
+    Object.keys(cfg.animLabels).forEach((clipName) => {
+      const exists = anims.some((a) => a.name === clipName);
+      if (!exists) return;
+
+      const label = cfg.animLabels[clipName] || clipName;
+      const btn = document.createElement('button');
+      btn.className = `vsp-sub-btn anim-btn ${clipName === activeClipName ? 'active' : ''}`;
+      btn.type = 'button';
+      btn.textContent = label;
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!avatarActions[clipName]) return;
+
+        Object.values(avatarActions).forEach((act) => act.stop());
+        avatarActions[clipName].reset().fadeIn(0.2).play();
+
+        animsContainer.querySelectorAll('.anim-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const catEl = document.querySelector('.vsp-hud-category');
+        if (catEl) {
+          catEl.textContent = `ANIMATED RIG • ACTION: ${label.toUpperCase()}`;
+        }
+      });
+
+      animsContainer.appendChild(btn);
+    });
+  }
 
   function createAvatarDesign() {
     const group = new THREE.Group();
 
     // 1. Cyber Holographic Studio Pedestal
-    const pedGeo = new THREE.CylinderGeometry(16, 20, 2, 48);
+    const isSquad = currentAvatarModel === 'all';
+    const pedRadiusTop = isSquad ? 32 : 16;
+    const pedRadiusBottom = isSquad ? 38 : 20;
+
+    const pedGeo = new THREE.CylinderGeometry(pedRadiusTop, pedRadiusBottom, 2, 48);
     const pedMat = new THREE.MeshStandardMaterial({
       color: 0x081018,
       roughness: 0.3,
@@ -1075,10 +1189,12 @@
     group.add(pedestal);
 
     // Glowing Neon Concentric Rings on Platform
+    const r1 = isSquad ? 30 : 14;
+    const r2 = isSquad ? 35 : 17;
     const ringMat1 = new THREE.LineDashedMaterial({ color: 0x00d679, dashSize: 4, gapSize: 3, linewidth: 2 });
     const ringMat2 = new THREE.LineDashedMaterial({ color: 0x7df9ff, dashSize: 6, gapSize: 4, linewidth: 2 });
-    const rGeo1 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, 14, 0, Math.PI * 2, true).getPoints(64));
-    const rGeo2 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, 17, 0, Math.PI * 2, true).getPoints(64));
+    const rGeo1 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, r1, 0, Math.PI * 2, true).getPoints(64));
+    const rGeo2 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, r2, 0, Math.PI * 2, true).getPoints(64));
     const ring1 = new THREE.Line(rGeo1, ringMat1);
     const ring2 = new THREE.Line(rGeo2, ringMat2);
     ring1.computeLineDistances();
@@ -1090,7 +1206,7 @@
     group.add(ring1);
     group.add(ring2);
 
-    // 2. High-Performance Studio Lighting for Lifelike Skin Shading
+    // 2. High-Performance Studio Lighting
     const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
     keyLight.position.set(20, 30, 25);
     group.add(keyLight);
@@ -1119,59 +1235,111 @@
     vspHalo.add(buildHaloTube(P_SPINE, 0x00d679));
     vspHalo.add(buildHaloTube(P_LOOP, 0x00d679));
     vspHalo.scale.set(0.24, 0.24, 0.24);
-    vspHalo.position.set(0, 16.5, 0);
+
+    const curHaloY = AVATAR_CATALOG[currentAvatarModel]?.haloPos?.[1] || 16.5;
+    vspHalo.position.set(0, curHaloY, 0);
     group.add(vspHalo);
 
-    // 4. Load High-Detail Human GLB Model (Michelle)
+    // Clean up old mixers
+    avatarMixers.forEach((m) => m.stopAllAction());
+    avatarMixers = [];
+    avatarActions = {};
+
+    // 4. Load High-Detail Models
     if (typeof THREE.GLTFLoader !== 'undefined') {
       const loader = new THREE.GLTFLoader();
-      loader.load(
-        'assets/models/Michelle.glb',
-        (gltf) => {
-          const model = gltf.scene;
-          // Scale & position character onto pedestal
-          model.scale.set(19, 19, 19);
-          model.position.set(0, -20, 0);
 
-          model.traverse((child) => {
-            if (child.isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
-              if (child.material) {
-                child.material.roughness = Math.min(child.material.roughness || 0.5, 0.6);
-                child.material.needsUpdate = true;
+      if (typeof THREE.DRACOLoader !== 'undefined') {
+        const dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/');
+        loader.setDRACOLoader(dracoLoader);
+      }
+
+      function loadModelFile(cfg, customOffset, onDone) {
+        loader.load(
+          cfg.file,
+          (gltf) => {
+            const model = gltf.scene;
+            const sx = cfg.scale;
+            model.scale.set(sx, sx, sx);
+
+            const px = customOffset ? customOffset[0] : cfg.pos[0];
+            const py = customOffset ? customOffset[1] : cfg.pos[1];
+            const pz = customOffset ? customOffset[2] : cfg.pos[2];
+            model.position.set(px, py, pz);
+
+            model.traverse((child) => {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                if (child.material) {
+                  child.material.roughness = Math.min(child.material.roughness || 0.5, 0.6);
+                  child.material.needsUpdate = true;
+                }
               }
+            });
+
+            group.add(model);
+
+            // Play skeletal animation if present
+            if (gltf.animations && gltf.animations.length > 0) {
+              const mixer = new THREE.AnimationMixer(model);
+              avatarMixers.push(mixer);
+
+              const modelActions = {};
+              gltf.animations.forEach((clip) => {
+                modelActions[clip.name] = mixer.clipAction(clip);
+              });
+
+              const playClipName = (cfg.defaultAnim && modelActions[cfg.defaultAnim])
+                ? cfg.defaultAnim
+                : gltf.animations[0].name;
+
+              if (modelActions[playClipName]) {
+                modelActions[playClipName].play();
+              }
+
+              if (!isSquad) {
+                avatarActions = modelActions;
+                renderAvatarActionButtons(cfg, gltf.animations, playClipName);
+              }
+            } else if (!isSquad) {
+              renderAvatarActionButtons(cfg, [], null);
             }
-          });
 
-          group.add(model);
-
-          // Play realistic skeletal animation
-          if (gltf.animations && gltf.animations.length > 0) {
-            avatarMixer = new THREE.AnimationMixer(model);
-            const action = avatarMixer.clipAction(gltf.animations[0]);
-            action.play();
+            updateTelemetryStats();
+            if (onDone) onDone();
+          },
+          undefined,
+          (err) => {
+            console.warn(`Could not load ${cfg.file}:`, err);
           }
+        );
+      }
 
-          updateTelemetryStats();
-        },
-        undefined,
-        (err) => {
-          console.warn('Could not load Michelle.glb:', err);
-        }
-      );
+      if (isSquad) {
+        // Lineup coordinates for 4-character squad:
+        loadModelFile(AVATAR_CATALOG.michelle, [0, -20, 0]);
+        loadModelFile(AVATAR_CATALOG.soldier, [-13, -20, -2]);
+        loadModelFile(AVATAR_CATALOG.xbot, [13, -20, -2]);
+        loadModelFile(AVATAR_CATALOG.robot, [0, -19.9, 8]);
+        renderAvatarActionButtons(AVATAR_CATALOG.all, [], null);
+      } else {
+        const cfg = AVATAR_CATALOG[currentAvatarModel] || AVATAR_CATALOG.michelle;
+        loadModelFile(cfg);
+      }
     }
 
     // 5. Animation Routine
     group.userData = {
       animate: (time, delta) => {
-        if (avatarMixer && delta) {
-          avatarMixer.update(delta);
+        if (avatarMixers.length > 0 && delta) {
+          avatarMixers.forEach((m) => m.update(delta));
         }
         ring1.rotation.z = time * 0.3;
         ring2.rotation.z = -time * 0.2;
         vspHalo.rotation.y = time * 1.5;
-        vspHalo.position.y = 16.5 + Math.sin(time * 2.5) * 0.6;
+        vspHalo.position.y = curHaloY + Math.sin(time * 2.5) * 0.6;
       }
     };
 
@@ -1185,10 +1353,10 @@
     if (!designDirectory[designKey]) return;
     currentDesign = designKey;
 
-    // Clean up avatar mixer if active
-    if (avatarMixer) {
-      avatarMixer.stopAllAction();
-      avatarMixer = null;
+    // Clean up avatar mixers if active
+    if (avatarMixers.length > 0) {
+      avatarMixers.forEach((m) => m.stopAllAction());
+      avatarMixers = [];
     }
 
     // Dispose old geometries and materials to avoid WebGL memory leaks
@@ -1236,14 +1404,23 @@
     activeGroup.add(newDesignGroup);
     activeGroup.userData = newDesignGroup.userData;
 
+    // Show or hide the Avatar Roster subbar
+    const avatarSubbar = document.getElementById('vsp-avatar-subbar');
+    if (avatarSubbar) {
+      avatarSubbar.style.display = designKey === 'avatar' ? 'flex' : 'none';
+    }
+
     // Update camera distance smoothly
-    const targetZ = designDirectory[designKey].cameraZ;
+    const targetZ = (designKey === 'avatar' && AVATAR_CATALOG[currentAvatarModel]?.cameraZ)
+      ? AVATAR_CATALOG[currentAvatarModel].cameraZ
+      : designDirectory[designKey].cameraZ;
+
     if (controls) {
       controls.target.set(0, 0, 0);
     }
     camera.position.set(0, 10, targetZ);
 
-    // Update Top Corner Design Name HUD (Primary User Request!)
+    // Update Top Corner Design Name HUD
     updateTopCornerDesignName(designKey);
 
     // Update switcher buttons UI
@@ -1260,6 +1437,18 @@
   }
 
   function updateTopCornerDesignName(designKey) {
+    if (designKey === 'avatar') {
+      const avMeta = AVATAR_CATALOG[currentAvatarModel];
+      if (designNameEl && avMeta) {
+        designNameEl.textContent = avMeta.name;
+      }
+      const catEl = document.querySelector('.vsp-hud-category');
+      if (catEl && avMeta) {
+        catEl.textContent = avMeta.category;
+      }
+      return;
+    }
+
     const meta = designDirectory[designKey];
     if (designNameEl && meta) {
       designNameEl.textContent = meta.name;
@@ -1357,6 +1546,25 @@
       const designKey = btn.getAttribute('data-design');
       if (designKey && designKey !== currentDesign) {
         loadDesign(designKey);
+      }
+    });
+  });
+
+  // Hook Avatar Roster Sub-Bar Buttons
+  const avatarModelBtns = document.querySelectorAll('#vsp-avatar-models .vsp-sub-btn');
+  avatarModelBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const modelKey = btn.getAttribute('data-avatar');
+      if (modelKey) {
+        currentAvatarModel = modelKey;
+        avatarModelBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (currentDesign !== 'avatar') {
+          loadDesign('avatar');
+        } else {
+          loadDesign('avatar');
+        }
       }
     });
   });
