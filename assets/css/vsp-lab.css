@@ -430,6 +430,20 @@ body.vsp-lab-page {
   color: #fbbf24;
   border-color: rgba(251, 191, 36, 0.35);
   background: rgba(251, 191, 36, 0.08);
+  width: 32px;
+  height: 32px;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+
+.vsp-sub-btn.audio-toggle-btn i,
+.vsp-mode-btn.audio-toggle-btn i {
+  font-size: 0.82rem;
+  margin: 0 !important;
 }
 
 .vsp-sub-btn.audio-toggle-btn:hover,
@@ -517,6 +531,10 @@ body.vsp-lab-page {
     background: rgba(8, 16, 24, 0.95);
     border-color: rgba(251, 191, 36, 0.5);
     box-shadow: 4px 0 12px rgba(0, 0, 0, 0.6);
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    padding: 0 !important;
   }
 
   .vsp-sub-btn {

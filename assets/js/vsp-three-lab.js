@@ -1210,7 +1210,7 @@
           .then(() => {
             isMusicPlaying = true;
             danceMusicBtn.classList.add('active');
-            if (musicLabelEl) musicLabelEl.textContent = 'Beat: ON';
+            danceMusicBtn.setAttribute('title', 'Sound: ON (Click to Mute)');
             const icon = danceMusicBtn.querySelector('i');
             if (icon) icon.className = 'fa-solid fa-volume-high';
           })
@@ -1222,9 +1222,9 @@
       danceAudioEl.pause();
       isMusicPlaying = false;
       danceMusicBtn.classList.remove('active');
-      if (musicLabelEl) musicLabelEl.textContent = 'Beat: OFF';
+      danceMusicBtn.setAttribute('title', 'Sound: OFF (Click to Play)');
       const icon = danceMusicBtn.querySelector('i');
-      if (icon) icon.className = 'fa-solid fa-music';
+      if (icon) icon.className = 'fa-solid fa-volume-xmark';
     }
   }
 
