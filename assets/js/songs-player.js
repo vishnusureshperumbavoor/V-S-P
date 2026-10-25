@@ -13,7 +13,8 @@
       id: 0,
       title: 'No Crown Given',
       artist: 'Vishnu Suresh Perumbavoor (VSP)',
-      album: 'Cover Session 05',
+      genre: 'Self Mass',
+      album: 'Self Mass',
       dateAdded: 'Oct 2026',
       duration: 179,
       durationStr: '2:59',
@@ -25,7 +26,8 @@
       id: 1,
       title: "I'm Running This Shit",
       artist: 'Vishnu Suresh Perumbavoor (VSP)',
-      album: 'Cover Session 05',
+      genre: 'Self Mass',
+      album: 'Self Mass',
       dateAdded: 'Oct 2026',
       duration: 121,
       durationStr: '2:01',
@@ -48,7 +50,6 @@
   let analyser = null;
   let audioSource = null;
   let animFrameId = null;
-  const likedTrackIds = new Set(JSON.parse(localStorage.getItem('vsp_liked_tracks') || '[]'));
 
   // Core Audio Element
   const audio = new Audio();
@@ -71,7 +72,6 @@
       barThumb: document.getElementById('sp-bar-thumb'),
       barTitle: document.getElementById('sp-bar-title'),
       barArtist: document.getElementById('sp-bar-artist'),
-      barLikeBtn: document.getElementById('sp-bar-like-btn'),
       // Controls
       btnPlayPause: document.getElementById('sp-btn-playpause'),
       playPauseIcon: document.getElementById('sp-playpause-icon'),
@@ -98,7 +98,6 @@
       // Canvas Visualizer
       canvas: document.getElementById('sp-audio-canvas'),
       btnToggleViz: document.getElementById('sp-btn-toggleviz'),
-      vizStatus: document.getElementById('sp-viz-status-text'),
       // Fullscreen Modal
       fsModal: document.getElementById('sp-fullscreen-modal'),
       btnOpenFs: document.getElementById('sp-btn-openfs'),
@@ -148,9 +147,6 @@
     if (dom.barArtist) dom.barArtist.textContent = track.artist;
     if (dom.totalTimeLabel) dom.totalTimeLabel.textContent = track.durationStr;
     if (dom.currentTimeLabel) dom.currentTimeLabel.textContent = '0:00';
-
-    // Update Like state in bottom bar
-    updateLikeState(track.id);
 
     // Update Fullscreen view
     if (dom.fsCover) dom.fsCover.src = track.cover;
@@ -218,11 +214,6 @@
 
     // Update visual table rows
     updateTableActiveRow();
-
-    // Update status text
-    if (dom.vizStatus) {
-      dom.vizStatus.textContent = playing ? 'PLAYING // 44.1kHz STEREO' : 'PAUSED // STANDBY';
-    }
   }
 
   // Update Table active row styling & equalizer bars
@@ -446,48 +437,6 @@
     setVolume(currentVolume);
   }
 
-  // Like Track Feature
-  function toggleLike(trackId) {
-    if (likedTrackIds.has(trackId)) {
-      likedTrackIds.delete(trackId);
-      showToast('Removed from Liked Songs');
-    } else {
-      likedTrackIds.add(trackId);
-      showToast('Added to Liked Songs');
-    }
-    localStorage.setItem('vsp_liked_tracks', JSON.stringify(Array.from(likedTrackIds)));
-    updateLikeState(trackId);
-  }
-
-  function updateLikeState(trackId) {
-    const isLiked = likedTrackIds.has(trackId);
-    if (dom.barLikeBtn) {
-      dom.barLikeBtn.classList.toggle('liked', isLiked);
-      const icon = dom.barLikeBtn.querySelector('i');
-      if (icon) {
-        icon.className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-      }
-    }
-
-    // Update row hearts
-    const rowHearts = document.querySelectorAll('.sp-row-heart');
-    rowHearts.forEach((btn) => {
-      const id = parseInt(btn.getAttribute('data-heart-id'), 10);
-      const liked = likedTrackIds.has(id);
-      btn.classList.toggle('liked', liked);
-      const ic = btn.querySelector('i');
-      if (ic) {
-        ic.className = liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-      }
-    });
-
-    // Update liked count in sidebar
-    const countEl = document.getElementById('sp-liked-count');
-    if (countEl) {
-      countEl.textContent = `${likedTrackIds.size} song${likedTrackIds.size === 1 ? '' : 's'}`;
-    }
-  }
-
   // Web Audio API Visualizer
   function initAudioContext() {
     if (audioCtx) return;
@@ -669,33 +618,16 @@
     if (dom.btnShuffle) dom.btnShuffle.addEventListener('click', toggleShuffle);
     if (dom.btnRepeat) dom.btnRepeat.addEventListener('click', toggleRepeat);
 
-    // Bottom bar like
-    if (dom.barLikeBtn) {
-      dom.barLikeBtn.addEventListener('click', () => toggleLike(TRACKS[currentTrackIdx].id));
-    }
-
     // Table rows click to play
     const rows = document.querySelectorAll('.sp-row');
     rows.forEach((row) => {
       row.addEventListener('click', (e) => {
-        // If clicking heart button directly, ignore row play
-        if (e.target.closest('.sp-row-heart')) return;
         const trackId = parseInt(row.getAttribute('data-track-id'), 10);
         if (trackId === currentTrackIdx) {
           togglePlayPause();
         } else {
           loadTrack(trackId, true);
         }
-      });
-    });
-
-    // Row hearts
-    const hearts = document.querySelectorAll('.sp-row-heart');
-    hearts.forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const id = parseInt(btn.getAttribute('data-heart-id'), 10);
-        toggleLike(id);
       });
     });
 

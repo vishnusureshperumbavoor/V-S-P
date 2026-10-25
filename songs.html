@@ -73,22 +73,10 @@
       <!-- Library & Playlists Card -->
       <div class="sp-sidebar-card" style="flex: 1;">
         <div class="sp-sidebar-header">
-          <h4><i class="fa-solid fa-book-bookmark"></i> Your Library</h4>
-          <span title="Add playlist"><i class="fa-solid fa-plus" style="font-size: 0.9rem; cursor: pointer;"></i></span>
+          <h4><i class="fa-solid fa-book-bookmark"></i> Library</h4>
         </div>
 
         <div class="sp-sidebar-scroll">
-          <!-- Liked Songs Playlist -->
-          <div class="sp-playlist-item" onclick="document.querySelector('#sp-tracklist-section').scrollIntoView({behavior: 'smooth'})">
-            <div class="sp-playlist-thumb liked-gradient">
-              <i class="fa-solid fa-heart"></i>
-            </div>
-            <div class="sp-playlist-meta">
-              <p class="sp-playlist-name">Liked Songs</p>
-              <p class="sp-playlist-info" id="sp-liked-count">Playlist &bull; 0 songs</p>
-            </div>
-          </div>
-
           <!-- Active Album Playlist -->
           <div class="sp-playlist-item active" onclick="document.querySelector('.sp-hero-header').scrollIntoView({behavior: 'smooth'})">
             <img src="assets/images/profile2.jpg" alt="Covers" class="sp-playlist-thumb" />
@@ -150,11 +138,6 @@
           <i class="fa-solid fa-play" id="sp-hero-play-icon"></i>
         </button>
 
-        <!-- Like Toggle -->
-        <button class="sp-action-icon-btn" id="sp-hero-like-btn" title="Save to Your Library" aria-label="Save to Your Library" onclick="document.querySelector('#sp-bar-like-btn').click()">
-          <i class="fa-regular fa-heart"></i>
-        </button>
-
         <!-- Shuffle Toggle -->
         <button class="sp-action-icon-btn" id="sp-hero-shuffle-btn" title="Enable Shuffle" aria-label="Enable Shuffle" onclick="document.querySelector('#sp-btn-shuffle').click()">
           <i class="fa-solid fa-shuffle"></i>
@@ -171,17 +154,10 @@
         </div>
       </div>
 
-      <!-- Real-time Audio Visualizer Section -->
+      <!-- Audio Visualizer Section -->
       <section class="sp-visualizer-section" id="sp-visualizer-section">
         <div class="sp-visualizer-card">
-          <div class="sp-viz-header">
-            <h5><i class="fa-solid fa-chart-simple" style="color: var(--sp-green);"></i> Real-Time Audio Spectrum</h5>
-            <div class="sp-viz-status">
-              <span class="sp-viz-dot"></span>
-              <span id="sp-viz-status-text">STANDBY // READY</span>
-            </div>
-          </div>
-          <canvas id="sp-audio-canvas" width="800" height="90"></canvas>
+          <canvas id="sp-audio-canvas" width="800" height="75"></canvas>
         </div>
       </section>
 
@@ -192,7 +168,7 @@
             <tr>
               <th class="th-num">#</th>
               <th>Title</th>
-              <th class="th-album">Album</th>
+              <th class="th-album">Genre</th>
               <th class="th-date">Date Added</th>
               <th class="th-time"><i class="fa-regular fa-clock"></i></th>
             </tr>
@@ -222,12 +198,9 @@
                   </div>
                 </div>
               </td>
-              <td class="sp-td-album">Cover Session 05</td>
+              <td class="sp-td-album">Self Mass</td>
               <td class="sp-td-date">Oct 2026</td>
               <td class="sp-td-time">
-                <button class="sp-row-heart" data-heart-id="0" title="Like song" aria-label="Like song">
-                  <i class="fa-regular fa-heart"></i>
-                </button>
                 <span>2:59</span>
               </td>
             </tr>
@@ -256,12 +229,9 @@
                   </div>
                 </div>
               </td>
-              <td class="sp-td-album">Cover Session 05</td>
+              <td class="sp-td-album">Self Mass</td>
               <td class="sp-td-date">Oct 2026</td>
               <td class="sp-td-time">
-                <button class="sp-row-heart" data-heart-id="1" title="Like song" aria-label="Like song">
-                  <i class="fa-regular fa-heart"></i>
-                </button>
                 <span>2:01</span>
               </td>
             </tr>
@@ -317,16 +287,13 @@
        Persistent Sticky Bottom Player Bar
        ========================================================================== -->
   <aside class="sp-player-bar" aria-label="Audio Player">
-    <!-- Left: Track Details & Heart -->
+    <!-- Left: Track Details -->
     <div class="sp-bar-left">
       <img src="assets/images/cover_no_crown_given.jpg" alt="Track Cover" class="sp-bar-thumb" id="sp-bar-thumb" />
       <div class="sp-bar-info">
         <p class="sp-bar-title" id="sp-bar-title">No Crown Given</p>
         <p class="sp-bar-artist" id="sp-bar-artist">Vishnu Suresh Perumbavoor (VSP)</p>
       </div>
-      <button class="sp-bar-like-btn" id="sp-bar-like-btn" title="Save to Your Library" aria-label="Save to Your Library">
-        <i class="fa-regular fa-heart"></i>
-      </button>
     </div>
 
     <!-- Center: Playback Controls & Live Scrub Bar -->
