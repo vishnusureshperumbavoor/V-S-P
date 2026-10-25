@@ -8,9 +8,9 @@
 (function () {
   'use strict';
 
-  // Clean URL Beautification: Strip .html extension from browser address bar
+  // Clean URL Beautification: Strip .html extension from browser address bar (top window only)
   try {
-    if (window.location.pathname.endsWith('.html')) {
+    if (window.self === window.top && window.location.pathname.endsWith('.html')) {
       let cleanPath = window.location.pathname.replace(/\.html$/, '');
       if (cleanPath.endsWith('/index')) {
         cleanPath = cleanPath.replace(/\/index$/, '/');
@@ -107,8 +107,8 @@
     if (path.includes('bot')) {
       return 'bot';
     }
-    if (path.includes('vsp') || path.includes('lab')) {
-      return 'vsp';
+    if (path.includes('3d-lab') || path.includes('lab') || path.includes('vsp')) {
+      return '3d-lab';
     }
     return 'home';
   }
@@ -128,7 +128,7 @@
     const homeActive = active === 'home' ? 'active' : '';
     const botActive = active === 'bot' ? 'active' : '';
     const blogActive = active === 'blogs' ? 'active' : '';
-    const vspActive = active === 'vsp' ? 'active' : '';
+    const labActive = (active === '3d-lab' || active === 'lab' || active === 'vsp') ? 'active' : '';
     const songsActive = active === 'songs' ? 'active' : '';
 
     let backTarget = `${root}index.html`;
@@ -188,7 +188,7 @@
                   </a>
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0 ${vspActive}" href="${root}vsp.html" title="VSP 3D Lab" aria-label="VSP 3D Lab">
+                  <a class="nav-link pl-0 pr-0 ${labActive}" href="${root}3d-lab.html" title="VSP 3D Lab" aria-label="VSP 3D Lab">
                     <span class="fa-solid fa-cube nav-icon"></span>
                     <span class="nav-text">3D Lab</span>
                   </a>

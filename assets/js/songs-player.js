@@ -829,8 +829,62 @@
     setupShellNavigation();
   }
 
+  // Site Base Path Helper (Handles both Local Dev '/' and GitHub Pages '/V-S-P/')
+  function getSiteBasePath() {
+    const path = window.location.pathname.toLowerCase();
+    if (path.startsWith('/v-s-p')) {
+      return '/V-S-P/';
+    }
+    return '/';
+  }
+
+  function getCleanDisplayPath(targetTab, rawUrl) {
+    const base = getSiteBasePath();
+    const p = (rawUrl || '').toLowerCase();
+
+    if (targetTab === 'bot' || p.includes('bot')) {
+      return base + 'bot/';
+    }
+    if (targetTab === 'songs' || p.includes('songs')) {
+      return base + 'songs';
+    }
+    if (targetTab === '3d-lab' || targetTab === 'vsp' || p.includes('3d-lab') || p.includes('vsp') || p.includes('lab')) {
+      return base + '3d-lab';
+    }
+    if (p.includes('blogs/') && !p.endsWith('blogs.html') && !p.endsWith('blogs')) {
+      const match = rawUrl.match(/blogs\/([^.]+)/);
+      if (match) return base + 'blogs/' + match[1];
+    }
+    if (targetTab === 'blogs' || p.includes('blogs')) {
+      return base + 'blogs';
+    }
+    // Home tab
+    return base;
+  }
+
+  function getIframeTargetUrl(targetTab, rawUrl) {
+    const base = getSiteBasePath();
+    const p = (rawUrl || '').toLowerCase();
+
+    if (targetTab === 'bot' || p.includes('bot')) {
+      return base + 'bot/index.html';
+    }
+    if (targetTab === '3d-lab' || targetTab === 'vsp' || p.includes('3d-lab') || p.includes('vsp') || p.includes('lab')) {
+      return base + '3d-lab.html';
+    }
+    if (p.includes('blogs/') && !p.endsWith('blogs.html') && !p.endsWith('blogs')) {
+      const match = rawUrl.match(/blogs\/([^?#]+)/);
+      if (match) return base + 'blogs/' + match[1];
+    }
+    if (targetTab === 'blogs' || p.includes('blogs')) {
+      return base + 'blogs.html';
+    }
+    return base + 'index.html';
+  }
+
   // Seamless Multi-Page Shell Router (Continuous Audio Across Pages)
   window.vspPlayerActive = true;
+  let currentActiveShellTab = 'songs';
 
   window.vspShowSongs = function(trackId, autoplay) {
     navigateTo('songs.html', 'songs');
@@ -845,20 +899,21 @@
     else if (cleanUrl.startsWith('./')) cleanUrl = cleanUrl.substring(2);
 
     let targetTab = 'home';
-    if (cleanUrl.includes('songs.html')) targetTab = 'songs';
+    if (cleanUrl.includes('songs')) targetTab = 'songs';
     else if (cleanUrl.includes('bot')) targetTab = 'bot';
     else if (cleanUrl.includes('blogs')) targetTab = 'blogs';
-    else if (cleanUrl.includes('vsp') || cleanUrl.includes('lab')) targetTab = 'vsp';
+    else if (cleanUrl.includes('3d-lab') || cleanUrl.includes('vsp') || cleanUrl.includes('lab')) targetTab = '3d-lab';
 
     navigateTo(cleanUrl, targetTab);
   };
 
   window.vspSyncChildMeta = function(path, title) {
+    if (currentActiveShellTab === 'songs') return;
     try {
       if (title) document.title = title;
       if (path) {
-        const cleanPath = path.replace(/\.html$/, '').replace(/\/index$/, '/');
-        window.history.replaceState({ url: cleanPath }, title || '', cleanPath);
+        const cleanPath = getCleanDisplayPath(currentActiveShellTab, path);
+        window.history.replaceState({ page: currentActiveShellTab, url: cleanPath }, title || '', cleanPath);
       }
     } catch (e) {}
   };
@@ -871,13 +926,13 @@
     navLinks.forEach((link) => {
       const href = (link.getAttribute('href') || '').toLowerCase();
       link.classList.remove('active');
-      if (tab === 'home' && (href.endsWith('index.html') || href === './' || href === 'index.html')) {
+      if (tab === 'home' && (href.endsWith('index.html') || href === './' || href === 'index.html' || href === '')) {
         link.classList.add('active');
       } else if (tab === 'bot' && href.includes('bot')) {
         link.classList.add('active');
       } else if (tab === 'blogs' && href.includes('blogs')) {
         link.classList.add('active');
-      } else if (tab === 'vsp' && (href.includes('vsp') || href.includes('lab'))) {
+      } else if ((tab === '3d-lab' || tab === 'vsp') && (href.includes('3d-lab') || href.includes('vsp') || href.includes('lab'))) {
         link.classList.add('active');
       } else if (tab === 'songs' && href.includes('songs')) {
         link.classList.add('active');
@@ -900,14 +955,17 @@
       document.body.classList.remove('noscroll');
     }
 
-    if (targetTab === 'songs' || url.includes('songs.html')) {
+    const displayUrl = getCleanDisplayPath(targetTab, url);
+    currentActiveShellTab = targetTab;
+
+    if (targetTab === 'songs' || (url && url.includes('songs'))) {
       if (viewportContainer) viewportContainer.style.display = 'none';
       if (appContainer) appContainer.style.display = '';
       if (footer) footer.style.display = '';
       document.body.classList.remove('sp-in-viewport');
       document.title = 'Songs & Music | Vishnu Suresh Perumbavoor (VSP)';
       if (pushToHistory) {
-        window.history.pushState({ page: 'songs', url: 'songs' }, '', 'songs');
+        window.history.pushState({ page: 'songs', url: displayUrl }, '', displayUrl);
       }
       updateNavActiveTab('songs');
       return;
@@ -919,27 +977,28 @@
     if (viewportContainer) viewportContainer.style.display = 'block';
     document.body.classList.add('sp-in-viewport');
 
+    const iframeTarget = getIframeTargetUrl(targetTab, url);
+    if (iframe) {
+      const currentSrc = iframe.getAttribute('data-loaded-src');
+      if (currentSrc !== iframeTarget) {
+        iframe.src = iframeTarget;
+        iframe.setAttribute('data-loaded-src', iframeTarget);
+      }
+    }
+
     const titles = {
       home: 'Vishnu Suresh Perumbavoor | Software Engineer & Researcher',
       bot: 'VSP Bot | Intelligent In-Browser Assistant',
       blogs: 'Blogs | Vishnu Suresh Perumbavoor (VSP)',
+      '3d-lab': 'VSP 3D Lab | Interactive 3D Typography & Visuals',
       vsp: 'VSP 3D Lab | Interactive 3D Typography & Visuals'
     };
-
-    if (iframe) {
-      const currentSrc = iframe.getAttribute('data-loaded-src');
-      if (currentSrc !== url) {
-        iframe.src = url;
-        iframe.setAttribute('data-loaded-src', url);
-      }
-    }
 
     const newTitle = titles[targetTab] || document.title;
     document.title = newTitle;
 
-    const cleanDisplayUrl = url.replace(/\.html$/, '').replace(/\/index$/, '/');
     if (pushToHistory) {
-      window.history.pushState({ page: targetTab, url: cleanDisplayUrl }, '', cleanDisplayUrl);
+      window.history.pushState({ page: targetTab, url: displayUrl }, '', displayUrl);
     }
     updateNavActiveTab(targetTab);
   }
@@ -954,10 +1013,10 @@
 
         e.preventDefault();
         let targetTab = 'home';
-        if (href.includes('songs.html')) targetTab = 'songs';
+        if (href.includes('songs')) targetTab = 'songs';
         else if (href.includes('bot')) targetTab = 'bot';
         else if (href.includes('blogs')) targetTab = 'blogs';
-        else if (href.includes('vsp') || href.includes('lab')) targetTab = 'vsp';
+        else if (href.includes('3d-lab') || href.includes('vsp') || href.includes('lab')) targetTab = '3d-lab';
 
         navigateTo(href, targetTab);
         return;
@@ -970,10 +1029,10 @@
 
         e.preventDefault();
         let targetTab = 'home';
-        if (href.includes('songs.html')) targetTab = 'songs';
+        if (href.includes('songs')) targetTab = 'songs';
         else if (href.includes('bot')) targetTab = 'bot';
         else if (href.includes('blogs')) targetTab = 'blogs';
-        else if (href.includes('vsp') || href.includes('lab')) targetTab = 'vsp';
+        else if (href.includes('3d-lab') || href.includes('vsp') || href.includes('lab')) targetTab = '3d-lab';
 
         navigateTo(href, targetTab);
         return;
@@ -992,7 +1051,7 @@
         let tab = 'home';
         if (path.includes('bot')) tab = 'bot';
         else if (path.includes('blogs')) tab = 'blogs';
-        else if (path.includes('vsp') || path.includes('lab')) tab = 'vsp';
+        else if (path.includes('3d-lab') || path.includes('vsp') || path.includes('lab')) tab = '3d-lab';
         else if (path.includes('songs')) tab = 'songs';
         navigateTo(window.location.pathname, tab, false);
       }
