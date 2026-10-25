@@ -1005,3 +1005,16 @@ button#vspbot-delete-model.is-hidden,
     display: none !important;
   }
 }
+
+/* Ensure all tray, action, and chat icons render cleanly */
+.vspbot-tray-icon-btn i,
+.vspbot-tray-icon-btn span,
+#vspbot-send i,
+#vspbot-send span,
+.chat.incoming span.fa-robot,
+.vspbot-download-chip i,
+.vspbot-model-info i {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
