@@ -8,24 +8,6 @@
 (function () {
   "use strict";
 
-  // Clean URL Beautification: Strip .html extension from browser address bar (top window only)
-  try {
-    if (
-      window.self === window.top &&
-      window.location.pathname.endsWith(".html")
-    ) {
-      let cleanPath = window.location.pathname.replace(/\.html$/, "");
-      if (cleanPath.endsWith("/index")) {
-        cleanPath = cleanPath.replace(/\/index$/, "/");
-      }
-      window.history.replaceState(
-        null,
-        document.title,
-        cleanPath + window.location.search + window.location.hash,
-      );
-    }
-  } catch (e) {}
-
   // Check if running inside VSP Persistent Audio Shell
   const isInsideVspShell = (function () {
     try {

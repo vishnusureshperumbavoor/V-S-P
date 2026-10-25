@@ -1188,46 +1188,15 @@
     return "/";
   }
 
-  function getCleanDisplayPath(targetTab, rawUrl) {
-    const base = getSiteBasePath();
-    const p = (rawUrl || "").toLowerCase();
-
-    if (targetTab === "bot" || p.includes("bot")) {
-      return base + "bot/";
-    }
-    if (targetTab === "songs" || p.includes("songs")) {
-      return base + "songs";
-    }
-    if (
-      targetTab === "3d-lab" ||
-      targetTab === "vsp" ||
-      p.includes("3d-lab") ||
-      p.includes("vsp") ||
-      p.includes("lab")
-    ) {
-      return base + "3d-lab";
-    }
-    if (
-      p.includes("blogs/") &&
-      !p.endsWith("blogs.html") &&
-      !p.endsWith("blogs")
-    ) {
-      const match = rawUrl.match(/blogs\/([^.]+)/);
-      if (match) return base + "blogs/" + match[1];
-    }
-    if (targetTab === "blogs" || p.includes("blogs")) {
-      return base + "blogs";
-    }
-    // Home tab
-    return base;
-  }
-
-  function getIframeTargetUrl(targetTab, rawUrl) {
+  function getTargetPageUrl(targetTab, rawUrl) {
     const base = getSiteBasePath();
     const p = (rawUrl || "").toLowerCase();
 
     if (targetTab === "bot" || p.includes("bot")) {
       return base + "bot/index.html";
+    }
+    if (targetTab === "songs" || p.includes("songs")) {
+      return base + "songs.html";
     }
     if (
       targetTab === "3d-lab" ||
@@ -1240,8 +1209,7 @@
     }
     if (
       p.includes("blogs/") &&
-      !p.endsWith("blogs.html") &&
-      !p.endsWith("blogs")
+      !p.endsWith("blogs.html")
     ) {
       const match = rawUrl.match(/blogs\/([^?#]+)/);
       if (match) return base + "blogs/" + match[1];
@@ -1322,11 +1290,10 @@
     try {
       if (title) document.title = title;
       if (path) {
-        const cleanPath = getCleanDisplayPath(currentActiveShellTab, path);
         window.history.replaceState(
-          { page: currentActiveShellTab, url: cleanPath },
+          { page: currentActiveShellTab, url: path },
           title || "",
-          cleanPath,
+          path,
         );
         updateShellBackButton(path);
       }
@@ -1383,7 +1350,10 @@
       document.body.classList.remove("noscroll");
     }
 
-    const displayUrl = getCleanDisplayPath(targetTab, url);
+    const targetUrl =
+      targetTab === "songs" || (url && url.includes("songs"))
+        ? getSiteBasePath() + "songs.html"
+        : getTargetPageUrl(targetTab, url);
     currentActiveShellTab = targetTab;
     updateShellBackButton(url);
 
@@ -1395,9 +1365,9 @@
       document.title = "Songs & Music | Vishnu Suresh Perumbavoor (VSP)";
       if (pushToHistory) {
         window.history.pushState(
-          { page: "songs", url: displayUrl },
+          { page: "songs", url: targetUrl },
           "",
-          displayUrl,
+          targetUrl,
         );
       }
       updateNavActiveTab("songs");
@@ -1410,7 +1380,7 @@
     if (viewportContainer) viewportContainer.style.display = "block";
     document.body.classList.add("sp-in-viewport");
 
-    const iframeTarget = getIframeTargetUrl(targetTab, url);
+    const iframeTarget = targetUrl;
     if (iframe) {
       const currentSrc = iframe.getAttribute("data-loaded-src");
       if (currentSrc !== iframeTarget) {
@@ -1431,9 +1401,9 @@
 
     if (pushToHistory) {
       window.history.pushState(
-        { page: targetTab, url: displayUrl },
+        { page: targetTab, url: targetUrl },
         "",
-        displayUrl,
+        targetUrl,
       );
     }
     updateNavActiveTab(targetTab);
@@ -1503,7 +1473,8 @@
     window.addEventListener("popstate", (e) => {
       const state = e.state;
       const path = window.location.pathname.toLowerCase();
-      const isSongsPage = !state || state.page === "songs" || path.endsWith("songs.html") || path.endsWith("songs");
+      const isSongsPage =
+        !state || state.page === "songs" || path.endsWith("songs.html");
 
       if (isSongsPage) {
         navigateTo("songs.html", "songs", false);
