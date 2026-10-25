@@ -88,10 +88,9 @@
       if (href.includes("songs.html")) {
         e.preventDefault();
         const matchTrack = href.match(/[?&]track=(\d+)/);
-        const trackId = matchTrack ? parseInt(matchTrack[1], 10) : 0;
-        const autoplay = href.includes("autoplay=true");
+        const trackId = matchTrack ? parseInt(matchTrack[1], 10) : undefined;
         try {
-          window.parent.vspShowSongs(trackId, autoplay);
+          window.parent.vspShowSongs(trackId, false);
         } catch (err) {
           window.location.href = href;
         }

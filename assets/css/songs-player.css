@@ -1260,58 +1260,562 @@ body.sp-in-viewport {
 }
 
 /* ==========================================================================
-   Autoplay Unlock Banner for Shared Links
+   Dedicated Single Track View (Individual Track Experience)
    ========================================================================== */
-.sp-autoplay-banner {
-  position: fixed;
-  top: calc(var(--sp-header-height) + 16px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(18, 20, 26, 0.96);
-  border: 1px solid var(--sp-green);
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85), 0 0 25px rgba(30, 215, 96, 0.35);
-  padding: 12px 26px;
-  border-radius: 30px;
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 700;
+.sp-view-pane {
+  animation: spPaneFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes spPaneFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Single Track Top Navigation Bar */
+.sp-single-top-nav {
   display: flex;
   align-items: center;
-  gap: 12px;
-  z-index: 2000;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: rgba(18, 18, 18, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sp-btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--sp-text-main);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 700;
   cursor: pointer;
-  animation: spPromptPulse 1.8s infinite ease-in-out;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
   user-select: none;
 }
 
-.sp-autoplay-banner:hover {
+.sp-btn-back:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(-3px);
+  color: #ffffff;
+}
+
+.sp-single-top-badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Single Track Hero */
+.sp-single-hero {
+  position: relative;
+  padding: 40px 32px 30px;
+  background: linear-gradient(180deg, rgba(30, 215, 96, 0.3) 0%, rgba(18, 18, 18, 0.9) 75%, var(--sp-dark-base) 100%);
+  display: flex;
+  align-items: flex-end;
+  gap: 32px;
+  z-index: 1;
+  transition: background 0.4s ease;
+}
+
+.sp-single-cover-wrap {
+  position: relative;
+  width: 230px;
+  height: 230px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75), 0 0 35px rgba(30, 215, 96, 0.25);
+  overflow: hidden;
+  background: #181818;
+}
+
+.sp-single-cover-wrap .sp-hero-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.sp-single-cover-wrap:hover .sp-hero-cover {
+  transform: scale(1.03);
+}
+
+.sp-single-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--sp-text-main);
+  z-index: 2;
+}
+
+.sp-type-tag {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  display: inline-block;
+}
+
+.sp-single-title {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.08;
+  margin: 4px 0 10px 0;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+}
+
+.sp-single-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--sp-text-main);
+}
+
+/* Single Track Action Bar */
+.sp-single-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 24px 32px 14px;
+  background: var(--sp-dark-base);
+}
+
+.sp-single-play-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
   background: var(--sp-green);
+  border: none;
   color: #000000;
-  transform: translateX(-50%) scale(1.05);
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 26px rgba(30, 215, 96, 0.45);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.sp-autoplay-banner i {
-  font-size: 1.35rem;
+.sp-single-play-btn:hover {
+  background: #22e668;
+  transform: scale(1.07);
+  box-shadow: 0 10px 30px rgba(30, 215, 96, 0.6);
+}
+
+.sp-single-play-btn:active {
+  transform: scale(0.96);
+}
+
+.sp-single-like-btn.liked i {
+  color: #f43f5e;
+  font-weight: 900;
+}
+
+.sp-single-like-btn:hover {
+  transform: scale(1.12);
+  color: #f43f5e;
+}
+
+/* In-View Single Player & Visualizer Section */
+.sp-single-player-section {
+  padding: 16px 32px 20px;
+}
+
+.sp-single-player-card {
+  background: linear-gradient(135deg, rgba(28, 30, 38, 0.8) 0%, rgba(18, 20, 26, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.sp-single-player-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sp-single-now-playing-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sp-badge-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   color: var(--sp-green);
+  background: rgba(30, 215, 96, 0.12);
+  border: 1px solid rgba(30, 215, 96, 0.28);
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
 }
 
-.sp-autoplay-banner:hover i {
+.sp-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--sp-green);
+  box-shadow: 0 0 8px var(--sp-green);
+  animation: spDotPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes spDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.sp-single-card-track {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--sp-text-main);
+}
+
+.sp-single-audio-specs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sp-text-sub);
+}
+
+.sp-single-canvas-wrap {
+  width: 100%;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sp-single-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sp-single-scrubber-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--sp-text-sub);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.sp-single-scrubber-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: height 0.15s ease;
+}
+
+.sp-single-scrubber-bar:hover {
+  height: 8px;
+}
+
+.sp-single-scrubber-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--sp-green);
+  border-radius: 999px;
+  pointer-events: none;
+  transition: width 0.05s linear;
+}
+
+.sp-single-scrubber-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.sp-single-scrubber-bar:hover .sp-single-scrubber-thumb {
+  opacity: 1;
+}
+
+/* More Tracks by Artist */
+.sp-single-more-section {
+  padding: 20px 32px;
+}
+
+.sp-btn-outline-sm {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--sp-text-main);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sp-btn-outline-sm:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.sp-single-tracks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.sp-single-track-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.sp-single-track-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.sp-single-track-item.active {
+  background: rgba(30, 215, 96, 0.12);
+  border-color: rgba(30, 215, 96, 0.25);
+}
+
+.sp-sti-index {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--sp-text-sub);
+  width: 22px;
+  text-align: center;
+}
+
+.sp-sti-cover {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sp-sti-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sp-sti-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--sp-text-main);
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sp-sti-artist {
+  font-size: 0.78rem;
+  color: var(--sp-text-sub);
+  margin: 0;
+}
+
+.sp-sti-duration {
+  font-size: 0.82rem;
+  color: var(--sp-text-sub);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.sp-sti-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--sp-text-sub);
+  font-size: 1rem;
+  padding: 6px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sp-sti-action-btn:hover {
+  color: var(--sp-text-main);
+  transform: scale(1.15);
+}
+
+/* About the Artist Card */
+.sp-single-artist-section {
+  padding: 16px 32px 36px;
+}
+
+.sp-single-artist-card {
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(30, 34, 43, 0.85) 0%, rgba(17, 19, 24, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 26px 28px;
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.sp-single-artist-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(30, 215, 96, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.sp-single-artist-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sp-verified-artist {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sp-single-artist-text h4 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.sp-single-artist-text p {
+  font-size: 0.88rem;
+  color: var(--sp-text-sub);
+  line-height: 1.45;
+  margin: 0 0 6px 0;
+}
+
+.sp-single-artist-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sp-artist-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.sp-artist-link-btn:hover {
+  background: var(--sp-green);
+  border-color: var(--sp-green);
   color: #000000;
+  text-decoration: none;
+  transform: translateY(-2px);
 }
 
-@keyframes spPromptPulse {
-  0% { box-shadow: 0 0 0 0 rgba(30, 215, 96, 0.6); }
-  70% { box-shadow: 0 0 0 16px rgba(30, 215, 96, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(30, 215, 96, 0); }
-}
+/* Responsive Breakpoints for Single View */
+@media (max-width: 768px) {
+  .sp-single-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 28px 18px 20px;
+    gap: 20px;
+  }
 
-@media (max-width: 576px) {
-  .sp-autoplay-banner {
-    top: calc(var(--sp-header-height) + 10px);
-    width: 90%;
+  .sp-single-cover-wrap {
+    width: 180px;
+    height: 180px;
+  }
+
+  .sp-single-title {
+    font-size: 2rem;
+  }
+
+  .sp-single-meta {
     justify-content: center;
-    font-size: 0.88rem;
-    padding: 10px 18px;
+  }
+
+  .sp-single-action-bar {
+    justify-content: center;
+    padding: 16px 18px 10px;
+  }
+
+  .sp-single-player-section,
+  .sp-single-more-section,
+  .sp-single-artist-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .sp-single-artist-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .sp-single-artist-links {
+    justify-content: center;
   }
 }

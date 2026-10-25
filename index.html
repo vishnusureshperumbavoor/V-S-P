@@ -1138,7 +1138,7 @@
             <div style="background: #12141a; border-radius: 12px; padding: 16px; border: 1px solid rgba(255,255,255,0.08); transition: transform 0.25s ease, border-color 0.25s ease; position: relative; height: 100%; display: flex; flex-direction: column;">
               <div style="position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 1/1; margin-bottom: 14px; background: #1a1e29;">
                 <img src="assets/images/cover_no_crown_given.jpg" alt="No Crown Given Cover" style="width: 100%; height: 100%; object-fit: cover;" />
-                <a href="songs.html?track=0&autoplay=true" title="Play track" style="position: absolute; bottom: 10px; right: 10px; width: 48px; height: 48px; border-radius: 50%; background: #1ed760; color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 6px 18px rgba(0,0,0,0.6); text-decoration: none;">
+                <a href="songs.html?track=0" title="Play track" style="position: absolute; bottom: 10px; right: 10px; width: 48px; height: 48px; border-radius: 50%; background: #1ed760; color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 6px 18px rgba(0,0,0,0.6); text-decoration: none;">
                   <i class="fa-solid fa-play" style="margin-left: 2px;"></i>
                 </a>
               </div>
@@ -1151,7 +1151,7 @@
                 Self Mass &bull; High-octane cadence and relentless tempo.
               </p>
               <div style="display: flex; gap: 8px;">
-                <a href="songs.html?track=0&autoplay=true" class="btn btn-outline-light btn-sm" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.8rem; font-weight: 700; flex: 1;">
+                <a href="songs.html?track=0" class="btn btn-outline-light btn-sm" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.8rem; font-weight: 700; flex: 1;">
                   <i class="fa-solid fa-play mr-1" style="color: #1ed760;"></i> Play Now
                 </a>
                 <button type="button" class="btn btn-outline-light btn-sm vsp-home-share-btn" data-share-id="0" data-share-title="No Crown Given" title="Share song" aria-label="Share song" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.85rem; padding: 6px 14px;">
@@ -1166,7 +1166,7 @@
             <div style="background: #12141a; border-radius: 12px; padding: 16px; border: 1px solid rgba(255,255,255,0.08); transition: transform 0.25s ease, border-color 0.25s ease; position: relative; height: 100%; display: flex; flex-direction: column;">
               <div style="position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 1/1; margin-bottom: 14px; background: #1a1e29;">
                 <img src="assets/images/cover_running_this.jpg" alt="I'm Running This Shit Cover" style="width: 100%; height: 100%; object-fit: cover;" />
-                <a href="songs.html?track=1&autoplay=true" title="Play track" style="position: absolute; bottom: 10px; right: 10px; width: 48px; height: 48px; border-radius: 50%; background: #1ed760; color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 6px 18px rgba(0,0,0,0.6); text-decoration: none;">
+                <a href="songs.html?track=1" title="Play track" style="position: absolute; bottom: 10px; right: 10px; width: 48px; height: 48px; border-radius: 50%; background: #1ed760; color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 6px 18px rgba(0,0,0,0.6); text-decoration: none;">
                   <i class="fa-solid fa-play" style="margin-left: 2px;"></i>
                 </a>
               </div>
@@ -1179,7 +1179,7 @@
                 Self Mass &bull; Energetic hype anthem with heavy driving percussion.
               </p>
               <div style="display: flex; gap: 8px;">
-                <a href="songs.html?track=1&autoplay=true" class="btn btn-outline-light btn-sm" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.8rem; font-weight: 700; flex: 1;">
+                <a href="songs.html?track=1" class="btn btn-outline-light btn-sm" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.8rem; font-weight: 700; flex: 1;">
                   <i class="fa-solid fa-play mr-1" style="color: #1ed760;"></i> Play Now
                 </a>
                 <button type="button" class="btn btn-outline-light btn-sm vsp-home-share-btn" data-share-id="1" data-share-title="I'm Running This Shit" title="Share song" aria-label="Share song" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.85rem; padding: 6px 14px;">
@@ -1198,7 +1198,7 @@
             var title = btn.getAttribute('data-share-title');
             var origin = window.location.origin;
             var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-            var url = origin + path + 'songs.html?track=' + id + '&autoplay=true';
+            var url = origin + path + 'songs.html?track=' + id;
             var data = { title: title + ' - VSP', text: 'Listen to "' + title + '" (Self Mass) by VSP', url: url };
             if (navigator.share && navigator.canShare && navigator.canShare(data)) {
               navigator.share(data).catch(function() {});

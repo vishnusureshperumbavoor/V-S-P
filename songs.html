@@ -15,8 +15,8 @@
   <meta property="og:url" content="https://vishnusureshperumbavoor.github.io/V-S-P/songs.html" />
   <meta property="og:title" content="VSP Songs & Covers" />
   <meta property="og:description" content="Listen to cover songs and beats by VSP" />
-  <meta property="og:image" content="https://i.pinimg.com/1200x/b6/63/42/b66342db04c1208b477a278fb5261224.jpg" />
-  <meta property="og:image:secure_url" content="https://i.pinimg.com/1200x/b6/63/42/b66342db04c1208b477a278fb5261224.jpg" />
+  <meta property="og:image" content="https://i.pinimg.com/1200x/80/67/58/8067584a0bbf76c8bf61976766bd6354.jpg" />
+  <meta property="og:image:secure_url" content="https://i.pinimg.com/1200x/80/67/58/8067584a0bbf76c8bf61976766bd6354.jpg" />
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -29,7 +29,7 @@
   <meta name="twitter:url" content="https://vishnusureshperumbavoor.github.io/V-S-P/songs.html" />
   <meta name="twitter:title" content="VSP Songs & Covers" />
   <meta name="twitter:description" content="Listen to cover songs and beats by VSP" />
-  <meta name="twitter:image" content="https://i.pinimg.com/1200x/b6/63/42/b66342db04c1208b477a278fb5261224.jpg" />
+  <meta name="twitter:image" content="https://i.pinimg.com/1200x/80/67/58/8067584a0bbf76c8bf61976766bd6354.jpg" />
   <meta name="twitter:image:alt" content="VSP Songs &amp; Covers" />
   <link rel="icon" href="./assets/images/vsp3.jpeg" type="image/png" />
 
@@ -103,11 +103,29 @@
 
         <div class="sp-sidebar-scroll">
           <!-- Active Album Playlist -->
-          <div class="sp-playlist-item active" onclick="document.querySelector('.sp-hero-header').scrollIntoView({behavior: 'smooth'})">
+          <div class="sp-playlist-item active" id="sp-sidebar-album-item" style="cursor: pointer;">
             <img src="assets/images/profile2.jpg" alt="Covers" class="sp-playlist-thumb" />
             <div class="sp-playlist-meta">
               <p class="sp-playlist-name" style="color: var(--sp-green);">Cover Sessions</p>
-              <p class="sp-playlist-info">Vishnu Suresh Perumbavoor &bull; 2 songs</p>
+              <p class="sp-playlist-info">VSP &bull; 2 songs</p>
+            </div>
+          </div>
+
+          <!-- Individual Track 1 Quick Link -->
+          <div class="sp-playlist-item sp-sidebar-track-item" data-track-id="0" style="cursor: pointer;">
+            <img src="assets/images/cover_no_crown_given.jpg" alt="No Crown Given" class="sp-playlist-thumb" />
+            <div class="sp-playlist-meta">
+              <p class="sp-playlist-name">No Crown Given</p>
+              <p class="sp-playlist-info">Single &bull; VSP</p>
+            </div>
+          </div>
+
+          <!-- Individual Track 2 Quick Link -->
+          <div class="sp-playlist-item sp-sidebar-track-item" data-track-id="1" style="cursor: pointer;">
+            <img src="assets/images/cover_running_this.jpg" alt="I'm Running This Shit" class="sp-playlist-thumb" />
+            <div class="sp-playlist-meta">
+              <p class="sp-playlist-name">I'm Running This Shit</p>
+              <p class="sp-playlist-info">Single &bull; VSP</p>
             </div>
           </div>
 
@@ -127,183 +145,313 @@
 
     <!-- Music Main View Panel -->
     <main class="sp-main-view">
-      <!-- Playlist Hero Banner -->
-      <section class="sp-hero-header" id="sp-hero-header">
-        <div class="sp-hero-cover-wrap">
-          <img src="assets/images/profile2.jpg" alt="VSP Songs Album Cover" class="sp-hero-cover" id="sp-hero-cover" />
-        </div>
+      <!-- Collection / Album View Pane -->
+      <div id="sp-album-view" class="sp-view-pane">
+        <!-- Playlist Hero Banner -->
+        <section class="sp-hero-header" id="sp-hero-header">
+          <div class="sp-hero-cover-wrap">
+            <img src="assets/images/profile2.jpg" alt="VSP Songs Album Cover" class="sp-hero-cover" id="sp-hero-cover" />
+          </div>
 
-        <div class="sp-hero-details">
-          <h1 class="sp-hero-title" id="sp-hero-title">VSP Songs & Covers</h1>
-          <p class="sp-hero-desc">
-            Curated high-voltage cover tracks and beats produced by Vishnu Suresh Perumbavoor. Driven by heavy basslines, relentless tempo, and cybernetic cadence.
-          </p>
-          <div class="sp-hero-meta">
-            <img src="assets/images/vsp3.jpeg" alt="Vishnu Suresh Perumbavoor" class="sp-hero-meta-avatar" />
-            <a href="index.html">Vishnu Suresh Perumbavoor</a>
-            <span class="dot-sep">&bull;</span>
-            <span>2 songs</span>
-            <span class="dot-sep">&bull;</span>
-            <span class="muted">5 min 00 sec</span>
-            <span class="dot-sep">&bull;</span>
-            <span class="muted">Oct 2026</span>
+          <div class="sp-hero-details">
+            <h1 class="sp-hero-title" id="sp-hero-title">VSP Songs & Covers</h1>
+            <div class="sp-hero-meta">
+              <img src="assets/images/vsp3.jpeg" alt="Vishnu Suresh Perumbavoor" class="sp-hero-meta-avatar" />
+              <a href="index.html">Vishnu Suresh Perumbavoor (VSP)</a>
+              <span class="dot-sep">&bull;</span>
+              <span>2 songs</span>
+              <span class="dot-sep">&bull;</span>
+              <span class="muted">5 min 00 sec</span>
+              <span class="dot-sep">&bull;</span>
+              <span class="muted">Oct 2026</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Action Control Bar -->
+        <div class="sp-action-bar">
+          <!-- Big Play Button -->
+          <button class="sp-play-big-btn" id="sp-hero-play-btn" title="Play Playlist" aria-label="Play Playlist">
+            <i class="fa-solid fa-play" id="sp-hero-play-icon"></i>
+          </button>
+
+          <!-- Shuffle Toggle -->
+          <button class="sp-action-icon-btn" id="sp-hero-shuffle-btn" title="Enable Shuffle" aria-label="Enable Shuffle" onclick="document.querySelector('#sp-btn-shuffle').click()">
+            <i class="fa-solid fa-shuffle"></i>
+          </button>
+
+          <!-- Repeat Toggle (Active by default: All songs loop) -->
+          <button class="sp-action-icon-btn active" id="sp-hero-repeat-btn" title="Repeat All Songs (Active)" aria-label="Repeat All Songs (Active)" onclick="document.querySelector('#sp-btn-repeat').click()">
+            <i class="fa-solid fa-repeat"></i>
+          </button>
+
+          <!-- Share Artist -->
+          <button class="sp-action-icon-btn" id="sp-hero-share-artist-btn" title="Share Artist" aria-label="Share Artist">
+            <i class="fa-solid fa-share-nodes"></i>
+          </button>
+
+          <div class="sp-action-right">
+            <span class="sp-tag-badge"><i class="fa-solid fa-compact-disc"></i> Studio Master</span>
+            <span class="sp-tag-badge d-none d-md-inline-flex"><i class="fa-solid fa-wave-square"></i> 192kbps MP3</span>
           </div>
         </div>
-      </section>
 
-      <!-- Action Control Bar -->
-      <div class="sp-action-bar">
-        <!-- Big Play Button -->
-        <button class="sp-play-big-btn" id="sp-hero-play-btn" title="Play Playlist" aria-label="Play Playlist">
-          <i class="fa-solid fa-play" id="sp-hero-play-icon"></i>
-        </button>
+        <!-- Audio Visualizer Section -->
+        <section class="sp-visualizer-section" id="sp-visualizer-section">
+          <div class="sp-visualizer-card">
+            <canvas id="sp-audio-canvas" width="800" height="75"></canvas>
+          </div>
+        </section>
 
-        <!-- Shuffle Toggle -->
-        <button class="sp-action-icon-btn" id="sp-hero-shuffle-btn" title="Enable Shuffle" aria-label="Enable Shuffle" onclick="document.querySelector('#sp-btn-shuffle').click()">
-          <i class="fa-solid fa-shuffle"></i>
-        </button>
+        <!-- Tracklist Table -->
+        <section class="sp-tracklist-section" id="sp-tracklist-section">
+          <table class="sp-table">
+            <thead>
+              <tr>
+                <th class="th-num">#</th>
+                <th>Title</th>
+                <th class="th-album">Genre</th>
+                <th class="th-date">Date Added</th>
+                <th class="th-time"><i class="fa-regular fa-clock"></i></th>
+                <th class="th-share" title="Share"></th>
+              </tr>
+            </thead>
+            <tbody id="sp-table-body">
+              <!-- Track 1 -->
+              <tr class="sp-row" data-track-id="0">
+                <td class="sp-td-num">
+                  <span class="sp-num-text">1</span>
+                  <span class="sp-hover-play"><i class="fa-solid fa-play"></i></span>
+                  <div class="sp-equalizer-bars">
+                    <div class="sp-eq-bar"></div>
+                    <div class="sp-eq-bar"></div>
+                    <div class="sp-eq-bar"></div>
+                    <div class="sp-eq-bar"></div>
+                  </div>
+                </td>
+                <td>
+                  <div class="sp-td-title">
+                    <img src="assets/images/cover_no_crown_given.jpg" alt="No Crown Given" class="sp-track-thumb" />
+                    <div class="sp-track-text">
+                      <p class="sp-track-name">No Crown Given</p>
+                      <p class="sp-track-artist">
+                        <span class="sp-tag-pill">COVER</span>
+                        VSP
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="sp-td-album">Self Mass</td>
+                <td class="sp-td-date">Oct 2026</td>
+                <td class="sp-td-time">
+                  <span>2:59</span>
+                </td>
+                <td class="sp-td-share">
+                  <button class="sp-row-share-btn" data-share-id="0" title="Share song" aria-label="Share song">
+                    <i class="fa-solid fa-share-nodes"></i>
+                  </button>
+                </td>
+              </tr>
 
-        <!-- Repeat Toggle (Active by default: All songs loop) -->
-        <button class="sp-action-icon-btn active" id="sp-hero-repeat-btn" title="Repeat All Songs (Active)" aria-label="Repeat All Songs (Active)" onclick="document.querySelector('#sp-btn-repeat').click()">
-          <i class="fa-solid fa-repeat"></i>
-        </button>
+              <!-- Track 2 -->
+              <tr class="sp-row" data-track-id="1">
+                <td class="sp-td-num">
+                  <span class="sp-num-text">2</span>
+                  <span class="sp-hover-play"><i class="fa-solid fa-play"></i></span>
+                  <div class="sp-equalizer-bars">
+                    <div class="sp-eq-bar"></div>
+                    <div class="sp-eq-bar"></div>
+                    <div class="sp-eq-bar"></div>
+                    <div class="sp-eq-bar"></div>
+                  </div>
+                </td>
+                <td>
+                  <div class="sp-td-title">
+                    <img src="assets/images/cover_running_this.jpg" alt="I'm Running This Shit" class="sp-track-thumb" />
+                    <div class="sp-track-text">
+                      <p class="sp-track-name">I'm Running This Shit</p>
+                      <p class="sp-track-artist">
+                        <span class="sp-tag-pill">COVER</span>
+                        VSP
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="sp-td-album">Self Mass</td>
+                <td class="sp-td-date">Oct 2026</td>
+                <td class="sp-td-time">
+                  <span>2:01</span>
+                </td>
+                <td class="sp-td-share">
+                  <button class="sp-row-share-btn" data-share-id="1" title="Share song" aria-label="Share song">
+                    <i class="fa-solid fa-share-nodes"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
 
-        <!-- Share Artist -->
-        <button class="sp-action-icon-btn" id="sp-hero-share-artist-btn" title="Share Artist" aria-label="Share Artist">
-          <i class="fa-solid fa-share-nodes"></i>
-        </button>
+        <!-- Recommended & More Songs Cards Grid -->
+        <section class="sp-cards-section" id="sp-cards-section">
+          <div class="sp-section-heading">
+            <h3>Featured Tracks & Playlists</h3>
+            <span style="font-size: 0.85rem; color: var(--sp-text-sub);">Audio Production</span>
+          </div>
 
-        <div class="sp-action-right">
-          <span class="sp-tag-badge"><i class="fa-solid fa-compact-disc"></i> Studio Master</span>
-          <span class="sp-tag-badge d-none d-md-inline-flex"><i class="fa-solid fa-wave-square"></i> 192kbps MP3</span>
-        </div>
+          <div class="sp-cards-grid">
+            <!-- Card 1 -->
+            <div class="sp-card" data-track-id="0">
+              <div class="sp-card-cover-wrap">
+                <img src="assets/images/cover_no_crown_given.jpg" alt="No Crown Given" class="sp-card-cover" />
+                <button class="sp-card-play-btn" title="Play No Crown Given"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <h4 class="sp-card-title">No Crown Given</h4>
+              <p class="sp-card-desc">High-octane cadence, aggressive 808 percussion and swagger.</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="sp-card" data-track-id="1">
+              <div class="sp-card-cover-wrap">
+                <img src="assets/images/cover_running_this.jpg" alt="I'm Running This Shit" class="sp-card-cover" />
+                <button class="sp-card-play-btn" title="Play I'm Running This Shit"><i class="fa-solid fa-play"></i></button>
+              </div>
+              <h4 class="sp-card-title">I'm Running This Shit</h4>
+              <p class="sp-card-desc">Pure adrenaline, commanding presence, and crisp production.</p>
+            </div>
+          </div>
+        </section>
       </div>
 
-      <!-- Audio Visualizer Section -->
-      <section class="sp-visualizer-section" id="sp-visualizer-section">
-        <div class="sp-visualizer-card">
-          <canvas id="sp-audio-canvas" width="800" height="75"></canvas>
-        </div>
-      </section>
-
-      <!-- Tracklist Table -->
-      <section class="sp-tracklist-section" id="sp-tracklist-section">
-        <table class="sp-table">
-          <thead>
-            <tr>
-              <th class="th-num">#</th>
-              <th>Title</th>
-              <th class="th-album">Genre</th>
-              <th class="th-date">Date Added</th>
-              <th class="th-time"><i class="fa-regular fa-clock"></i></th>
-              <th class="th-share" title="Share"></th>
-            </tr>
-          </thead>
-          <tbody id="sp-table-body">
-            <!-- Track 1 -->
-            <tr class="sp-row" data-track-id="0">
-              <td class="sp-td-num">
-                <span class="sp-num-text">1</span>
-                <span class="sp-hover-play"><i class="fa-solid fa-play"></i></span>
-                <div class="sp-equalizer-bars">
-                  <div class="sp-eq-bar"></div>
-                  <div class="sp-eq-bar"></div>
-                  <div class="sp-eq-bar"></div>
-                  <div class="sp-eq-bar"></div>
-                </div>
-              </td>
-              <td>
-                <div class="sp-td-title">
-                  <img src="assets/images/cover_no_crown_given.jpg" alt="No Crown Given" class="sp-track-thumb" />
-                  <div class="sp-track-text">
-                    <p class="sp-track-name">No Crown Given</p>
-                    <p class="sp-track-artist">
-                      <span class="sp-tag-pill">COVER</span>
-                      VSP
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td class="sp-td-album">Self Mass</td>
-              <td class="sp-td-date">Oct 2026</td>
-              <td class="sp-td-time">
-                <span>2:59</span>
-              </td>
-              <td class="sp-td-share">
-                <button class="sp-row-share-btn" data-share-id="0" title="Share song" aria-label="Share song">
-                  <i class="fa-solid fa-share-nodes"></i>
-                </button>
-              </td>
-            </tr>
-
-            <!-- Track 2 -->
-            <tr class="sp-row" data-track-id="1">
-              <td class="sp-td-num">
-                <span class="sp-num-text">2</span>
-                <span class="sp-hover-play"><i class="fa-solid fa-play"></i></span>
-                <div class="sp-equalizer-bars">
-                  <div class="sp-eq-bar"></div>
-                  <div class="sp-eq-bar"></div>
-                  <div class="sp-eq-bar"></div>
-                  <div class="sp-eq-bar"></div>
-                </div>
-              </td>
-              <td>
-                <div class="sp-td-title">
-                  <img src="assets/images/cover_running_this.jpg" alt="I'm Running This Shit" class="sp-track-thumb" />
-                  <div class="sp-track-text">
-                    <p class="sp-track-name">I'm Running This Shit</p>
-                    <p class="sp-track-artist">
-                      <span class="sp-tag-pill">COVER</span>
-                      VSP
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td class="sp-td-album">Self Mass</td>
-              <td class="sp-td-date">Oct 2026</td>
-              <td class="sp-td-time">
-                <span>2:01</span>
-              </td>
-              <td class="sp-td-share">
-                <button class="sp-row-share-btn" data-share-id="1" title="Share song" aria-label="Share song">
-                  <i class="fa-solid fa-share-nodes"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- Recommended & More Songs Cards Grid -->
-      <section class="sp-cards-section" id="sp-cards-section">
-        <div class="sp-section-heading">
-          <h3>Featured Tracks & Playlists</h3>
-          <span style="font-size: 0.85rem; color: var(--sp-text-sub);">Audio Production</span>
-        </div>
-
-        <div class="sp-cards-grid">
-          <!-- Card 1 -->
-          <div class="sp-card" data-track-id="0">
-            <div class="sp-card-cover-wrap">
-              <img src="assets/images/cover_no_crown_given.jpg" alt="No Crown Given" class="sp-card-cover" />
-              <button class="sp-card-play-btn" title="Play No Crown Given"><i class="fa-solid fa-play"></i></button>
-            </div>
-            <h4 class="sp-card-title">No Crown Given</h4>
-            <p class="sp-card-desc">High-octane cadence, aggressive 808 percussion and swagger.</p>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="sp-card" data-track-id="1">
-            <div class="sp-card-cover-wrap">
-              <img src="assets/images/cover_running_this.jpg" alt="I'm Running This Shit" class="sp-card-cover" />
-              <button class="sp-card-play-btn" title="Play I'm Running This Shit"><i class="fa-solid fa-play"></i></button>
-            </div>
-            <h4 class="sp-card-title">I'm Running This Shit</h4>
-            <p class="sp-card-desc">Pure adrenaline, commanding presence, and crisp production.</p>
+      <!-- Dedicated Single Track View Pane -->
+      <div id="sp-single-view" class="sp-view-pane" style="display: none;">
+        <!-- Top Navigation Bar -->
+        <div class="sp-single-top-nav">
+          <button class="sp-btn-back" id="sp-single-back-btn" title="Back to All Songs">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>All Songs & Covers</span>
+          </button>
+          <div class="sp-single-top-badges">
+            <span class="sp-tag-badge"><i class="fa-solid fa-compact-disc"></i> Single Release</span>
+            <span class="sp-tag-badge d-none d-md-inline-flex"><i class="fa-solid fa-circle-check" style="color: #38bdf8;"></i> Official Audio</span>
           </div>
         </div>
-      </section>
+
+        <!-- Dedicated Single Song Hero -->
+        <section class="sp-hero-header sp-single-hero" id="sp-single-hero">
+          <div class="sp-hero-cover-wrap sp-single-cover-wrap" id="sp-single-cover-wrap">
+            <img src="assets/images/cover_no_crown_given.jpg" alt="Song Cover" class="sp-hero-cover" id="sp-single-cover" />
+            <span class="sp-hero-badge" id="sp-single-badge">Banger</span>
+          </div>
+
+          <div class="sp-hero-details sp-single-details">
+            <h1 class="sp-hero-title sp-single-title" id="sp-single-title">No Crown Given</h1>
+            <div class="sp-hero-meta sp-single-meta">
+              <img src="assets/images/vsp3.jpeg" alt="Vishnu Suresh Perumbavoor" class="sp-hero-meta-avatar" />
+              <a href="index.html">Vishnu Suresh Perumbavoor (VSP)</a>
+              <span class="dot-sep">&bull;</span>
+              <span id="sp-single-album">Cover Sessions</span>
+              <span class="dot-sep">&bull;</span>
+              <span id="sp-single-year">2026</span>
+              <span class="dot-sep">&bull;</span>
+              <span id="sp-single-duration">2:59</span>
+              <span class="dot-sep">&bull;</span>
+              <span class="sp-tag-pill" id="sp-single-genre">Self Mass</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dedicated Single Song Action Bar -->
+        <div class="sp-action-bar sp-single-action-bar">
+          <!-- Big Play / Pause Button for this track -->
+          <button class="sp-play-big-btn sp-single-play-btn" id="sp-single-play-btn" title="Play Track" aria-label="Play Track">
+            <i class="fa-solid fa-play" id="sp-single-play-icon"></i>
+          </button>
+
+          <!-- Heart / Like Button -->
+          <button class="sp-action-icon-btn sp-single-like-btn" id="sp-single-like-btn" title="Save to Your Liked Songs" aria-label="Save to Your Liked Songs">
+            <i class="fa-regular fa-heart" id="sp-single-like-icon"></i>
+          </button>
+
+          <!-- Share Track Button -->
+          <button class="sp-action-icon-btn" id="sp-single-share-btn" title="Share this track" aria-label="Share this track">
+            <i class="fa-solid fa-share-nodes"></i>
+          </button>
+
+          <!-- Repeat Track Toggle -->
+          <button class="sp-action-icon-btn" id="sp-single-repeat-btn" title="Repeat Track" aria-label="Repeat Track">
+            <i class="fa-solid fa-repeat"></i>
+          </button>
+
+          <div class="sp-action-right">
+            <span class="sp-tag-badge"><i class="fa-solid fa-headphones"></i> Studio Quality</span>
+            <span class="sp-tag-badge d-none d-md-inline-flex"><i class="fa-solid fa-wave-square"></i> Lossless Audio</span>
+          </div>
+        </div>
+
+        <!-- Interactive In-View Track Player & Waveform Visualizer -->
+        <section class="sp-single-player-section">
+          <div class="sp-single-player-card">
+            <div class="sp-single-player-header">
+              <div class="sp-single-now-playing-info">
+                <span class="sp-badge-live"><span class="sp-pulse-dot"></span> NOW PLAYING</span>
+                <span class="sp-single-card-track" id="sp-single-card-track">No Crown Given</span>
+              </div>
+              <div class="sp-single-audio-specs">
+                <span><i class="fa-solid fa-signal"></i> 44.1kHz Hi-Fi</span>
+              </div>
+            </div>
+
+            <!-- Single Canvas Visualizer -->
+            <div class="sp-single-canvas-wrap">
+              <canvas id="sp-single-canvas" width="800" height="80"></canvas>
+            </div>
+
+            <!-- Scrubber line directly in card -->
+            <div class="sp-single-scrubber-row">
+              <span class="sp-single-time-cur" id="sp-single-time-cur">0:00</span>
+              <div class="sp-single-scrubber-bar" id="sp-single-scrubber-bar">
+                <div class="sp-single-scrubber-fill" id="sp-single-scrubber-fill"></div>
+                <div class="sp-single-scrubber-thumb" id="sp-single-scrubber-thumb"></div>
+              </div>
+              <span class="sp-single-time-total" id="sp-single-time-total">2:59</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- More by VSP / Other Tracks -->
+        <section class="sp-single-more-section">
+          <div class="sp-section-heading">
+            <div>
+              <h3>More by VSP</h3>
+              <p style="font-size: 0.85rem; color: var(--sp-text-sub); margin: 2px 0 0 0;">Next up from VSP</p>
+            </div>
+            <button class="sp-btn-outline-sm" id="sp-btn-view-all-songs">View All Songs</button>
+          </div>
+          <div class="sp-single-tracks-list" id="sp-single-other-tracks">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- About the Artist Card -->
+        <section class="sp-single-artist-section">
+          <div class="sp-single-artist-card">
+            <div class="sp-single-artist-content">
+              <img src="assets/images/vsp3.jpeg" alt="Vishnu Suresh Perumbavoor" class="sp-single-artist-avatar" />
+              <div class="sp-single-artist-text">
+                <span class="sp-verified-artist"><i class="fa-solid fa-circle-check"></i> Verified Artist</span>
+                <h4>Vishnu Suresh Perumbavoor (VSP)</h4>
+                <p>AI Engineer, Computer Vision Specialist & Beat Producer. Blending cybernetic soundscapes, raw 808 rhythms, and relentless momentum.</p>
+                <div class="sp-single-artist-links">
+                  <a href="index.html" class="sp-artist-link-btn"><i class="fa-solid fa-user"></i> Full Portfolio</a>
+                  <a href="3d-lab.html" class="sp-artist-link-btn"><i class="fa-solid fa-cube"></i> 3D Lab</a>
+                  <a href="bot/" class="sp-artist-link-btn"><i class="fa-solid fa-robot"></i> AI Bot</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 
