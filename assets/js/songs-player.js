@@ -143,6 +143,19 @@
       fsArtist: document.getElementById("sp-fs-artist"),
       // Toast
       toast: document.getElementById("sp-toast"),
+      // Instagram Story Modal elements
+      storyModal: document.getElementById("sp-story-modal"),
+      storyBackdrop: document.getElementById("sp-story-backdrop"),
+      storyCloseBtn: document.getElementById("sp-story-close-btn"),
+      storyPreviewContainer: document.getElementById("sp-story-preview-container"),
+      storySpinner: document.getElementById("sp-story-spinner"),
+      storyTrackTitle: document.getElementById("sp-story-track-title"),
+      storyTrackArtist: document.getElementById("sp-story-track-artist"),
+      storyNativeShareBtn: document.getElementById("sp-story-native-share-btn"),
+      storyDownloadBtn: document.getElementById("sp-story-download-btn"),
+      storyCopyLinkBtn: document.getElementById("sp-story-copy-link-btn"),
+      singleStoryBtn: document.getElementById("sp-single-story-btn"),
+      barStoryBtn: document.getElementById("sp-bar-story-btn"),
     };
   }
 
@@ -289,6 +302,7 @@
       const url = `songs.html?track=${currentTrackIdx}`;
       window.history.pushState({ view: "single", track: currentTrackIdx }, "", url);
     }
+    document.title = `${TRACKS[currentTrackIdx].title} | Vishnu Suresh Perumbavoor (VSP)`;
 
     if (dom.sidebarAlbumItem) {
       dom.sidebarAlbumItem.classList.remove("active");
@@ -311,6 +325,7 @@
     if (pushHistory) {
       window.history.pushState({ view: "album" }, "", "songs.html");
     }
+    document.title = "Songs & Music | Vishnu Suresh Perumbavoor (VSP)";
 
     if (dom.sidebarAlbumItem) {
       dom.sidebarAlbumItem.classList.add("active");
@@ -752,36 +767,375 @@
     setVolume(currentVolume);
   }
 
-  // Share Track Function
-  function shareTrack(trackId) {
-    if (trackId < 0 || trackId >= TRACKS.length) return;
-    const track = TRACKS[trackId];
+  // Current Story Canvas State
+  let currentStoryCanvas = null;
+  let currentStoryTrackId = 0;
+
+  // Generate 9:16 (1080x1920) Instagram Story Card Canvas
+  function generateStoryCanvas(track, callback) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080;
+    canvas.height = 1920;
+    const ctx = canvas.getContext("2d");
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      // 1. Sleek Cyber Gradient Background
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, 1920);
+      bgGrad.addColorStop(0, "#08090d");
+      bgGrad.addColorStop(0.35, "#0f141d");
+      bgGrad.addColorStop(0.7, "#141c28");
+      bgGrad.addColorStop(1, "#08090d");
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // 2. Ambient Neon Green & Cyan Radial Glow
+      const glow1 = ctx.createRadialGradient(540, 680, 60, 540, 680, 720);
+      glow1.addColorStop(0, "rgba(0, 214, 121, 0.22)");
+      glow1.addColorStop(0.5, "rgba(0, 119, 255, 0.12)");
+      glow1.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = glow1;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // Subtle cyber horizontal scan lines
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.025)";
+      ctx.lineWidth = 1;
+      for (let y = 80; y < 1920; y += 60) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(1080, y);
+        ctx.stroke();
+      }
+
+      // 3. Header Branding Tag
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.font = "bold 26px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+      ctx.fillText("V S P   M U S I C", 540, 210);
+
+      // Neon dots
+      ctx.fillStyle = "#00d679";
+      ctx.beginPath();
+      ctx.arc(360, 202, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(720, 202, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 4. Centered Cover Art (680x680) with rounded corners & shadow
+      const coverSize = 680;
+      const coverX = (1080 - coverSize) / 2;
+      const coverY = 300;
+      const cornerRadius = 36;
+
+      // Drop Shadow
+      ctx.save();
+      ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
+      ctx.shadowBlur = 60;
+      ctx.shadowOffsetY = 24;
+      ctx.beginPath();
+      ctx.moveTo(coverX + cornerRadius, coverY);
+      ctx.arcTo(coverX + coverSize, coverY, coverX + coverSize, coverY + coverSize, cornerRadius);
+      ctx.arcTo(coverX + coverSize, coverY + coverSize, coverX, coverY + coverSize, cornerRadius);
+      ctx.arcTo(coverX, coverY + coverSize, coverX, coverY, cornerRadius);
+      ctx.arcTo(coverX, coverY, coverX + coverSize, coverY, cornerRadius);
+      ctx.closePath();
+      ctx.fillStyle = "#000";
+      ctx.fill();
+      ctx.restore();
+
+      // Clipped Cover Image
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(coverX + cornerRadius, coverY);
+      ctx.arcTo(coverX + coverSize, coverY, coverX + coverSize, coverY + coverSize, cornerRadius);
+      ctx.arcTo(coverX + coverSize, coverY + coverSize, coverX, coverY + coverSize, cornerRadius);
+      ctx.arcTo(coverX, coverY + coverSize, coverX, coverY, cornerRadius);
+      ctx.arcTo(coverX, coverY, coverX + coverSize, coverY, cornerRadius);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(img, coverX, coverY, coverSize, coverSize);
+      ctx.restore();
+
+      // Inner Border
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(coverX + cornerRadius, coverY);
+      ctx.arcTo(coverX + coverSize, coverY, coverX + coverSize, coverY + coverSize, cornerRadius);
+      ctx.arcTo(coverX + coverSize, coverY + coverSize, coverX, coverY + coverSize, cornerRadius);
+      ctx.arcTo(coverX, coverY + coverSize, coverX, coverY, cornerRadius);
+      ctx.arcTo(coverX, coverY, coverX + coverSize, coverY, cornerRadius);
+      ctx.closePath();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.restore();
+
+      // 5. Track Title
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "900 62px -apple-system, BlinkMacSystemFont, 'Nunito', 'Segoe UI', Roboto, sans-serif";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.6)";
+      ctx.shadowBlur = 18;
+      ctx.shadowOffsetY = 4;
+      ctx.fillText(track.title, 540, 1080);
+      ctx.restore();
+
+      // 6. Artist Name
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#00d679";
+      ctx.font = "700 34px -apple-system, BlinkMacSystemFont, 'Nunito', 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText(track.artist || "Vishnu Suresh Perumbavoor (VSP)", 540, 1145);
+      ctx.restore();
+
+      // 7. Genre / Mass Pill Badge
+      const genreText = (track.genre || "Self Mass").toUpperCase();
+      ctx.save();
+      ctx.font = "bold 22px -apple-system, BlinkMacSystemFont, sans-serif";
+      const textW = ctx.measureText(genreText).width;
+      const pillW = textW + 44;
+      const pillH = 44;
+      const pillX = 540 - pillW / 2;
+      const pillY = 1185;
+      const pillR = 22;
+
+      ctx.beginPath();
+      ctx.moveTo(pillX + pillR, pillY);
+      ctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + pillH, pillR);
+      ctx.arcTo(pillX + pillW, pillY + pillH, pillX, pillY + pillH, pillR);
+      ctx.arcTo(pillX, pillY + pillH, pillX, pillY, pillR);
+      ctx.arcTo(pillX, pillY, pillX + pillW, pillY, pillR);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(0, 214, 121, 0.12)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(0, 214, 121, 0.4)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#00d679";
+      ctx.fillText(genreText, 540, pillY + 30);
+      ctx.restore();
+
+      // 8. Waveform Sound Graphic
+      ctx.save();
+      const barsCount = 38;
+      const barW = 8;
+      const barGap = 10;
+      const totalW = barsCount * (barW + barGap) - barGap;
+      const startX = (1080 - totalW) / 2;
+      const centerY = 1320;
+
+      const waveHeights = [
+        18, 28, 48, 72, 42, 88, 112, 62, 98, 124, 82, 52,
+        104, 134, 78, 48, 92, 128, 112, 68, 84, 118, 98, 58,
+        88, 124, 72, 42, 98, 108, 62, 82, 52, 36, 26, 16, 22, 14
+      ];
+
+      for (let i = 0; i < barsCount; i++) {
+        const bh = waveHeights[i % waveHeights.length];
+        const bx = startX + i * (barW + barGap);
+        const by = centerY - bh / 2;
+
+        const grad = ctx.createLinearGradient(0, by, 0, by + bh);
+        grad.addColorStop(0, "#00d679");
+        grad.addColorStop(1, "#0088ff");
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(bx, by, barW, bh, 4);
+        } else {
+          ctx.rect(bx, by, barW, bh);
+        }
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // 9. Modern Link Sticker Mockup
+      ctx.save();
+      const stickerW = 640;
+      const stickerH = 82;
+      const stickerX = (1080 - stickerW) / 2;
+      const stickerY = 1450;
+      const stickerR = 41;
+
+      ctx.shadowColor = "rgba(0, 0, 0, 0.65)";
+      ctx.shadowBlur = 32;
+      ctx.shadowOffsetY = 14;
+
+      ctx.beginPath();
+      ctx.moveTo(stickerX + stickerR, stickerY);
+      ctx.arcTo(stickerX + stickerW, stickerY, stickerX + stickerW, stickerY + stickerH, stickerR);
+      ctx.arcTo(stickerX + stickerW, stickerY + stickerH, stickerX, stickerY + stickerH, stickerR);
+      ctx.arcTo(stickerX, stickerY + stickerH, stickerX, stickerY, stickerR);
+      ctx.arcTo(stickerX, stickerY, stickerX + stickerW, stickerY, stickerR);
+      ctx.closePath();
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.restore();
+
+      // Sticker Content
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.font = "bold 28px -apple-system, BlinkMacSystemFont, sans-serif";
+      ctx.fillStyle = "#0c1017";
+      ctx.fillText("🔗  VSP.MUSIC/SONG", 540, stickerY + 51);
+      ctx.restore();
+
+      // Sticker subtext hint
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.font = "600 24px -apple-system, BlinkMacSystemFont, sans-serif";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
+      ctx.fillText("Tap Link Sticker on Instagram to Listen", 540, 1575);
+      ctx.restore();
+
+      // 10. Bottom Footer
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.font = "600 22px -apple-system, BlinkMacSystemFont, sans-serif";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+      ctx.fillText("vishnusureshperumbavoor.github.io/V-S-P", 540, 1780);
+      ctx.restore();
+
+      callback(canvas);
+    };
+
+    img.onerror = () => {
+      callback(null);
+    };
+
+    img.src = track.cover;
+  }
+
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  function openStoryModal(trackId) {
+    const id =
+      typeof trackId === "number" && trackId >= 0 && trackId < TRACKS.length
+        ? trackId
+        : currentTrackIdx;
+    const track = TRACKS[id];
+    currentStoryTrackId = id;
+
+    if (!dom.storyModal) return;
+
+    dom.storyModal.style.display = "flex";
+    if (dom.storySpinner) dom.storySpinner.style.display = "block";
+    if (dom.storyTrackTitle) dom.storyTrackTitle.textContent = track.title;
+    if (dom.storyTrackArtist)
+      dom.storyTrackArtist.textContent =
+        track.artist || "Vishnu Suresh Perumbavoor (VSP)";
+
+    if (dom.storyPreviewContainer) {
+      const existingCanvas = dom.storyPreviewContainer.querySelector("canvas");
+      if (existingCanvas) existingCanvas.remove();
+    }
+
+    generateStoryCanvas(track, (canvas) => {
+      if (dom.storySpinner) dom.storySpinner.style.display = "none";
+      if (!canvas) {
+        showToast("Error generating Story card");
+        return;
+      }
+      currentStoryCanvas = canvas;
+      if (dom.storyPreviewContainer) {
+        dom.storyPreviewContainer.appendChild(canvas);
+      }
+    });
+  }
+
+  function closeStoryModal() {
+    if (dom.storyModal) {
+      dom.storyModal.style.display = "none";
+    }
+  }
+
+  function shareStoryToInstagram(trackId, canvas) {
+    const id = typeof trackId === "number" ? trackId : currentStoryTrackId;
+    const track = TRACKS[id];
     const origin = window.location.origin;
     const path = window.location.pathname.substring(
       0,
       window.location.pathname.lastIndexOf("/") + 1,
     );
-    const shareUrl = `${origin}${path}songs.html?track=${trackId}`;
+    const shareUrl = `${origin}${path}songs.html?track=${id}`;
 
-    const shareData = {
-      title: `${track.title} - VSP`,
-      text: `Listen to "${track.title}" (${track.genre}) by VSP`,
-      url: shareUrl,
-    };
+    // 1. Copy Link for Instagram Link Sticker
+    copyToClipboard(shareUrl);
+    showToast("Link copied for Story Sticker!");
 
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare(shareData)
-    ) {
-      navigator.share(shareData).catch((err) => {
-        if (err.name !== "AbortError") {
-          copyToClipboard(shareUrl);
-        }
-      });
-    } else {
-      copyToClipboard(shareUrl);
+    if (!canvas) {
+      canvas = currentStoryCanvas;
     }
+    if (!canvas) return;
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const safeTitle = (track.title || "Song").replace(/[^a-zA-Z0-9]/g, "_");
+      const filename = `VSP_${safeTitle}_Story.png`;
+
+      // Check if navigator.share with files is supported (iOS Safari / Android Chrome)
+      try {
+        const file = new File([blob], filename, { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `${track.title} - VSP`,
+            text: `Listen to "${track.title}" by Vishnu Suresh Perumbavoor (VSP): ${shareUrl}`,
+          });
+          return;
+        }
+      } catch (err) {
+        if (err.name === "AbortError") return;
+      }
+
+      // Fallback: download card and try opening Instagram app
+      triggerDownload(blob, filename);
+      showToast("Story card saved & link copied!");
+
+      // If mobile device, attempt to open Instagram Story composer
+      if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+        setTimeout(() => {
+          window.location.href = "instagram://story-camera";
+        }, 800);
+      }
+    }, "image/png");
+  }
+
+  function downloadStoryCard(trackId, canvas) {
+    const id = typeof trackId === "number" ? trackId : currentStoryTrackId;
+    const track = TRACKS[id];
+    if (!canvas) canvas = currentStoryCanvas;
+    if (!canvas) return;
+
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const safeTitle = (track.title || "Song").replace(/[^a-zA-Z0-9]/g, "_");
+      triggerDownload(blob, `VSP_${safeTitle}_Story.png`);
+      showToast("Story card downloaded!");
+    }, "image/png");
+  }
+
+  // Share Track Function
+  function shareTrack(trackId) {
+    if (trackId < 0 || trackId >= TRACKS.length) return;
+    openStoryModal(trackId);
   }
 
   // Share Artist Function
@@ -974,6 +1328,13 @@
         case "KeyP":
           prevTrack();
           break;
+        case "Escape":
+          if (dom.storyModal && dom.storyModal.style.display !== "none") {
+            closeStoryModal();
+          } else if (dom.fsModal && dom.fsModal.classList.contains("active")) {
+            dom.fsModal.classList.remove("active");
+          }
+          break;
       }
     });
   }
@@ -1045,6 +1406,50 @@
     if (dom.singleShareBtn) {
       dom.singleShareBtn.addEventListener("click", () => {
         shareTrack(currentTrackIdx);
+      });
+    }
+
+    // Single View Instagram Story Button
+    if (dom.singleStoryBtn) {
+      dom.singleStoryBtn.addEventListener("click", () => {
+        openStoryModal(currentTrackIdx);
+      });
+    }
+
+    // Bottom Bar Instagram Story Button
+    if (dom.barStoryBtn) {
+      dom.barStoryBtn.addEventListener("click", () => {
+        openStoryModal(currentTrackIdx);
+      });
+    }
+
+    // Story Modal Action Buttons
+    if (dom.storyCloseBtn) {
+      dom.storyCloseBtn.addEventListener("click", closeStoryModal);
+    }
+    if (dom.storyBackdrop) {
+      dom.storyBackdrop.addEventListener("click", closeStoryModal);
+    }
+    if (dom.storyNativeShareBtn) {
+      dom.storyNativeShareBtn.addEventListener("click", () => {
+        shareStoryToInstagram(currentStoryTrackId, currentStoryCanvas);
+      });
+    }
+    if (dom.storyDownloadBtn) {
+      dom.storyDownloadBtn.addEventListener("click", () => {
+        downloadStoryCard(currentStoryTrackId, currentStoryCanvas);
+      });
+    }
+    if (dom.storyCopyLinkBtn) {
+      dom.storyCopyLinkBtn.addEventListener("click", () => {
+        const origin = window.location.origin;
+        const path = window.location.pathname.substring(
+          0,
+          window.location.pathname.lastIndexOf("/") + 1,
+        );
+        const shareUrl = `${origin}${path}songs.html?track=${currentStoryTrackId}`;
+        copyToClipboard(shareUrl);
+        showToast("Link copied for Story Sticker!");
       });
     }
 

@@ -378,6 +378,11 @@
             <i class="fa-solid fa-share-nodes"></i>
           </button>
 
+          <!-- Share to Instagram Story -->
+          <button class="sp-action-icon-btn sp-story-btn" id="sp-single-story-btn" title="Share to Instagram Story" aria-label="Share to Instagram Story">
+            <i class="fa-brands fa-instagram"></i>
+          </button>
+
           <!-- Repeat Track Toggle -->
           <button class="sp-action-icon-btn" id="sp-single-repeat-btn" title="Repeat Track" aria-label="Repeat Track">
             <i class="fa-solid fa-repeat"></i>
@@ -474,6 +479,9 @@
       <button class="sp-ctrl-btn" id="sp-bar-share-btn" title="Share current song" aria-label="Share current song" style="margin-left: 4px;">
         <i class="fa-solid fa-share-nodes"></i>
       </button>
+      <button class="sp-ctrl-btn sp-story-btn" id="sp-bar-story-btn" title="Share to Instagram Story" aria-label="Share to Instagram Story" style="margin-left: 2px;">
+        <i class="fa-brands fa-instagram"></i>
+      </button>
     </div>
 
     <!-- Center: Playback Controls & Live Scrub Bar -->
@@ -566,6 +574,77 @@
       <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; color: #fff;">Space</kbd> Play/Pause &bull; 
       <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; color: #fff;">&larr;/&rarr;</kbd> Seek &bull; 
       <kbd style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; color: #fff;">&uarr;/&darr;</kbd> Volume
+    </div>
+  </div>
+
+  <!-- Instagram Story Share Modal -->
+  <div class="sp-story-modal" id="sp-story-modal" role="dialog" aria-modal="true" aria-label="Share to Instagram Story" style="display: none;">
+    <div class="sp-story-backdrop" id="sp-story-backdrop"></div>
+    <div class="sp-story-dialog">
+      <div class="sp-story-dialog-header">
+        <div class="sp-story-header-title">
+          <i class="fa-brands fa-instagram sp-story-ig-icon"></i>
+          <span>Share to Instagram Story</span>
+        </div>
+        <button class="sp-story-close-btn" id="sp-story-close-btn" aria-label="Close Story Share">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="sp-story-body">
+        <div class="sp-story-preview-wrap">
+          <div class="sp-story-preview-card" id="sp-story-preview-container">
+            <div class="sp-story-spinner" id="sp-story-spinner">
+              <i class="fa-solid fa-circle-notch fa-spin"></i>
+            </div>
+          </div>
+          <span class="sp-story-preview-badge"><i class="fa-solid fa-mobile-screen"></i> 9:16 Story Card</span>
+        </div>
+
+        <div class="sp-story-actions-panel">
+          <div class="sp-story-track-info">
+            <span class="sp-story-label">NOW SHARING</span>
+            <h4 id="sp-story-track-title">Track Title</h4>
+            <p id="sp-story-track-artist">Vishnu Suresh Perumbavoor (VSP)</p>
+          </div>
+
+          <div class="sp-story-btn-stack">
+            <!-- Primary Action: Share directly to Instagram Story -->
+            <button class="sp-story-primary-btn" id="sp-story-native-share-btn">
+              <i class="fa-brands fa-instagram"></i>
+              <span>Share to Instagram Story</span>
+            </button>
+
+            <!-- Download Story Card -->
+            <button class="sp-story-sec-btn" id="sp-story-download-btn">
+              <i class="fa-solid fa-download"></i>
+              <span>Download 9:16 Story Card</span>
+            </button>
+
+            <!-- Copy Link for Sticker -->
+            <button class="sp-story-sec-btn" id="sp-story-copy-link-btn">
+              <i class="fa-solid fa-link"></i>
+              <span>Copy Link for Sticker</span>
+            </button>
+          </div>
+
+          <!-- Quick instructions -->
+          <div class="sp-story-steps">
+            <div class="sp-story-step-item">
+              <span class="sp-step-num">1</span>
+              <span>Tap <strong>Share to Story</strong> (or download card)</span>
+            </div>
+            <div class="sp-story-step-item">
+              <span class="sp-step-num">2</span>
+              <span>In Instagram Story, tap the <strong>Sticker</strong> icon</span>
+            </div>
+            <div class="sp-story-step-item">
+              <span class="sp-step-num">3</span>
+              <span>Select <strong>Link</strong> & paste copied track URL</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
