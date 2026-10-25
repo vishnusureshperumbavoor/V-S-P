@@ -9905,10 +9905,31 @@ a.navbar-brand span.fa {
 .w3l-header .navbar-brand {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #ffffff !important;
+  color: var(--primary, #00d679) !important;
   display: inline-flex;
   align-items: center;
-  gap: 8px; }
+  gap: 8px;
+  line-height: 1; }
+
+.w3l-header .navbar-brand:hover,
+.w3l-header .navbar-brand:focus {
+  color: var(--primary, #00d679) !important; }
+
+.w3l-header .navbar-brand span.fa,
+.w3l-header .navbar-brand i.fa,
+.w3l-header .navbar-brand .fa-gamepad,
+.w3l-header .navbar-brand .brand-logo-icon {
+  color: var(--primary, #00d679) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; }
+
+.w3l-header .navbar-brand .brand-text {
+  color: var(--primary, #00d679) !important;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1; }
 
 .navbar-dark .navbar-nav .show > .nav-link,
 .navbar-dark .navbar-nav .active > .nav-link,

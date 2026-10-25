@@ -7,72 +7,90 @@
  */
 
 (function () {
-  'use strict';
+  "use strict";
 
   // Ensure Three.js is available
-  if (typeof THREE === 'undefined') {
-    console.error('Three.js library is required for VSP 3D Lab.');
+  if (typeof THREE === "undefined") {
+    console.error("Three.js library is required for 3D Lab.");
     return;
   }
 
   // DOM Elements
-  const container = document.getElementById('vsp-three-viewport');
-  const designNameEl = document.getElementById('vsp-design-name');
-  const fpsCounterEl = document.getElementById('vsp-hud-fps');
-  const polyCounterEl = document.getElementById('vsp-hud-polys');
-  const autoSpinBtn = document.getElementById('vsp-toggle-spin');
-  const themeBtn = document.getElementById('vsp-toggle-theme');
-  const switcherBtns = document.querySelectorAll('.vsp-mode-btn');
+  const container = document.getElementById("vsp-three-viewport");
+  const designNameEl = document.getElementById("vsp-design-name");
+  const fpsCounterEl = document.getElementById("vsp-hud-fps");
+  const polyCounterEl = document.getElementById("vsp-hud-polys");
+  const autoSpinBtn = document.getElementById("vsp-toggle-spin");
+  const themeBtn = document.getElementById("vsp-toggle-theme");
+  const switcherBtns = document.querySelectorAll(".vsp-mode-btn");
 
   if (!container) return;
 
   // Scene state
-  let currentDesign = 'matrix';
+  let currentDesign = "matrix";
   let autoSpin = true;
   let activeThemeIndex = 0;
   const themes = [
-    { name: 'EMERALD // CYAN', primary: 0x00d679, secondary: 0x7df9ff, hex1: '#00d679', hex2: '#7df9ff' },
-    { name: 'ELECTRIC CYAN', primary: 0x7df9ff, secondary: 0x00d679, hex1: '#7df9ff', hex2: '#00d679' },
-    { name: 'HYPER VIOLET', primary: 0xa855f7, secondary: 0x7df9ff, hex1: '#a855f7', hex2: '#7df9ff' }
+    {
+      name: "EMERALD // CYAN",
+      primary: 0x00d679,
+      secondary: 0x7df9ff,
+      hex1: "#00d679",
+      hex2: "#7df9ff",
+    },
+    {
+      name: "ELECTRIC CYAN",
+      primary: 0x7df9ff,
+      secondary: 0x00d679,
+      hex1: "#7df9ff",
+      hex2: "#00d679",
+    },
+    {
+      name: "HYPER VIOLET",
+      primary: 0xa855f7,
+      secondary: 0x7df9ff,
+      hex1: "#a855f7",
+      hex2: "#7df9ff",
+    },
   ];
 
   // Design metadata (Small text displayed at top corner as requested)
   const designDirectory = {
     matrix: {
-      name: 'CYBERNETIC 3D VSP HOLOGRAPHIC MATRIX',
-      category: 'WIREFRAME HUD',
+      name: "CYBERNETIC 3D VSP HOLOGRAPHIC MATRIX",
+      category: "WIREFRAME HUD",
       cameraZ: 110,
     },
     swarm: {
-      name: 'QUANTUM VSP PARTICLE SWARM & MORPH',
-      category: 'KINETIC PARTICLES',
+      name: "QUANTUM VSP PARTICLE SWARM & MORPH",
+      category: "KINETIC PARTICLES",
       cameraZ: 95,
     },
     synaptic: {
-      name: 'NEON SYNAPTIC VSP HYPER-LATTICE',
-      category: 'NEURAL TOPOLOGY',
+      name: "NEON SYNAPTIC VSP HYPER-LATTICE",
+      category: "NEURAL TOPOLOGY",
       cameraZ: 105,
     },
     radar: {
-      name: 'ORBITAL VSP GYROSCOPE & RADAR CORE',
-      category: 'ROTATIONAL GIMBAL',
+      name: "ORBITAL VSP GYROSCOPE & RADAR CORE",
+      category: "ROTATIONAL GIMBAL",
       cameraZ: 115,
     },
     water: {
-      name: 'AQUATIC VSP FLUID RIPPLE & CAUSTICS MATRIX',
-      category: 'WATER & WAVE DYNAMICS',
+      name: "AQUATIC VSP FLUID RIPPLE & CAUSTICS MATRIX",
+      category: "WATER & WAVE DYNAMICS",
       cameraZ: 120,
     },
     hologram: {
-      name: 'VOLUMETRIC VSP SCI-FI HOLOGRAPHIC EMITTER',
-      category: 'HOLOGRAPHIC PROJECTION',
+      name: "VOLUMETRIC VSP SCI-FI HOLOGRAPHIC EMITTER",
+      category: "HOLOGRAPHIC PROJECTION",
       cameraZ: 110,
     },
     avatar: {
-      name: 'ANIMATED 3D HUMAN GLB AVATAR',
-      category: 'GLTF SKELETAL RIG',
+      name: "ANIMATED 3D HUMAN GLB AVATAR",
+      category: "GLTF SKELETAL RIG",
       cameraZ: 45,
-    }
+    },
   };
 
   // Three.js Core Variables
@@ -100,7 +118,7 @@
   const V_PATH = [
     new THREE.Vector3(-42, 22, 0),
     new THREE.Vector3(-28, -22, 0),
-    new THREE.Vector3(-14, 22, 0)
+    new THREE.Vector3(-14, 22, 0),
   ];
 
   const S_PATH = [
@@ -110,13 +128,10 @@
     new THREE.Vector3(5, 0, 0),
     new THREE.Vector3(8, -10, 0),
     new THREE.Vector3(5, -22, 0),
-    new THREE.Vector3(-7, -22, 0)
+    new THREE.Vector3(-7, -22, 0),
   ];
 
-  const P_SPINE = [
-    new THREE.Vector3(16, -22, 0),
-    new THREE.Vector3(16, 22, 0)
-  ];
+  const P_SPINE = [new THREE.Vector3(16, -22, 0), new THREE.Vector3(16, 22, 0)];
 
   const P_LOOP = [
     new THREE.Vector3(16, 22, 0),
@@ -124,7 +139,7 @@
     new THREE.Vector3(37, 14, 0),
     new THREE.Vector3(37, 6, 0),
     new THREE.Vector3(32, 0, 0),
-    new THREE.Vector3(16, 0, 0)
+    new THREE.Vector3(16, 0, 0),
   ];
 
   // Helper to sample dense points along line segments for particle swarm
@@ -147,14 +162,18 @@
 
     // S letter
     for (let i = 0; i < S_PATH.length - 1; i++) {
-      points.push(...sampleSegment(S_PATH[i], S_PATH[i + 1], Math.floor(step * 0.45)));
+      points.push(
+        ...sampleSegment(S_PATH[i], S_PATH[i + 1], Math.floor(step * 0.45)),
+      );
     }
 
     // P letter spine
     points.push(...sampleSegment(P_SPINE[0], P_SPINE[1], step));
     // P letter loop
     for (let i = 0; i < P_LOOP.length - 1; i++) {
-      points.push(...sampleSegment(P_LOOP[i], P_LOOP[i + 1], Math.floor(step * 0.4)));
+      points.push(
+        ...sampleSegment(P_LOOP[i], P_LOOP[i + 1], Math.floor(step * 0.4)),
+      );
     }
 
     return points;
@@ -177,7 +196,7 @@
     renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
-      powerPreference: 'high-performance'
+      powerPreference: "high-performance",
     });
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     renderer.setPixelRatio(dpr);
@@ -186,11 +205,11 @@
     renderer.toneMappingExposure = 1.25;
 
     // Clear previous canvases if any
-    container.innerHTML = '';
+    container.innerHTML = "";
     container.appendChild(renderer.domElement);
 
     // OrbitControls
-    if (typeof THREE.OrbitControls !== 'undefined') {
+    if (typeof THREE.OrbitControls !== "undefined") {
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
@@ -206,26 +225,26 @@
 
     const primaryLight = new THREE.PointLight(themes[0].primary, 3, 200);
     primaryLight.position.set(-30, 40, 50);
-    primaryLight.name = 'primaryLight';
+    primaryLight.name = "primaryLight";
     scene.add(primaryLight);
 
     const secondaryLight = new THREE.PointLight(themes[0].secondary, 3, 200);
     secondaryLight.position.set(30, -30, 40);
-    secondaryLight.name = 'secondaryLight';
+    secondaryLight.name = "secondaryLight";
     scene.add(secondaryLight);
 
     // Add main dynamic group
     scene.add(activeGroup);
 
     // Build default design
-    loadDesign('matrix');
+    loadDesign("matrix");
 
     // Attach Event Listeners
-    window.addEventListener('resize', onWindowResize, false);
-    window.addEventListener('mousemove', onMouseMove, false);
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener("resize", onWindowResize, false);
+    window.addEventListener("mousemove", onMouseMove, false);
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
 
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
       } else {
@@ -246,15 +265,20 @@
 
     // Helper: Build 3D Extruded Tube for path
     function buildTube(points, radius = 1.4, color = theme.primary) {
-      const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
+      const curve = new THREE.CatmullRomCurve3(
+        points,
+        false,
+        "catmullrom",
+        0.1,
+      );
       const tubeGeo = new THREE.TubeGeometry(curve, 64, radius, 8, false);
-      
+
       // Wireframe outer
       const wireMat = new THREE.MeshBasicMaterial({
         color: color,
         wireframe: true,
         transparent: true,
-        opacity: 0.85
+        opacity: 0.85,
       });
       const wireMesh = new THREE.Mesh(tubeGeo, wireMat);
 
@@ -264,7 +288,7 @@
         emissive: color,
         emissiveIntensity: 0.45,
         roughness: 0.2,
-        metalness: 0.8
+        metalness: 0.8,
       });
       const coreMesh = new THREE.Mesh(tubeGeo, coreMat);
       coreMesh.scale.set(0.7, 0.7, 0.7);
@@ -291,30 +315,30 @@
       color: theme.secondary,
       dashSize: 4,
       gapSize: 2,
-      linewidth: 1.5
+      linewidth: 1.5,
     });
     const ringGeo1 = new THREE.BufferGeometry().setFromPoints(
-      new THREE.Path().absarc(0, 0, 56, 0, Math.PI * 2, true).getPoints(90)
+      new THREE.Path().absarc(0, 0, 56, 0, Math.PI * 2, true).getPoints(90),
     );
     const ring1 = new THREE.Line(ringGeo1, ringMat1);
     ring1.computeLineDistances();
     ring1.rotation.x = Math.PI / 2.8;
-    ring1.name = 'ring1';
+    ring1.name = "ring1";
     group.add(ring1);
 
     const ringMat2 = new THREE.LineDashedMaterial({
       color: theme.primary,
       dashSize: 6,
       gapSize: 4,
-      linewidth: 1.5
+      linewidth: 1.5,
     });
     const ringGeo2 = new THREE.BufferGeometry().setFromPoints(
-      new THREE.Path().absarc(0, 0, 68, 0, Math.PI * 2, true).getPoints(100)
+      new THREE.Path().absarc(0, 0, 68, 0, Math.PI * 2, true).getPoints(100),
     );
     const ring2 = new THREE.Line(ringGeo2, ringMat2);
     ring2.computeLineDistances();
     ring2.rotation.y = Math.PI / 3.5;
-    ring2.name = 'ring2';
+    ring2.name = "ring2";
     group.add(ring2);
 
     // Ground Cyber Grid
@@ -331,15 +355,15 @@
       starPos[i + 1] = (Math.random() - 0.5) * 160;
       starPos[i + 2] = (Math.random() - 0.5) * 160;
     }
-    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
     const starMat = new THREE.PointsMaterial({
       color: theme.secondary,
       size: 1.5,
       transparent: true,
-      opacity: 0.65
+      opacity: 0.65,
     });
     const starField = new THREE.Points(starGeo, starMat);
-    starField.name = 'starField';
+    starField.name = "starField";
     group.add(starField);
 
     group.userData = {
@@ -355,7 +379,7 @@
         letterS.scale.set(scale, scale, scale);
         letterP1.scale.set(scale, scale, scale);
         letterP2.scale.set(scale, scale, scale);
-      }
+      },
     };
 
     return group;
@@ -402,25 +426,29 @@
 
       // Color gradient based on X position
       const t = (x + 45) / 90;
-      const col = new THREE.Color().lerpColors(c1, c2, Math.max(0, Math.min(1, t)));
+      const col = new THREE.Color().lerpColors(
+        c1,
+        c2,
+        Math.max(0, Math.min(1, t)),
+      );
       colors[i * 3] = col.r;
       colors[i * 3 + 1] = col.g;
       colors[i * 3 + 2] = col.b;
     }
 
     const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
     // Custom circle particle texture
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     canvas.width = 64;
     canvas.height = 64;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    grad.addColorStop(0.35, 'rgba(0, 214, 121, 0.85)');
-    grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    grad.addColorStop(0, "rgba(255, 255, 255, 1)");
+    grad.addColorStop(0.35, "rgba(0, 214, 121, 0.85)");
+    grad.addColorStop(1, "rgba(0, 0, 0, 0)");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 64, 64);
     const particleTex = new THREE.CanvasTexture(canvas);
@@ -432,15 +460,21 @@
       transparent: true,
       opacity: 0.9,
       blending: THREE.AdditiveBlending,
-      depthWrite: false
+      depthWrite: false,
     });
 
     const pointCloud = new THREE.Points(geometry, material);
     group.add(pointCloud);
 
     // Surrounding quantum field bounds
-    const cageGeo = new THREE.WireframeGeometry(new THREE.BoxGeometry(95, 55, 25));
-    const cageMat = new THREE.LineBasicMaterial({ color: theme.secondary, transparent: true, opacity: 0.15 });
+    const cageGeo = new THREE.WireframeGeometry(
+      new THREE.BoxGeometry(95, 55, 25),
+    );
+    const cageMat = new THREE.LineBasicMaterial({
+      color: theme.secondary,
+      transparent: true,
+      opacity: 0.15,
+    });
     const cage = new THREE.LineSegments(cageGeo, cageMat);
     group.add(cage);
 
@@ -492,7 +526,7 @@
         }
 
         geometry.attributes.position.needsUpdate = true;
-      }
+      },
     };
 
     return group;
@@ -510,12 +544,7 @@
     const packetsGroup = new THREE.Group();
 
     // Key vertices for the VSP letters
-    const allVertices = [
-      ...V_PATH,
-      ...S_PATH,
-      ...P_SPINE,
-      ...P_LOOP
-    ];
+    const allVertices = [...V_PATH, ...S_PATH, ...P_SPINE, ...P_LOOP];
 
     // Node spheres
     const nodeGeo = new THREE.IcosahedronGeometry(1.8, 2);
@@ -524,7 +553,7 @@
       emissive: theme.primary,
       emissiveIntensity: 0.8,
       roughness: 0.2,
-      metalness: 0.9
+      metalness: 0.9,
     });
 
     allVertices.forEach((v) => {
@@ -548,7 +577,7 @@
       [P_LOOP[1], P_LOOP[2]],
       [P_LOOP[2], P_LOOP[3]],
       [P_LOOP[3], P_LOOP[4]],
-      [P_LOOP[4], P_LOOP[5]]
+      [P_LOOP[4], P_LOOP[5]],
     ];
 
     beamLines.forEach(([p1, p2]) => {
@@ -557,7 +586,7 @@
         color: theme.secondary,
         transparent: true,
         opacity: 0.85,
-        linewidth: 2
+        linewidth: 2,
       });
       beamsGroup.add(new THREE.Line(lineGeo, lineMat));
     });
@@ -575,7 +604,7 @@
         mesh: mesh,
         lineIndex: i % beamLines.length,
         progress: Math.random(),
-        speed: 0.4 + Math.random() * 0.5
+        speed: 0.4 + Math.random() * 0.5,
       });
     }
 
@@ -585,7 +614,7 @@
       color: theme.primary,
       wireframe: true,
       transparent: true,
-      opacity: 0.14
+      opacity: 0.14,
     });
     const shield = new THREE.Mesh(shieldGeo, shieldMat);
     group.add(shield);
@@ -612,7 +641,7 @@
         nodesGroup.children.forEach((n) => {
           n.scale.set(pulse, pulse, pulse);
         });
-      }
+      },
     };
 
     return group;
@@ -627,7 +656,10 @@
 
     // Inner Centered 3D VSP Monogram
     const vspCore = new THREE.Group();
-    const coreMat = new THREE.LineBasicMaterial({ color: theme.secondary, linewidth: 2 });
+    const coreMat = new THREE.LineBasicMaterial({
+      color: theme.secondary,
+      linewidth: 2,
+    });
 
     const vGeo = new THREE.BufferGeometry().setFromPoints(V_PATH);
     const sGeo = new THREE.BufferGeometry().setFromPoints(S_PATH);
@@ -648,16 +680,16 @@
         emissive: color,
         emissiveIntensity: 0.5,
         roughness: 0.25,
-        metalness: 0.85
+        metalness: 0.85,
       });
       const mesh = new THREE.Mesh(ringGeo, ringMat);
       mesh.userData = { rotationAxis };
       return mesh;
     }
 
-    const gimbal1 = makeGimbal(48, theme.primary, 'x');
-    const gimbal2 = makeGimbal(58, theme.secondary, 'y');
-    const gimbal3 = makeGimbal(68, theme.primary, 'z');
+    const gimbal1 = makeGimbal(48, theme.primary, "x");
+    const gimbal2 = makeGimbal(58, theme.secondary, "y");
+    const gimbal3 = makeGimbal(68, theme.primary, "z");
 
     group.add(gimbal1);
     group.add(gimbal2);
@@ -669,7 +701,7 @@
       color: theme.primary,
       transparent: true,
       opacity: 0.25,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
     });
     const radarSweep = new THREE.Mesh(radarGeo, radarMat);
     radarSweep.rotation.x = Math.PI / 2;
@@ -677,13 +709,15 @@
 
     // Target telemetry crosshairs
     const crosshairGeo = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(-75, 0, 0), new THREE.Vector3(75, 0, 0),
-      new THREE.Vector3(0, -75, 0), new THREE.Vector3(0, 75, 0)
+      new THREE.Vector3(-75, 0, 0),
+      new THREE.Vector3(75, 0, 0),
+      new THREE.Vector3(0, -75, 0),
+      new THREE.Vector3(0, 75, 0),
     ]);
     const crosshairMat = new THREE.LineDashedMaterial({
       color: theme.secondary,
       dashSize: 6,
-      gapSize: 6
+      gapSize: 6,
     });
     const crosshair = new THREE.LineSegments(crosshairGeo, crosshairMat);
     crosshair.computeLineDistances();
@@ -702,7 +736,7 @@
 
         radarSweep.rotation.z = -time * 2.2;
         vspCore.rotation.y = Math.sin(time) * 0.35;
-      }
+      },
     };
 
     return group;
@@ -734,7 +768,7 @@
       roughness: 0.12,
       metalness: 0.85,
       flatShading: true,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
     });
     const waterMesh = new THREE.Mesh(waterGeo, waterMat);
     waterMesh.rotation.x = -Math.PI / 2.3;
@@ -746,7 +780,7 @@
       color: theme.secondary,
       wireframe: true,
       transparent: true,
-      opacity: 0.28
+      opacity: 0.28,
     });
     const causticsMesh = new THREE.Mesh(waterGeo, causticsMat);
     causticsMesh.rotation.x = -Math.PI / 2.3;
@@ -757,14 +791,19 @@
     const vspTextGroup = new THREE.Group();
 
     function buildWaterTube(points, color = theme.secondary) {
-      const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
+      const curve = new THREE.CatmullRomCurve3(
+        points,
+        false,
+        "catmullrom",
+        0.1,
+      );
       const tubeGeo = new THREE.TubeGeometry(curve, 48, 2.2, 12, false);
       const tubeMat = new THREE.MeshStandardMaterial({
         color: 0x002233,
         emissive: color,
         emissiveIntensity: 0.7,
         roughness: 0.1,
-        metalness: 0.95
+        metalness: 0.95,
       });
       return new THREE.Mesh(tubeGeo, tubeMat);
     }
@@ -788,7 +827,7 @@
       emissive: theme.secondary,
       emissiveIntensity: 0.6,
       roughness: 0.1,
-      metalness: 0.9
+      metalness: 0.9,
     });
     const drops = [];
     const dropCount = 45;
@@ -797,7 +836,7 @@
       dropMesh.position.set(
         (Math.random() - 0.5) * 90,
         Math.random() * 25 - 5,
-        (Math.random() - 0.5) * 40
+        (Math.random() - 0.5) * 40,
       );
       group.add(dropMesh);
       drops.push({
@@ -805,7 +844,7 @@
         speedY: 0.15 + Math.random() * 0.25,
         baseY: -8,
         maxY: 12 + Math.random() * 15,
-        phase: Math.random() * Math.PI * 2
+        phase: Math.random() * Math.PI * 2,
       });
     }
 
@@ -829,9 +868,17 @@
           const vy = pos.getY(i);
 
           // Rolling ocean swells + interactive ripple rings
-          const wave1 = Math.sin(vx * 0.08 + time * 2.2) * Math.cos(vy * 0.08 + time * 1.8) * 3.6;
-          const distFromMouse = Math.hypot(vx - rippleCenter.x, vy - rippleCenter.y);
-          const ripple = Math.sin(distFromMouse * 0.2 - time * 3.5) * Math.max(0, 2.5 - distFromMouse * 0.035);
+          const wave1 =
+            Math.sin(vx * 0.08 + time * 2.2) *
+            Math.cos(vy * 0.08 + time * 1.8) *
+            3.6;
+          const distFromMouse = Math.hypot(
+            vx - rippleCenter.x,
+            vy - rippleCenter.y,
+          );
+          const ripple =
+            Math.sin(distFromMouse * 0.2 - time * 3.5) *
+            Math.max(0, 2.5 - distFromMouse * 0.035);
 
           pos.setZ(i, wave1 + ripple);
         }
@@ -854,7 +901,7 @@
           }
           d.mesh.position.x += Math.sin(time * 3 + d.phase) * 0.08;
         });
-      }
+      },
     };
 
     return group;
@@ -874,7 +921,7 @@
     const baseMat = new THREE.MeshStandardMaterial({
       color: 0x081018,
       roughness: 0.3,
-      metalness: 0.9
+      metalness: 0.9,
     });
     const base = new THREE.Mesh(baseGeo, baseMat);
     base.position.y = -34;
@@ -884,7 +931,7 @@
     const lensGeo = new THREE.CircleGeometry(22, 36);
     const lensMat = new THREE.MeshBasicMaterial({
       color: holoCyan,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
     });
     const lens = new THREE.Mesh(lensGeo, lensMat);
     lens.rotation.x = -Math.PI / 2;
@@ -892,11 +939,25 @@
     group.add(lens);
 
     // Rotating Pedestal Rings
-    const ringMat1 = new THREE.LineDashedMaterial({ color: holoGreen, dashSize: 4, gapSize: 3, linewidth: 2 });
-    const ringMat2 = new THREE.LineDashedMaterial({ color: holoCyan, dashSize: 6, gapSize: 4, linewidth: 2 });
+    const ringMat1 = new THREE.LineDashedMaterial({
+      color: holoGreen,
+      dashSize: 4,
+      gapSize: 3,
+      linewidth: 2,
+    });
+    const ringMat2 = new THREE.LineDashedMaterial({
+      color: holoCyan,
+      dashSize: 6,
+      gapSize: 4,
+      linewidth: 2,
+    });
 
-    const rGeo1 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, 26, 0, Math.PI * 2, true).getPoints(64));
-    const rGeo2 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, 29, 0, Math.PI * 2, true).getPoints(64));
+    const rGeo1 = new THREE.BufferGeometry().setFromPoints(
+      new THREE.Path().absarc(0, 0, 26, 0, Math.PI * 2, true).getPoints(64),
+    );
+    const rGeo2 = new THREE.BufferGeometry().setFromPoints(
+      new THREE.Path().absarc(0, 0, 29, 0, Math.PI * 2, true).getPoints(64),
+    );
     const ring1 = new THREE.Line(rGeo1, ringMat1);
     const ring2 = new THREE.Line(rGeo2, ringMat2);
     ring1.computeLineDistances();
@@ -916,7 +977,7 @@
       opacity: 0.12,
       side: THREE.DoubleSide,
       blending: THREE.AdditiveBlending,
-      depthWrite: false
+      depthWrite: false,
     });
     const beamCone = new THREE.Mesh(coneGeo, coneMat);
     beamCone.position.y = 4;
@@ -926,15 +987,20 @@
     const holoLettersGroup = new THREE.Group();
 
     function buildHoloTube(points, color) {
-      const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
+      const curve = new THREE.CatmullRomCurve3(
+        points,
+        false,
+        "catmullrom",
+        0.1,
+      );
       const tubeGeo = new THREE.TubeGeometry(curve, 54, 2.0, 10, false);
-      
+
       const wireMat = new THREE.MeshBasicMaterial({
         color: color,
         wireframe: true,
         transparent: true,
         opacity: 0.88,
-        blending: THREE.AdditiveBlending
+        blending: THREE.AdditiveBlending,
       });
       const wireMesh = new THREE.Mesh(tubeGeo, wireMat);
 
@@ -945,7 +1011,7 @@
         roughness: 0.1,
         metalness: 0.95,
         transparent: true,
-        opacity: 0.75
+        opacity: 0.75,
       });
       const glowMesh = new THREE.Mesh(tubeGeo, glowMat);
       glowMesh.scale.set(0.65, 0.65, 0.65);
@@ -975,7 +1041,7 @@
       transparent: true,
       opacity: 0.65,
       blending: THREE.AdditiveBlending,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
     });
     const scanline = new THREE.Mesh(scanGeo, scanMat);
     scanline.rotation.x = -Math.PI / 4;
@@ -995,25 +1061,37 @@
       voxelPos[i * 3 + 2] = Math.sin(angle) * radius;
       voxelVels[i] = 0.2 + Math.random() * 0.35;
     }
-    voxelGeo.setAttribute('position', new THREE.BufferAttribute(voxelPos, 3));
+    voxelGeo.setAttribute("position", new THREE.BufferAttribute(voxelPos, 3));
     const voxelMat = new THREE.PointsMaterial({
       color: holoCyan,
       size: 1.8,
       transparent: true,
       opacity: 0.75,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
     });
     const voxels = new THREE.Points(voxelGeo, voxelMat);
     group.add(voxels);
 
     // 6. Hologram Targeting HUD Brackets
     const bracketGeo = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(-45, 26, 0), new THREE.Vector3(-45, 30, 0), new THREE.Vector3(-41, 30, 0),
-      new THREE.Vector3(41, 30, 0), new THREE.Vector3(45, 30, 0), new THREE.Vector3(45, 26, 0),
-      new THREE.Vector3(45, -20, 0), new THREE.Vector3(45, -24, 0), new THREE.Vector3(41, -24, 0),
-      new THREE.Vector3(-41, -24, 0), new THREE.Vector3(-45, -24, 0), new THREE.Vector3(-45, -20, 0)
+      new THREE.Vector3(-45, 26, 0),
+      new THREE.Vector3(-45, 30, 0),
+      new THREE.Vector3(-41, 30, 0),
+      new THREE.Vector3(41, 30, 0),
+      new THREE.Vector3(45, 30, 0),
+      new THREE.Vector3(45, 26, 0),
+      new THREE.Vector3(45, -20, 0),
+      new THREE.Vector3(45, -24, 0),
+      new THREE.Vector3(41, -24, 0),
+      new THREE.Vector3(-41, -24, 0),
+      new THREE.Vector3(-45, -24, 0),
+      new THREE.Vector3(-45, -20, 0),
     ]);
-    const bracketMat = new THREE.LineBasicMaterial({ color: holoCyan, transparent: true, opacity: 0.45 });
+    const bracketMat = new THREE.LineBasicMaterial({
+      color: holoCyan,
+      transparent: true,
+      opacity: 0.45,
+    });
     const hudBrackets = new THREE.LineSegments(bracketGeo, bracketMat);
     group.add(hudBrackets);
 
@@ -1049,7 +1127,7 @@
 
         // Gentle floating hover
         holoLettersGroup.position.y = 4 + Math.sin(time * 2) * 1.2;
-      }
+      },
     };
 
     return group;
@@ -1060,107 +1138,114 @@
   // ==========================================================================
   let avatarMixers = [];
   let avatarActions = {};
-  let currentAvatarModel = 'michelle';
+  let currentAvatarModel = "michelle";
 
   const AVATAR_CATALOG = {
     michelle: {
-      id: 'michelle',
-      name: 'MICHELLE // MIXAMO DANCER',
-      file: 'assets/models/Michelle.glb',
+      id: "michelle",
+      name: "MICHELLE // MIXAMO DANCER",
+      file: "assets/models/Michelle.glb",
       scale: 19,
       pos: [0, -20, 0],
       haloPos: [0, 16.5, 0],
       cameraZ: 48,
-      defaultAnim: 'SambaDance',
+      defaultAnim: "SambaDance",
       animLabels: {},
-      category: 'GLTF SKELETAL RIG • SAMBA DANCE'
+      category: "GLTF SKELETAL RIG • SAMBA DANCE",
     },
     robot: {
-      id: 'robot',
-      name: 'ROBOT EXPRESSIVE // CYBER ANDROID',
-      file: 'assets/models/RobotExpressive.glb',
+      id: "robot",
+      name: "ROBOT EXPRESSIVE // CYBER ANDROID",
+      file: "assets/models/RobotExpressive.glb",
       scale: 6.2,
       pos: [0, -19.9, 0],
       haloPos: [0, 13.5, 0],
       cameraZ: 44,
-      defaultAnim: 'Running',
+      defaultAnim: "Running",
       animLabels: {
-        Running: 'Run',
-        Dance: 'Dance',
-        Wave: 'Wave',
-        Jump: 'Jump',
-        ThumbsUp: 'Thumbs Up',
-        Walking: 'Walk'
+        Running: "Run",
+        Dance: "Dance",
+        Wave: "Wave",
+        Jump: "Jump",
+        ThumbsUp: "Thumbs Up",
+        Walking: "Walk",
       },
-      category: 'EXPRESSIVE RIG • SPRINT CYCLE'
+      category: "EXPRESSIVE RIG • SPRINT CYCLE",
     },
     soldier: {
-      id: 'soldier',
-      name: 'VANGUARD SOLDIER // TACTICAL OPERATIVE',
-      file: 'assets/models/Soldier.glb',
+      id: "soldier",
+      name: "VANGUARD SOLDIER // TACTICAL OPERATIVE",
+      file: "assets/models/Soldier.glb",
       scale: 17.5,
       pos: [0, -20, 0],
       haloPos: [0, 16.5, 0],
       cameraZ: 48,
-      defaultAnim: 'Run',
-      animLabels: { Run: 'Run', Walk: 'Walk' },
-      category: 'COMBAT RIG • TACTICAL RUN'
+      defaultAnim: "Run",
+      animLabels: { Run: "Run", Walk: "Walk" },
+      category: "COMBAT RIG • TACTICAL RUN",
     },
     xbot: {
-      id: 'xbot',
-      name: 'XBOT // CYBERNETIC MANNEQUIN',
-      file: 'assets/models/Xbot.glb',
+      id: "xbot",
+      name: "XBOT // CYBERNETIC MANNEQUIN",
+      file: "assets/models/Xbot.glb",
       scale: 17.5,
       pos: [0, -20, 0],
       haloPos: [0, 16.5, 0],
       cameraZ: 48,
-      defaultAnim: 'run',
-      animLabels: { run: 'Run', walk: 'Walk' },
-      category: 'FUTURISTIC CYBORG • SKELETAL RIG'
+      defaultAnim: "run",
+      animLabels: { run: "Run", walk: "Walk" },
+      category: "FUTURISTIC CYBORG • SKELETAL RIG",
     },
     all: {
-      id: 'all',
-      name: 'ALL SQUAD // 4-CHARACTER 3D LINEUP',
-      category: 'MULTI-RIG 3D SHOWCASE',
-      cameraZ: 62
-    }
+      id: "all",
+      name: "ALL SQUAD // 4-CHARACTER 3D LINEUP",
+      category: "MULTI-RIG 3D SHOWCASE",
+      cameraZ: 62,
+    },
   };
 
   function renderAvatarActionButtons(cfg, anims, activeClipName) {
-    const animsContainer = document.getElementById('vsp-avatar-anims');
-    const dividerEl = document.getElementById('vsp-avatar-anim-divider');
+    const animsContainer = document.getElementById("vsp-avatar-anims");
+    const dividerEl = document.getElementById("vsp-avatar-anim-divider");
     if (!animsContainer) return;
 
-    animsContainer.innerHTML = '';
+    animsContainer.innerHTML = "";
 
-    if (!anims || anims.length === 0 || !cfg.animLabels || Object.keys(cfg.animLabels).length === 0) {
-      if (dividerEl) dividerEl.style.display = 'none';
+    if (
+      !anims ||
+      anims.length === 0 ||
+      !cfg.animLabels ||
+      Object.keys(cfg.animLabels).length === 0
+    ) {
+      if (dividerEl) dividerEl.style.display = "none";
       return;
     }
 
-    if (dividerEl) dividerEl.style.display = 'block';
+    if (dividerEl) dividerEl.style.display = "block";
 
     Object.keys(cfg.animLabels).forEach((clipName) => {
       const exists = anims.some((a) => a.name === clipName);
       if (!exists) return;
 
       const label = cfg.animLabels[clipName] || clipName;
-      const btn = document.createElement('button');
-      btn.className = `vsp-sub-btn anim-btn ${clipName === activeClipName ? 'active' : ''}`;
-      btn.type = 'button';
+      const btn = document.createElement("button");
+      btn.className = `vsp-sub-btn anim-btn ${clipName === activeClipName ? "active" : ""}`;
+      btn.type = "button";
       btn.textContent = label;
 
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener("click", (e) => {
         e.stopPropagation();
         if (!avatarActions[clipName]) return;
 
         Object.values(avatarActions).forEach((act) => act.stop());
         avatarActions[clipName].reset().fadeIn(0.2).play();
 
-        animsContainer.querySelectorAll('.anim-btn').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
+        animsContainer
+          .querySelectorAll(".anim-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
 
-        const catEl = document.querySelector('.vsp-hud-category');
+        const catEl = document.querySelector(".vsp-hud-category");
         if (catEl) {
           catEl.textContent = `ANIMATED RIG • ACTION: ${label.toUpperCase()}`;
         }
@@ -1174,15 +1259,20 @@
     const group = new THREE.Group();
 
     // 1. Cyber Holographic Studio Pedestal
-    const isSquad = currentAvatarModel === 'all';
+    const isSquad = currentAvatarModel === "all";
     const pedRadiusTop = isSquad ? 32 : 16;
     const pedRadiusBottom = isSquad ? 38 : 20;
 
-    const pedGeo = new THREE.CylinderGeometry(pedRadiusTop, pedRadiusBottom, 2, 48);
+    const pedGeo = new THREE.CylinderGeometry(
+      pedRadiusTop,
+      pedRadiusBottom,
+      2,
+      48,
+    );
     const pedMat = new THREE.MeshStandardMaterial({
       color: 0x081018,
       roughness: 0.3,
-      metalness: 0.8
+      metalness: 0.8,
     });
     const pedestal = new THREE.Mesh(pedGeo, pedMat);
     pedestal.position.y = -21;
@@ -1191,10 +1281,24 @@
     // Glowing Neon Concentric Rings on Platform
     const r1 = isSquad ? 30 : 14;
     const r2 = isSquad ? 35 : 17;
-    const ringMat1 = new THREE.LineDashedMaterial({ color: 0x00d679, dashSize: 4, gapSize: 3, linewidth: 2 });
-    const ringMat2 = new THREE.LineDashedMaterial({ color: 0x7df9ff, dashSize: 6, gapSize: 4, linewidth: 2 });
-    const rGeo1 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, r1, 0, Math.PI * 2, true).getPoints(64));
-    const rGeo2 = new THREE.BufferGeometry().setFromPoints(new THREE.Path().absarc(0, 0, r2, 0, Math.PI * 2, true).getPoints(64));
+    const ringMat1 = new THREE.LineDashedMaterial({
+      color: 0x00d679,
+      dashSize: 4,
+      gapSize: 3,
+      linewidth: 2,
+    });
+    const ringMat2 = new THREE.LineDashedMaterial({
+      color: 0x7df9ff,
+      dashSize: 6,
+      gapSize: 4,
+      linewidth: 2,
+    });
+    const rGeo1 = new THREE.BufferGeometry().setFromPoints(
+      new THREE.Path().absarc(0, 0, r1, 0, Math.PI * 2, true).getPoints(64),
+    );
+    const rGeo2 = new THREE.BufferGeometry().setFromPoints(
+      new THREE.Path().absarc(0, 0, r2, 0, Math.PI * 2, true).getPoints(64),
+    );
     const ring1 = new THREE.Line(rGeo1, ringMat1);
     const ring2 = new THREE.Line(rGeo2, ringMat2);
     ring1.computeLineDistances();
@@ -1225,9 +1329,19 @@
     // 3. Floating Neon VSP Monogram Halo above head
     const vspHalo = new THREE.Group();
     function buildHaloTube(points, color) {
-      const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.1);
+      const curve = new THREE.CatmullRomCurve3(
+        points,
+        false,
+        "catmullrom",
+        0.1,
+      );
       const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.6, 8, false);
-      const wireMat = new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity: 0.9 });
+      const wireMat = new THREE.MeshBasicMaterial({
+        color,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.9,
+      });
       return new THREE.Mesh(tubeGeo, wireMat);
     }
     vspHalo.add(buildHaloTube(V_PATH, 0x00d679));
@@ -1246,12 +1360,14 @@
     avatarActions = {};
 
     // 4. Load High-Detail Models
-    if (typeof THREE.GLTFLoader !== 'undefined') {
+    if (typeof THREE.GLTFLoader !== "undefined") {
       const loader = new THREE.GLTFLoader();
 
-      if (typeof THREE.DRACOLoader !== 'undefined') {
+      if (typeof THREE.DRACOLoader !== "undefined") {
         const dracoLoader = new THREE.DRACOLoader();
-        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/');
+        dracoLoader.setDecoderPath(
+          "https://www.gstatic.com/draco/versioned/decoders/1.4.3/",
+        );
         loader.setDRACOLoader(dracoLoader);
       }
 
@@ -1273,7 +1389,10 @@
                 child.castShadow = true;
                 child.receiveShadow = true;
                 if (child.material) {
-                  child.material.roughness = Math.min(child.material.roughness || 0.5, 0.6);
+                  child.material.roughness = Math.min(
+                    child.material.roughness || 0.5,
+                    0.6,
+                  );
                   child.material.needsUpdate = true;
                 }
               }
@@ -1291,9 +1410,10 @@
                 modelActions[clip.name] = mixer.clipAction(clip);
               });
 
-              const playClipName = (cfg.defaultAnim && modelActions[cfg.defaultAnim])
-                ? cfg.defaultAnim
-                : gltf.animations[0].name;
+              const playClipName =
+                cfg.defaultAnim && modelActions[cfg.defaultAnim]
+                  ? cfg.defaultAnim
+                  : gltf.animations[0].name;
 
               if (modelActions[playClipName]) {
                 modelActions[playClipName].play();
@@ -1313,7 +1433,7 @@
           undefined,
           (err) => {
             console.warn(`Could not load ${cfg.file}:`, err);
-          }
+          },
         );
       }
 
@@ -1325,7 +1445,8 @@
         loadModelFile(AVATAR_CATALOG.robot, [0, -19.9, 8]);
         renderAvatarActionButtons(AVATAR_CATALOG.all, [], null);
       } else {
-        const cfg = AVATAR_CATALOG[currentAvatarModel] || AVATAR_CATALOG.michelle;
+        const cfg =
+          AVATAR_CATALOG[currentAvatarModel] || AVATAR_CATALOG.michelle;
         loadModelFile(cfg);
       }
     }
@@ -1343,7 +1464,7 @@
         ring2.rotation.z = -time * 0.3;
         vspHalo.rotation.y = time * 1.5;
         vspHalo.position.y = curHaloY + Math.sin(time * 2.5) * 0.6;
-      }
+      },
     };
 
     return group;
@@ -1379,25 +1500,25 @@
     // Build new design
     let newDesignGroup;
     switch (designKey) {
-      case 'matrix':
+      case "matrix":
         newDesignGroup = createMatrixDesign();
         break;
-      case 'swarm':
+      case "swarm":
         newDesignGroup = createSwarmDesign();
         break;
-      case 'synaptic':
+      case "synaptic":
         newDesignGroup = createSynapticDesign();
         break;
-      case 'radar':
+      case "radar":
         newDesignGroup = createRadarDesign();
         break;
-      case 'water':
+      case "water":
         newDesignGroup = createWaterDesign();
         break;
-      case 'hologram':
+      case "hologram":
         newDesignGroup = createHologramDesign();
         break;
-      case 'avatar':
+      case "avatar":
         newDesignGroup = createAvatarDesign();
         break;
       default:
@@ -1408,15 +1529,16 @@
     activeGroup.userData = newDesignGroup.userData;
 
     // Show or hide the Avatar Roster subbar
-    const avatarSubbar = document.getElementById('vsp-avatar-subbar');
+    const avatarSubbar = document.getElementById("vsp-avatar-subbar");
     if (avatarSubbar) {
-      avatarSubbar.style.display = designKey === 'avatar' ? 'flex' : 'none';
+      avatarSubbar.style.display = designKey === "avatar" ? "flex" : "none";
     }
 
     // Update camera distance smoothly
-    const targetZ = (designKey === 'avatar' && AVATAR_CATALOG[currentAvatarModel]?.cameraZ)
-      ? AVATAR_CATALOG[currentAvatarModel].cameraZ
-      : designDirectory[designKey].cameraZ;
+    const targetZ =
+      designKey === "avatar" && AVATAR_CATALOG[currentAvatarModel]?.cameraZ
+        ? AVATAR_CATALOG[currentAvatarModel].cameraZ
+        : designDirectory[designKey].cameraZ;
 
     if (controls) {
       controls.target.set(0, 0, 0);
@@ -1428,12 +1550,12 @@
 
     // Update switcher buttons UI
     switcherBtns.forEach((btn) => {
-      const dKey = btn.getAttribute('data-design');
+      const dKey = btn.getAttribute("data-design");
       if (!dKey) return;
       if (dKey === designKey) {
-        btn.classList.add('active');
+        btn.classList.add("active");
       } else {
-        btn.classList.remove('active');
+        btn.classList.remove("active");
       }
     });
 
@@ -1442,12 +1564,12 @@
   }
 
   function updateTopCornerDesignName(designKey) {
-    if (designKey === 'avatar') {
+    if (designKey === "avatar") {
       const avMeta = AVATAR_CATALOG[currentAvatarModel];
       if (designNameEl && avMeta) {
         designNameEl.textContent = avMeta.name;
       }
-      const catEl = document.querySelector('.vsp-hud-category');
+      const catEl = document.querySelector(".vsp-hud-category");
       if (catEl && avMeta) {
         catEl.textContent = avMeta.category;
       }
@@ -1458,7 +1580,7 @@
     if (designNameEl && meta) {
       designNameEl.textContent = meta.name;
     }
-    const catEl = document.querySelector('.vsp-hud-category');
+    const catEl = document.querySelector(".vsp-hud-category");
     if (catEl && meta) {
       catEl.textContent = meta.category;
     }
@@ -1497,7 +1619,10 @@
     }
 
     // Call active design animation routine
-    if (activeGroup.userData && typeof activeGroup.userData.animate === 'function') {
+    if (
+      activeGroup.userData &&
+      typeof activeGroup.userData.animate === "function"
+    ) {
       activeGroup.userData.animate(elapsedTime, delta);
     }
 
@@ -1547,8 +1672,8 @@
 
   // Hook UI Switcher Buttons
   switcherBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const designKey = btn.getAttribute('data-design');
+    btn.addEventListener("click", () => {
+      const designKey = btn.getAttribute("data-design");
       if (designKey && designKey !== currentDesign) {
         loadDesign(designKey);
       }
@@ -1556,19 +1681,21 @@
   });
 
   // Hook Avatar Roster Sub-Bar Buttons
-  const avatarModelBtns = document.querySelectorAll('#vsp-avatar-models .vsp-sub-btn');
+  const avatarModelBtns = document.querySelectorAll(
+    "#vsp-avatar-models .vsp-sub-btn",
+  );
   avatarModelBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const modelKey = btn.getAttribute('data-avatar');
+    btn.addEventListener("click", () => {
+      const modelKey = btn.getAttribute("data-avatar");
       if (modelKey) {
         currentAvatarModel = modelKey;
-        avatarModelBtns.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
+        avatarModelBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
 
-        if (currentDesign !== 'avatar') {
-          loadDesign('avatar');
+        if (currentDesign !== "avatar") {
+          loadDesign("avatar");
         } else {
-          loadDesign('avatar');
+          loadDesign("avatar");
         }
       }
     });
@@ -1576,9 +1703,9 @@
 
   // Auto-Spin Toggle Button
   if (autoSpinBtn) {
-    autoSpinBtn.addEventListener('click', () => {
+    autoSpinBtn.addEventListener("click", () => {
       autoSpin = !autoSpin;
-      autoSpinBtn.classList.toggle('active', autoSpin);
+      autoSpinBtn.classList.toggle("active", autoSpin);
       autoSpinBtn.innerHTML = autoSpin
         ? '<i class="fa-solid fa-rotate"></i> Auto-Spin: ON'
         : '<i class="fa-solid fa-pause"></i> Auto-Spin: OFF';
@@ -1587,13 +1714,13 @@
 
   // Theme Toggle Button
   if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
+    themeBtn.addEventListener("click", () => {
       activeThemeIndex = (activeThemeIndex + 1) % themes.length;
       const theme = themes[activeThemeIndex];
-      themeBtn.innerHTML = `<i class="fa-solid fa-palette"></i> Theme: ${theme.name.split(' // ')[0]}`;
+      themeBtn.innerHTML = `<i class="fa-solid fa-palette"></i> Theme: ${theme.name.split(" // ")[0]}`;
 
-      const pLight = scene.getObjectByName('primaryLight');
-      const sLight = scene.getObjectByName('secondaryLight');
+      const pLight = scene.getObjectByName("primaryLight");
+      const sLight = scene.getObjectByName("secondaryLight");
       if (pLight) pLight.color.setHex(theme.primary);
       if (sLight) sLight.color.setHex(theme.secondary);
 

@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * VSP 3D Lab Stylesheet
+ * 3D Lab Stylesheet
  * Futuristic Cybernetic UI for Interactive 3D Visuals & Experiments
  * ============================================================================
  */
@@ -17,7 +17,9 @@
 body.vsp-lab-page {
   background-color: var(--vsp-dark-bg);
   color: #cbd5e1;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -46,13 +48,24 @@ body.vsp-lab-page {
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(3, 6, 10, 0.75) 90%),
-              linear-gradient(to bottom, rgba(3, 6, 10, 0.6) 0%, transparent 15%, transparent 85%, rgba(3, 6, 10, 0.8) 100%);
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 40%,
+      rgba(3, 6, 10, 0.75) 90%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(3, 6, 10, 0.6) 0%,
+      transparent 15%,
+      transparent 85%,
+      rgba(3, 6, 10, 0.8) 100%
+    );
 }
 
 /* Scanline Effect */
 .vsp-cyber-vignette::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
@@ -76,15 +89,21 @@ body.vsp-lab-page {
   padding: 12px 18px;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 214, 121, 0.12);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(0, 214, 121, 0.12);
   pointer-events: auto;
   max-width: min(92vw, 420px);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .vsp-design-hud:hover {
   border-color: var(--vsp-neon-green);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 214, 121, 0.22);
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(0, 214, 121, 0.22);
 }
 
 /* Tech HUD Corner Brackets */
@@ -126,8 +145,15 @@ body.vsp-lab-page {
 }
 
 @keyframes vspHudBlink {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
 }
 
 .vsp-hud-category {
@@ -194,7 +220,9 @@ body.vsp-lab-page {
   padding: 6px 12px 9px 12px;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 214, 121, 0.08);
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(0, 214, 121, 0.08);
   max-width: calc(100vw - 24px);
   overflow-x: auto;
   overflow-y: hidden;
@@ -255,7 +283,11 @@ body.vsp-lab-page {
 }
 
 .vsp-mode-btn.active {
-  background: linear-gradient(135deg, rgba(0, 214, 121, 0.25) 0%, rgba(125, 249, 255, 0.2) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 214, 121, 0.25) 0%,
+    rgba(125, 249, 255, 0.2) 100%
+  );
   border-color: var(--vsp-neon-green);
   color: #ffffff;
   box-shadow: 0 0 16px rgba(0, 214, 121, 0.35);
@@ -312,7 +344,9 @@ body.vsp-lab-page {
   padding: 5px 12px 8px 12px;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 214, 121, 0.1);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.7),
+    0 0 15px rgba(0, 214, 121, 0.1);
   animation: vspSubbarFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   max-width: calc(100vw - 24px);
   overflow-x: auto;
@@ -455,7 +489,11 @@ body.vsp-lab-page {
 
 .vsp-sub-btn.audio-toggle-btn.active,
 .vsp-mode-btn.audio-toggle-btn.active {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.3) 0%, rgba(0, 214, 121, 0.25) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.3) 0%,
+    rgba(0, 214, 121, 0.25) 100%
+  );
   border-color: #fbbf24;
   color: #ffffff;
   box-shadow: 0 0 14px rgba(251, 191, 36, 0.45);
@@ -468,8 +506,13 @@ body.vsp-lab-page {
 }
 
 @keyframes vspAudioPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.3); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
 }
 
 /* Responsive Styles */

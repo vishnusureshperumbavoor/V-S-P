@@ -6,32 +6,43 @@
  */
 
 (function () {
-  'use strict';
+  "use strict";
 
   // Clean URL Beautification: Strip .html extension from browser address bar (top window only)
   try {
-    if (window.self === window.top && window.location.pathname.endsWith('.html')) {
-      let cleanPath = window.location.pathname.replace(/\.html$/, '');
-      if (cleanPath.endsWith('/index')) {
-        cleanPath = cleanPath.replace(/\/index$/, '/');
+    if (
+      window.self === window.top &&
+      window.location.pathname.endsWith(".html")
+    ) {
+      let cleanPath = window.location.pathname.replace(/\.html$/, "");
+      if (cleanPath.endsWith("/index")) {
+        cleanPath = cleanPath.replace(/\/index$/, "/");
       }
-      window.history.replaceState(null, document.title, cleanPath + window.location.search + window.location.hash);
+      window.history.replaceState(
+        null,
+        document.title,
+        cleanPath + window.location.search + window.location.hash,
+      );
     }
   } catch (e) {}
 
   // Check if running inside VSP Persistent Audio Shell
   const isInsideVspShell = (function () {
     try {
-      return Boolean(window.parent && window.parent !== window && window.parent.vspPlayerActive);
+      return Boolean(
+        window.parent &&
+        window.parent !== window &&
+        window.parent.vspPlayerActive,
+      );
     } catch (e) {
       return false;
     }
   })();
 
   if (isInsideVspShell) {
-    document.body.classList.add('in-vsp-frame');
-    const frameStyle = document.createElement('style');
-    frameStyle.id = 'vsp-frame-styles';
+    document.body.classList.add("in-vsp-frame");
+    const frameStyle = document.createElement("style");
+    frameStyle.id = "vsp-frame-styles";
     frameStyle.textContent = `
       body.in-vsp-frame {
         padding-top: 0 !important;
@@ -61,17 +72,24 @@
     } catch (e) {}
 
     // Intercept clicks on links that target songs.html or songs player
-    document.addEventListener('click', (e) => {
-      const link = e.target.closest('a');
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest("a");
       if (!link) return;
-      const href = link.getAttribute('href');
-      if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+      const href = link.getAttribute("href");
+      if (
+        !href ||
+        href.startsWith("#") ||
+        href.startsWith("http") ||
+        href.startsWith("mailto:") ||
+        href.startsWith("tel:")
+      )
+        return;
 
-      if (href.includes('songs.html')) {
+      if (href.includes("songs.html")) {
         e.preventDefault();
         const matchTrack = href.match(/[?&]track=(\d+)/);
         const trackId = matchTrack ? parseInt(matchTrack[1], 10) : 0;
-        const autoplay = href.includes('autoplay=true');
+        const autoplay = href.includes("autoplay=true");
         try {
           window.parent.vspShowSongs(trackId, autoplay);
         } catch (err) {
@@ -82,71 +100,84 @@
   }
 
   function getRootPrefix() {
-    const currentScript = document.currentScript || document.querySelector('script[src*="nav-footer.js"]');
+    const currentScript =
+      document.currentScript ||
+      document.querySelector('script[src*="nav-footer.js"]');
     if (currentScript) {
-      const src = currentScript.getAttribute('src');
-      if (src && src.startsWith('../')) {
-        return '../';
+      const src = currentScript.getAttribute("src");
+      if (src && src.startsWith("../")) {
+        return "../";
       }
     }
     const path = window.location.pathname;
-    if (path.includes('/blogs/') || path.includes('/bot/') || path.endsWith('/bot') || path.includes('/bot/index.html')) {
-      return '../';
+    if (
+      path.includes("/blogs/") ||
+      path.includes("/bot/") ||
+      path.endsWith("/bot") ||
+      path.includes("/bot/index.html")
+    ) {
+      return "../";
     }
-    return './';
+    return "./";
   }
 
   function getActiveTab() {
     const path = window.location.pathname.toLowerCase();
-    if (path.includes('songs') || path.includes('/songs')) {
-      return 'songs';
+    if (path.includes("songs") || path.includes("/songs")) {
+      return "songs";
     }
-    if (path.includes('blogs') || path.includes('/blogs/')) {
-      return 'blogs';
+    if (path.includes("blogs") || path.includes("/blogs/")) {
+      return "blogs";
     }
-    if (path.includes('bot')) {
-      return 'bot';
+    if (path.includes("bot")) {
+      return "bot";
     }
-    if (path.includes('3d-lab') || path.includes('lab') || path.includes('vsp')) {
-      return '3d-lab';
+    if (
+      path.includes("3d-lab") ||
+      path.includes("lab") ||
+      path.includes("vsp")
+    ) {
+      return "3d-lab";
     }
-    return 'home';
+    return "home";
   }
 
   function renderHeader() {
-    const headerContainer = document.getElementById('vsp-header') || document.querySelector('header');
+    const headerContainer =
+      document.getElementById("vsp-header") || document.querySelector("header");
     if (!headerContainer) return;
 
     if (isInsideVspShell) {
-      headerContainer.style.display = 'none';
+      headerContainer.style.display = "none";
       return;
     }
 
     const root = getRootPrefix();
     const active = getActiveTab();
 
-    const homeActive = active === 'home' ? 'active' : '';
-    const botActive = active === 'bot' ? 'active' : '';
-    const blogActive = active === 'blogs' ? 'active' : '';
-    const labActive = (active === '3d-lab' || active === 'lab' || active === 'vsp') ? 'active' : '';
-    const songsActive = active === 'songs' ? 'active' : '';
-
-    let backTarget = `${root}index.html`;
-    let backTitle = 'Back to Home';
+    const homeActive = active === "home" ? "active" : "";
+    const botActive = active === "bot" ? "active" : "";
+    const blogActive = active === "blogs" ? "active" : "";
+    const labActive =
+      active === "3d-lab" || active === "lab" || active === "vsp"
+        ? "active"
+        : "";
+    const songsActive = active === "songs" ? "active" : "";
 
     const path = window.location.pathname.toLowerCase();
-    const isInsideBlogsDir = path.includes('/blogs/') || (path.includes('blogs/') && !path.endsWith('blogs.html'));
+    const matchBlog = path.match(/blogs\/([^/?#]+)/);
+    const blogFileName = matchBlog ? matchBlog[1].replace(/\.html$/, "") : "";
+    const isReadingIndividualBlog = Boolean(
+      blogFileName && blogFileName !== "index" && blogFileName !== "blogs",
+    );
 
-    if (isInsideBlogsDir) {
-      backTarget = `${root}blogs.html`;
-      backTitle = 'Back to Blogs';
-    }
-
-    const backButtonHtml = active !== 'home' ? `
-      <a href="${backTarget}" class="vsp-nav-back-btn mr-2" title="${backTitle}" aria-label="${backTitle}">
+    const backButtonHtml = isReadingIndividualBlog
+      ? `
+      <a href="${root}blogs.html" class="vsp-nav-back-btn mr-2" title="Back to Blogs" aria-label="Back to Blogs">
         <i class="fa-solid fa-arrow-left"></i>
       </a>
-    ` : '';
+    `
+      : "";
 
     headerContainer.innerHTML = `
       <div class="w3l-header fixed-top" id="home">
@@ -155,7 +186,8 @@
             <div class="d-flex align-items-center">
               ${backButtonHtml}
               <a class="navbar-brand m-0" href="${root}index.html">
-                <span class="fa fa-gamepad"></span> VSP
+                <span class="fa fa-gamepad brand-logo-icon" style="color: #00d679;"></span>
+                <span class="brand-text" style="color: #00d679;">VSP</span>
               </a>
             </div>
             <button
@@ -188,7 +220,7 @@
                   </a>
                 </li>
                 <li class="nav-item mr-lg-4">
-                  <a class="nav-link pl-0 pr-0 ${labActive}" href="${root}3d-lab.html" title="VSP 3D Lab" aria-label="VSP 3D Lab">
+                  <a class="nav-link pl-0 pr-0 ${labActive}" href="${root}3d-lab.html" title="3D Lab" aria-label="3D Lab">
                     <span class="fa-solid fa-cube nav-icon"></span>
                     <span class="nav-text">3D Lab</span>
                   </a>
@@ -207,39 +239,43 @@
     `;
 
     // Resilient vanilla mobile toggle - immune to Bootstrap data-api interference
-    const toggler = headerContainer.querySelector('.navbar-toggler');
-    const collapseNav = headerContainer.querySelector('#navbarNav');
+    const toggler = headerContainer.querySelector(".navbar-toggler");
+    const collapseNav = headerContainer.querySelector("#navbarNav");
     if (toggler && collapseNav) {
-      toggler.addEventListener('click', (e) => {
+      toggler.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const isOpen = collapseNav.classList.toggle('show');
-        toggler.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        document.body.classList.toggle('noscroll', isOpen);
+        const isOpen = collapseNav.classList.toggle("show");
+        toggler.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        document.body.classList.toggle("noscroll", isOpen);
       });
 
       // Close menu when tapping outside header
-      document.addEventListener('click', (e) => {
-        if (collapseNav.classList.contains('show') && !headerContainer.contains(e.target)) {
-          collapseNav.classList.remove('show');
-          toggler.setAttribute('aria-expanded', 'false');
-          document.body.classList.remove('noscroll');
+      document.addEventListener("click", (e) => {
+        if (
+          collapseNav.classList.contains("show") &&
+          !headerContainer.contains(e.target)
+        ) {
+          collapseNav.classList.remove("show");
+          toggler.setAttribute("aria-expanded", "false");
+          document.body.classList.remove("noscroll");
         }
       });
 
       // Close menu when tapping any navigation link
-      collapseNav.querySelectorAll('.nav-link').forEach((link) => {
-        link.addEventListener('click', () => {
-          collapseNav.classList.remove('show');
-          toggler.setAttribute('aria-expanded', 'false');
-          document.body.classList.remove('noscroll');
+      collapseNav.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", () => {
+          collapseNav.classList.remove("show");
+          toggler.setAttribute("aria-expanded", "false");
+          document.body.classList.remove("noscroll");
         });
       });
     }
   }
 
   function renderFooter() {
-    const footerContainer = document.getElementById('vsp-footer') || document.querySelector('footer');
+    const footerContainer =
+      document.getElementById("vsp-footer") || document.querySelector("footer");
     if (!footerContainer) return;
 
     footerContainer.innerHTML = `
@@ -296,8 +332,8 @@
   }
 
   // Execute immediately if DOM elements exist, or on DOMContentLoaded
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
       renderHeader();
       renderFooter();
     });
