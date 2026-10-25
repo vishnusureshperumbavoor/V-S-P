@@ -857,7 +857,8 @@
     try {
       if (title) document.title = title;
       if (path) {
-        window.history.replaceState({ url: path }, title || '', path);
+        const cleanPath = path.replace(/\.html$/, '').replace(/\/index$/, '/');
+        window.history.replaceState({ url: cleanPath }, title || '', cleanPath);
       }
     } catch (e) {}
   };
@@ -906,7 +907,7 @@
       document.body.classList.remove('sp-in-viewport');
       document.title = 'Songs & Music | Vishnu Suresh Perumbavoor (VSP)';
       if (pushToHistory) {
-        window.history.pushState({ page: 'songs', url: 'songs.html' }, '', 'songs.html');
+        window.history.pushState({ page: 'songs', url: 'songs' }, '', 'songs');
       }
       updateNavActiveTab('songs');
       return;
@@ -936,8 +937,9 @@
     const newTitle = titles[targetTab] || document.title;
     document.title = newTitle;
 
+    const cleanDisplayUrl = url.replace(/\.html$/, '').replace(/\/index$/, '/');
     if (pushToHistory) {
-      window.history.pushState({ page: targetTab, url: url }, '', url);
+      window.history.pushState({ page: targetTab, url: cleanDisplayUrl }, '', cleanDisplayUrl);
     }
     updateNavActiveTab(targetTab);
   }
