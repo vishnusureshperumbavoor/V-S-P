@@ -143,9 +143,14 @@
           <i class="fa-solid fa-shuffle"></i>
         </button>
 
-        <!-- Repeat Toggle -->
-        <button class="sp-action-icon-btn" id="sp-hero-repeat-btn" title="Toggle Repeat" aria-label="Toggle Repeat" onclick="document.querySelector('#sp-btn-repeat').click()">
+        <!-- Repeat Toggle (Active by default: All songs loop) -->
+        <button class="sp-action-icon-btn active" id="sp-hero-repeat-btn" title="Repeat All Songs (Active)" aria-label="Repeat All Songs (Active)" onclick="document.querySelector('#sp-btn-repeat').click()">
           <i class="fa-solid fa-repeat"></i>
+        </button>
+
+        <!-- Share Artist -->
+        <button class="sp-action-icon-btn" id="sp-hero-share-artist-btn" title="Share Artist" aria-label="Share Artist">
+          <i class="fa-solid fa-share-nodes"></i>
         </button>
 
         <div class="sp-action-right">
@@ -171,6 +176,7 @@
               <th class="th-album">Genre</th>
               <th class="th-date">Date Added</th>
               <th class="th-time"><i class="fa-regular fa-clock"></i></th>
+              <th class="th-share" title="Share"></th>
             </tr>
           </thead>
           <tbody id="sp-table-body">
@@ -193,7 +199,7 @@
                     <p class="sp-track-name">No Crown Given</p>
                     <p class="sp-track-artist">
                       <span class="sp-tag-pill">COVER</span>
-                      Vishnu Suresh Perumbavoor (VSP)
+                      VSP
                     </p>
                   </div>
                 </div>
@@ -202,6 +208,11 @@
               <td class="sp-td-date">Oct 2026</td>
               <td class="sp-td-time">
                 <span>2:59</span>
+              </td>
+              <td class="sp-td-share">
+                <button class="sp-row-share-btn" data-share-id="0" title="Share song" aria-label="Share song">
+                  <i class="fa-solid fa-share-nodes"></i>
+                </button>
               </td>
             </tr>
 
@@ -224,7 +235,7 @@
                     <p class="sp-track-name">I'm Running This Shit</p>
                     <p class="sp-track-artist">
                       <span class="sp-tag-pill">COVER</span>
-                      Vishnu Suresh Perumbavoor (VSP)
+                      VSP
                     </p>
                   </div>
                 </div>
@@ -233,6 +244,11 @@
               <td class="sp-td-date">Oct 2026</td>
               <td class="sp-td-time">
                 <span>2:01</span>
+              </td>
+              <td class="sp-td-share">
+                <button class="sp-row-share-btn" data-share-id="1" title="Share song" aria-label="Share song">
+                  <i class="fa-solid fa-share-nodes"></i>
+                </button>
               </td>
             </tr>
           </tbody>
@@ -266,18 +282,6 @@
             <h4 class="sp-card-title">I'm Running This Shit</h4>
             <p class="sp-card-desc">Pure adrenaline, commanding presence, and crisp production.</p>
           </div>
-
-          <!-- Card 3 -->
-          <div class="sp-card" onclick="window.location.href='vsp.html'">
-            <div class="sp-card-cover-wrap" style="background: linear-gradient(135deg, #0f172a, #00d679);">
-              <div style="height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #fff;">
-                <i class="fa-solid fa-cube"></i>
-              </div>
-              <button class="sp-card-play-btn" title="Open 3D Lab"><i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-            <h4 class="sp-card-title">VSP 3D Audio Lab</h4>
-            <p class="sp-card-desc">Interactive 3D WebGL dancer and audio visualizer models.</p>
-          </div>
         </div>
       </section>
     </main>
@@ -294,6 +298,9 @@
         <p class="sp-bar-title" id="sp-bar-title">No Crown Given</p>
         <p class="sp-bar-artist" id="sp-bar-artist">Vishnu Suresh Perumbavoor (VSP)</p>
       </div>
+      <button class="sp-ctrl-btn" id="sp-bar-share-btn" title="Share current song" aria-label="Share current song" style="margin-left: 4px;">
+        <i class="fa-solid fa-share-nodes"></i>
+      </button>
     </div>
 
     <!-- Center: Playback Controls & Live Scrub Bar -->
@@ -311,7 +318,7 @@
         <button class="sp-ctrl-btn" id="sp-btn-next" title="Next Track" aria-label="Next Track">
           <i class="fa-solid fa-forward-step"></i>
         </button>
-        <button class="sp-ctrl-btn" id="sp-btn-repeat" title="Enable Repeat" aria-label="Enable Repeat">
+        <button class="sp-ctrl-btn active" id="sp-btn-repeat" title="Repeat All Songs (Active)" aria-label="Repeat All Songs (Active)">
           <i class="fa-solid fa-repeat"></i>
         </button>
       </div>

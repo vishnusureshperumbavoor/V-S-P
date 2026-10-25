@@ -1125,9 +1125,14 @@
               <p style="font-size: 0.85rem; color: #94a3b8; margin: 0 0 14px 0; flex-grow: 1;">
                 Self Mass &bull; High-octane cadence and relentless tempo.
               </p>
-              <a href="songs.html?track=0&autoplay=true" class="btn btn-outline-light btn-sm" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.8rem; font-weight: 700; width: 100%;">
-                <i class="fa-solid fa-play mr-1" style="color: #1ed760;"></i> Play Now
-              </a>
+              <div style="display: flex; gap: 8px;">
+                <a href="songs.html?track=0&autoplay=true" class="btn btn-outline-light btn-sm" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.8rem; font-weight: 700; flex: 1;">
+                  <i class="fa-solid fa-play mr-1" style="color: #1ed760;"></i> Play Now
+                </a>
+                <button type="button" class="btn btn-outline-light btn-sm vsp-home-share-btn" data-share-id="0" data-share-title="No Crown Given" title="Share song" aria-label="Share song" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.85rem; padding: 6px 14px;">
+                  <i class="fa-solid fa-share-nodes"></i>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1148,13 +1153,40 @@
               <p style="font-size: 0.85rem; color: #94a3b8; margin: 0 0 14px 0; flex-grow: 1;">
                 Self Mass &bull; Energetic hype anthem with heavy driving percussion.
               </p>
-              <a href="songs.html?track=1&autoplay=true" class="btn btn-outline-light btn-sm" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.8rem; font-weight: 700; width: 100%;">
-                <i class="fa-solid fa-play mr-1" style="color: #1ed760;"></i> Play Now
-              </a>
+              <div style="display: flex; gap: 8px;">
+                <a href="songs.html?track=1&autoplay=true" class="btn btn-outline-light btn-sm" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.8rem; font-weight: 700; flex: 1;">
+                  <i class="fa-solid fa-play mr-1" style="color: #1ed760;"></i> Play Now
+                </a>
+                <button type="button" class="btn btn-outline-light btn-sm vsp-home-share-btn" data-share-id="1" data-share-title="I'm Running This Shit" title="Share song" aria-label="Share song" style="border-radius: 6px; border-color: rgba(255,255,255,0.2); font-size: 0.85rem; padding: 6px 14px;">
+                  <i class="fa-solid fa-share-nodes"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <script>
+        document.querySelectorAll('.vsp-home-share-btn').forEach(function(btn) {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var id = btn.getAttribute('data-share-id');
+            var title = btn.getAttribute('data-share-title');
+            var origin = window.location.origin;
+            var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+            var url = origin + path + 'songs.html?track=' + id + '&autoplay=true';
+            var data = { title: title + ' - Vishnu Suresh Perumbavoor', text: 'Listen to "' + title + '" (Self Mass) by Vishnu Suresh Perumbavoor', url: url };
+            if (navigator.share && navigator.canShare && navigator.canShare(data)) {
+              navigator.share(data).catch(function() {});
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(function() {
+                var old = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check" style="color: #1ed760;"></i>';
+                setTimeout(function() { btn.innerHTML = old; }, 2000);
+              });
+            }
+          });
+        });
+      </script>
     </section>
     <!-- //songs section -->
 

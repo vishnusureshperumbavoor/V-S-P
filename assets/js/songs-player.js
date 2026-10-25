@@ -41,7 +41,7 @@
   let currentTrackIdx = 0;
   let isPlaying = false;
   let isShuffle = false;
-  let repeatMode = 0; // 0: off, 1: all, 2: one
+  let repeatMode = 1; // 0: off, 1: all, 2: one (default: loop all songs)
   let currentVolume = 0.85;
   let isMuted = false;
   let isDraggingProgress = false;
@@ -72,6 +72,7 @@
       barThumb: document.getElementById('sp-bar-thumb'),
       barTitle: document.getElementById('sp-bar-title'),
       barArtist: document.getElementById('sp-bar-artist'),
+      barShareBtn: document.getElementById('sp-bar-share-btn'),
       // Controls
       btnPlayPause: document.getElementById('sp-btn-playpause'),
       playPauseIcon: document.getElementById('sp-playpause-icon'),
@@ -79,6 +80,8 @@
       btnNext: document.getElementById('sp-btn-next'),
       btnShuffle: document.getElementById('sp-btn-shuffle'),
       btnRepeat: document.getElementById('sp-btn-repeat'),
+      heroRepeatBtn: document.getElementById('sp-hero-repeat-btn'),
+      heroShareArtistBtn: document.getElementById('sp-hero-share-artist-btn'),
       // Mobile controls
       btnMobPlayPause: document.getElementById('sp-btn-mob-playpause'),
       mobPlayIcon: document.getElementById('sp-mob-play-icon'),
@@ -276,26 +279,35 @@
   }
 
   // Repeat toggle
-  function toggleRepeat() {
+  function toggleRepeat(showNotification = true) {
     repeatMode = (repeatMode + 1) % 3;
+    updateRepeatUI();
+    if (showNotification) {
+      const msgs = ['Repeat is OFF', 'Repeat All Songs', 'Repeat Current Track'];
+      showToast(msgs[repeatMode]);
+    }
+  }
+
+  function updateRepeatUI() {
+    const isRepeatActive = repeatMode > 0;
+    const titles = ['Repeat Off', 'Repeat All Songs (Active)', 'Repeat Current Track (Active)'];
+    const title = titles[repeatMode] || 'Repeat';
+
     if (dom.btnRepeat) {
-      dom.btnRepeat.classList.toggle('active', repeatMode > 0);
+      dom.btnRepeat.classList.toggle('active', isRepeatActive);
+      dom.btnRepeat.setAttribute('title', title);
+      dom.btnRepeat.setAttribute('aria-label', title);
       const icon = dom.btnRepeat.querySelector('i');
       if (icon) {
-        if (repeatMode === 2) {
-          icon.className = 'fa-solid fa-repeat';
-          dom.btnRepeat.setAttribute('title', 'Repeat Track');
-        } else if (repeatMode === 1) {
-          icon.className = 'fa-solid fa-repeat';
-          dom.btnRepeat.setAttribute('title', 'Repeat Playlist');
-        } else {
-          icon.className = 'fa-solid fa-repeat';
-          dom.btnRepeat.setAttribute('title', 'Repeat Off');
-        }
+        icon.className = 'fa-solid fa-repeat';
       }
     }
-    const msgs = ['Repeat is OFF', 'Repeat Playlist', 'Repeat Current Track'];
-    showToast(msgs[repeatMode]);
+
+    if (dom.heroRepeatBtn) {
+      dom.heroRepeatBtn.classList.toggle('active', isRepeatActive);
+      dom.heroRepeatBtn.setAttribute('title', title);
+      dom.heroRepeatBtn.setAttribute('aria-label', title);
+    }
   }
 
   // Track ended event
@@ -436,6 +448,82 @@
     // Initialize volume
     setVolume(currentVolume);
   }
+
+  // Share Track Function
+  function shareTrack(trackId) {
+    if (trackId < 0 || trackId >= TRACKS.length) return;
+    const track = TRACKS[trackId];
+    const origin = window.location.origin;
+    const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+    const shareUrl = `${origin}${path}songs.html?track=${trackId}&autoplay=true`;
+
+    const shareData = {
+      title: `${track.title} - Vishnu Suresh Perumbavoor`,
+      text: `Listen to "${track.title}" (${track.genre}) by Vishnu Suresh Perumbavoor`,
+      url: shareUrl
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      navigator.share(shareData).catch((err) => {
+        if (err.name !== 'AbortError') {
+          copyToClipboard(shareUrl);
+        }
+      });
+    } else {
+      copyToClipboard(shareUrl);
+    }
+  }
+
+  // Share Artist Function
+  function shareArtist() {
+    const origin = window.location.origin;
+    const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+    const shareUrl = `${origin}${path}songs.html`;
+
+    const shareData = {
+      title: 'Vishnu Suresh Perumbavoor (VSP) - Artist Profile & Songs',
+      text: 'Listen to cover songs and beats by Vishnu Suresh Perumbavoor (VSP)',
+      url: shareUrl
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      navigator.share(shareData).catch((err) => {
+        if (err.name !== 'AbortError') {
+          copyToClipboard(shareUrl);
+        }
+      });
+    } else {
+      copyToClipboard(shareUrl);
+    }
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Link copied to clipboard!');
+      }).catch(() => {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const input = document.createElement('input');
+    input.value = text;
+    document.body.appendChild(input);
+    input.select();
+    try {
+      document.execCommand('copy');
+      showToast('Link copied to clipboard!');
+    } catch (e) {
+      showToast('Could not copy link');
+    }
+    document.body.removeChild(input);
+  }
+
+  window.vspShareTrack = shareTrack;
 
   // Web Audio API Visualizer
   function initAudioContext() {
@@ -618,16 +706,39 @@
     if (dom.btnShuffle) dom.btnShuffle.addEventListener('click', toggleShuffle);
     if (dom.btnRepeat) dom.btnRepeat.addEventListener('click', toggleRepeat);
 
+    // Hero share artist
+    if (dom.heroShareArtistBtn) {
+      dom.heroShareArtistBtn.addEventListener('click', shareArtist);
+    }
+
+    // Bottom bar share
+    if (dom.barShareBtn) {
+      dom.barShareBtn.addEventListener('click', () => {
+        shareTrack(currentTrackIdx);
+      });
+    }
+
     // Table rows click to play
     const rows = document.querySelectorAll('.sp-row');
     rows.forEach((row) => {
       row.addEventListener('click', (e) => {
+        if (e.target.closest('.sp-row-share-btn')) return;
         const trackId = parseInt(row.getAttribute('data-track-id'), 10);
         if (trackId === currentTrackIdx) {
           togglePlayPause();
         } else {
           loadTrack(trackId, true);
         }
+      });
+    });
+
+    // Row share buttons
+    const rowShareBtns = document.querySelectorAll('.sp-row-share-btn');
+    rowShareBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const trackId = parseInt(btn.getAttribute('data-share-id'), 10);
+        shareTrack(trackId);
       });
     });
 
@@ -666,6 +777,7 @@
   // Initialize on DOM Ready
   function init() {
     initDOMElements();
+    updateRepeatUI();
     bindEvents();
     checkUrlParams();
     startVisualizer();

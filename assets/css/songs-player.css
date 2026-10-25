@@ -464,9 +464,16 @@ body.vsp-songs-page::-webkit-scrollbar-thumb:hover,
 }
 
 .sp-table thead th.th-time {
-  width: 90px;
+  width: 70px;
   text-align: right;
-  padding-right: 20px;
+  padding-right: 12px;
+}
+
+.sp-table thead th.th-share {
+  width: 48px;
+  text-align: center;
+  padding-right: 18px;
+  padding-left: 4px;
 }
 
 .sp-row {
@@ -561,12 +568,13 @@ body.vsp-songs-page::-webkit-scrollbar-thumb:hover,
   display: flex;
 }
 
+/* Keep the spectrum animation visible when hovering an already playing song */
 .sp-row.playing:hover .sp-equalizer-bars {
-  display: none;
+  display: flex !important;
 }
 
 .sp-row.playing:hover .sp-hover-play {
-  display: inline-block;
+  display: none !important;
 }
 
 /* Track Title & Meta */
@@ -634,10 +642,49 @@ body.vsp-songs-page::-webkit-scrollbar-thumb:hover,
 }
 
 .sp-td-time {
+  width: 70px;
   text-align: right;
   color: var(--sp-text-sub);
   font-size: 0.88rem;
-  padding-right: 20px !important;
+  padding-right: 12px !important;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.sp-td-share {
+  width: 48px;
+  text-align: center;
+  padding-right: 18px !important;
+  padding-left: 4px !important;
+  vertical-align: middle;
+}
+
+.sp-row-share-btn {
+  background: transparent;
+  border: none;
+  color: var(--sp-text-sub);
+  opacity: 0.85;
+  cursor: pointer;
+  margin: 0;
+  font-size: 0.92rem;
+  padding: 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.sp-row:hover .sp-row-share-btn {
+  color: var(--sp-text-main);
+  opacity: 1;
+}
+
+.sp-row-share-btn:hover {
+  color: var(--sp-green) !important;
+  transform: scale(1.2);
+  opacity: 1;
 }
 
 /* Audio Visualizer Stage */
