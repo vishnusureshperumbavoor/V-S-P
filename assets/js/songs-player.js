@@ -129,6 +129,7 @@
       dom.toast.classList.remove('show');
     }, 2400);
   }
+  window.vspShowToast = showToast;
 
   // Load a track into the player
   function loadTrack(index, autoplay = false) {
