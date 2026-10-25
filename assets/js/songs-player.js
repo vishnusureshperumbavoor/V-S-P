@@ -1132,10 +1132,36 @@
     }, "image/png");
   }
 
-  // Share Track Function
+  // Share Track Function (Standard Share)
   function shareTrack(trackId) {
     if (trackId < 0 || trackId >= TRACKS.length) return;
-    openStoryModal(trackId);
+    const track = TRACKS[trackId];
+    const origin = window.location.origin;
+    const path = window.location.pathname.substring(
+      0,
+      window.location.pathname.lastIndexOf("/") + 1,
+    );
+    const shareUrl = `${origin}${path}songs.html?track=${trackId}`;
+
+    const shareData = {
+      title: `${track.title} - VSP`,
+      text: `Listen to "${track.title}" (${track.genre}) by VSP`,
+      url: shareUrl,
+    };
+
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare(shareData)
+    ) {
+      navigator.share(shareData).catch((err) => {
+        if (err.name !== "AbortError") {
+          copyToClipboard(shareUrl);
+        }
+      });
+    } else {
+      copyToClipboard(shareUrl);
+    }
   }
 
   // Share Artist Function

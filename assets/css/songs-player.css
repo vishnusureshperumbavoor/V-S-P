@@ -1820,9 +1820,16 @@ body.sp-in-viewport {
   }
 }
 
-/* Instagram Story Share Feature */
+/* Instagram Story Share Feature (Mobile Only) */
 .sp-story-btn {
+  display: none !important;
   transition: all 0.25s ease !important;
+}
+
+@media (max-width: 991px), (pointer: coarse) {
+  .sp-story-btn {
+    display: inline-flex !important;
+  }
 }
 
 .sp-story-btn:hover {
