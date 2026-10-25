@@ -10538,13 +10538,13 @@ section.w3l-grid-quote h3 {
 
 /* vspbot */
 
-/* Add this CSS to hide the x icon by default */
-.fa-xmark {
+/* Hide x icon on bot toggler by default */
+.vspbot-toggler .fa-xmark {
     display: none;
 }
 
-/* Add this CSS to show the x icon when needed */
-.show-vspbot .fa-xmark {
+/* Show x icon on bot toggler when bot is open */
+.show-vspbot .vspbot-toggler .fa-xmark {
     display: inline-block;
 }
 

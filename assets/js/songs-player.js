@@ -37,6 +37,17 @@
     },
   ];
 
+  // Master Playlist / Album Metadata for Sharing
+  const PLAYLIST_DATA = {
+    isAlbum: true,
+    title: "VSP Songs & Covers",
+    artist: "VSP",
+    genre: "Playlist",
+    album: "VSP Music",
+    cover: "assets/images/cover_artist_playlist.jpg",
+    badge: "Album",
+  };
+
   // State
   let currentTrackIdx = 0;
   let isPlaying = false;
@@ -115,7 +126,9 @@
       btnRepeat: document.getElementById("sp-btn-repeat"),
       heroRepeatBtn: document.getElementById("sp-hero-repeat-btn"),
       heroShareArtistBtn: document.getElementById("sp-hero-share-artist-btn"),
+      heroStoryBtn: document.getElementById("sp-hero-story-btn"),
       // Mobile controls
+      btnMobPrev: document.getElementById("sp-btn-mob-prev"),
       btnMobPlayPause: document.getElementById("sp-btn-mob-playpause"),
       mobPlayIcon: document.getElementById("sp-mob-play-icon"),
       btnMobNext: document.getElementById("sp-btn-mob-next"),
@@ -154,6 +167,8 @@
       storyNativeShareBtn: document.getElementById("sp-story-native-share-btn"),
       storyDownloadBtn: document.getElementById("sp-story-download-btn"),
       storyCopyLinkBtn: document.getElementById("sp-story-copy-link-btn"),
+      storyBackBtn: document.getElementById("sp-story-back-btn"),
+      storyCancelBtn: document.getElementById("sp-story-cancel-btn"),
       singleStoryBtn: document.getElementById("sp-single-story-btn"),
       barStoryBtn: document.getElementById("sp-bar-story-btn"),
     };
@@ -885,12 +900,12 @@
       ctx.fillText(track.title, 540, 1080);
       ctx.restore();
 
-      // 6. Artist Name
+      // 6. Artist Name (VSP)
       ctx.save();
       ctx.textAlign = "center";
       ctx.fillStyle = "#00d679";
-      ctx.font = "700 34px -apple-system, BlinkMacSystemFont, 'Nunito', 'Segoe UI', Roboto, sans-serif";
-      ctx.fillText(track.artist || "Vishnu Suresh Perumbavoor (VSP)", 540, 1145);
+      ctx.font = "800 36px -apple-system, BlinkMacSystemFont, 'Nunito', 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("VSP", 540, 1145);
       ctx.restore();
 
       // 7. Genre / Mass Pill Badge
@@ -985,7 +1000,7 @@
       ctx.textAlign = "center";
       ctx.font = "bold 28px -apple-system, BlinkMacSystemFont, sans-serif";
       ctx.fillStyle = "#0c1017";
-      ctx.fillText("🔗  VSP.MUSIC/SONG", 540, stickerY + 51);
+      ctx.fillText(track.isAlbum ? "🔗  VSP.MUSIC/SONGS" : "🔗  VSP.MUSIC/SONG", 540, stickerY + 51);
       ctx.restore();
 
       // Sticker subtext hint
@@ -996,19 +1011,18 @@
       ctx.fillText("Tap Link Sticker on Instagram to Listen", 540, 1575);
       ctx.restore();
 
-      // 10. Bottom Footer
-      ctx.save();
-      ctx.textAlign = "center";
-      ctx.font = "600 22px -apple-system, BlinkMacSystemFont, sans-serif";
-      ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
-      ctx.fillText("vishnusureshperumbavoor.github.io/V-S-P", 540, 1780);
-      ctx.restore();
-
       callback(canvas);
     };
 
     img.onerror = () => {
-      callback(null);
+      // Fallback for third-party CDNs that do not support CORS canvas exports
+      const fallback = track.fallbackCover || (track.id === 2 ? "assets/images/cover_running_this.jpg" : "assets/images/cover_artist_playlist.jpg");
+      if (img.src !== fallback && !img._triedFallback) {
+        img._triedFallback = true;
+        img.src = fallback;
+      } else {
+        callback(null);
+      }
     };
 
     img.src = track.cover;
@@ -1025,29 +1039,43 @@
     setTimeout(() => URL.revokeObjectURL(url), 5000);
   }
 
-  function openStoryModal(trackId) {
-    const id =
-      typeof trackId === "number" && trackId >= 0 && trackId < TRACKS.length
-        ? trackId
-        : currentTrackIdx;
-    const track = TRACKS[id];
-    currentStoryTrackId = id;
+  function openStoryModal(target) {
+    let item;
+    let isAlbumMode = false;
+
+    if (target === "album" || target === "artist" || target === -1) {
+      item = PLAYLIST_DATA;
+      isAlbumMode = true;
+      currentStoryTrackId = -1;
+    } else {
+      const id =
+        typeof target === "number" && target >= 0 && target < TRACKS.length
+          ? target
+          : currentTrackIdx;
+      item = TRACKS[id];
+      currentStoryTrackId = id;
+    }
 
     if (!dom.storyModal) return;
 
     dom.storyModal.style.display = "flex";
     if (dom.storySpinner) dom.storySpinner.style.display = "block";
-    if (dom.storyTrackTitle) dom.storyTrackTitle.textContent = track.title;
-    if (dom.storyTrackArtist)
-      dom.storyTrackArtist.textContent =
-        track.artist || "Vishnu Suresh Perumbavoor (VSP)";
+    if (dom.storyTrackTitle) dom.storyTrackTitle.textContent = item.title;
+    if (dom.storyTrackArtist) dom.storyTrackArtist.textContent = "VSP";
+
+    const labelElem = dom.storyModal.querySelector(".sp-story-label");
+    if (labelElem) {
+      labelElem.textContent = isAlbumMode
+        ? "NOW SHARING PLAYLIST"
+        : "NOW SHARING";
+    }
 
     if (dom.storyPreviewContainer) {
       const existingCanvas = dom.storyPreviewContainer.querySelector("canvas");
       if (existingCanvas) existingCanvas.remove();
     }
 
-    generateStoryCanvas(track, (canvas) => {
+    generateStoryCanvas(item, (canvas) => {
       if (dom.storySpinner) dom.storySpinner.style.display = "none";
       if (!canvas) {
         showToast("Error generating Story card");
@@ -1066,15 +1094,33 @@
     }
   }
 
-  function shareStoryToInstagram(trackId, canvas) {
-    const id = typeof trackId === "number" ? trackId : currentStoryTrackId;
-    const track = TRACKS[id];
+  function shareStoryToInstagram(targetId, canvas) {
+    const isAlbum =
+      targetId === -1 || targetId === "album" || currentStoryTrackId === -1;
     const origin = window.location.origin;
     const path = window.location.pathname.substring(
       0,
       window.location.pathname.lastIndexOf("/") + 1,
     );
-    const shareUrl = `${origin}${path}songs.html?track=${id}`;
+
+    let shareUrl;
+    let title;
+    let safeTitle;
+
+    if (isAlbum) {
+      shareUrl = `${origin}${path}songs.html`;
+      title = "VSP Songs & Covers";
+      safeTitle = "VSP_Playlist";
+    } else {
+      const id =
+        typeof targetId === "number" && targetId >= 0
+          ? targetId
+          : currentTrackIdx;
+      const track = TRACKS[id];
+      shareUrl = `${origin}${path}songs.html?track=${id}`;
+      title = `${track.title} - VSP`;
+      safeTitle = (track.title || "Song").replace(/[^a-zA-Z0-9]/g, "_");
+    }
 
     // 1. Copy Link for Instagram Link Sticker
     copyToClipboard(shareUrl);
@@ -1087,7 +1133,6 @@
 
     canvas.toBlob(async (blob) => {
       if (!blob) return;
-      const safeTitle = (track.title || "Song").replace(/[^a-zA-Z0-9]/g, "_");
       const filename = `VSP_${safeTitle}_Story.png`;
 
       // Check if navigator.share with files is supported (iOS Safari / Android Chrome)
@@ -1096,8 +1141,8 @@
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
             files: [file],
-            title: `${track.title} - VSP`,
-            text: `Listen to "${track.title}" by Vishnu Suresh Perumbavoor (VSP): ${shareUrl}`,
+            title: title,
+            text: `Listen on VSP Music: ${shareUrl}`,
           });
           return;
         }
@@ -1118,80 +1163,40 @@
     }, "image/png");
   }
 
-  function downloadStoryCard(trackId, canvas) {
-    const id = typeof trackId === "number" ? trackId : currentStoryTrackId;
-    const track = TRACKS[id];
+  function downloadStoryCard(targetId, canvas) {
+    const isAlbum =
+      targetId === -1 || targetId === "album" || currentStoryTrackId === -1;
+    let safeTitle;
+    if (isAlbum) {
+      safeTitle = "VSP_Playlist";
+    } else {
+      const id =
+        typeof targetId === "number" && targetId >= 0
+          ? targetId
+          : currentTrackIdx;
+      const track = TRACKS[id];
+      safeTitle = (track.title || "Song").replace(/[^a-zA-Z0-9]/g, "_");
+    }
+
     if (!canvas) canvas = currentStoryCanvas;
     if (!canvas) return;
 
     canvas.toBlob((blob) => {
       if (!blob) return;
-      const safeTitle = (track.title || "Song").replace(/[^a-zA-Z0-9]/g, "_");
       triggerDownload(blob, `VSP_${safeTitle}_Story.png`);
       showToast("Story card downloaded!");
     }, "image/png");
   }
 
-  // Share Track Function (Standard Share)
+  // Share Track Function
   function shareTrack(trackId) {
     if (trackId < 0 || trackId >= TRACKS.length) return;
-    const track = TRACKS[trackId];
-    const origin = window.location.origin;
-    const path = window.location.pathname.substring(
-      0,
-      window.location.pathname.lastIndexOf("/") + 1,
-    );
-    const shareUrl = `${origin}${path}songs.html?track=${trackId}`;
-
-    const shareData = {
-      title: `${track.title} - VSP`,
-      text: `Listen to "${track.title}" (${track.genre}) by VSP`,
-      url: shareUrl,
-    };
-
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare(shareData)
-    ) {
-      navigator.share(shareData).catch((err) => {
-        if (err.name !== "AbortError") {
-          copyToClipboard(shareUrl);
-        }
-      });
-    } else {
-      copyToClipboard(shareUrl);
-    }
+    openStoryModal(trackId);
   }
 
-  // Share Artist Function
+  // Share Artist / Playlist Function
   function shareArtist() {
-    const origin = window.location.origin;
-    const path = window.location.pathname.substring(
-      0,
-      window.location.pathname.lastIndexOf("/") + 1,
-    );
-    const shareUrl = `${origin}${path}songs.html`;
-
-    const shareData = {
-      title: "VSP - Songs & Covers",
-      text: "Listen to cover songs and beats by VSP",
-      url: shareUrl,
-    };
-
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare(shareData)
-    ) {
-      navigator.share(shareData).catch((err) => {
-        if (err.name !== "AbortError") {
-          copyToClipboard(shareUrl);
-        }
-      });
-    } else {
-      copyToClipboard(shareUrl);
-    }
+    openStoryModal("album");
   }
 
   function copyToClipboard(text) {
@@ -1453,6 +1458,12 @@
     if (dom.storyCloseBtn) {
       dom.storyCloseBtn.addEventListener("click", closeStoryModal);
     }
+    if (dom.storyBackBtn) {
+      dom.storyBackBtn.addEventListener("click", closeStoryModal);
+    }
+    if (dom.storyCancelBtn) {
+      dom.storyCancelBtn.addEventListener("click", closeStoryModal);
+    }
     if (dom.storyBackdrop) {
       dom.storyBackdrop.addEventListener("click", closeStoryModal);
     }
@@ -1473,7 +1484,10 @@
           0,
           window.location.pathname.lastIndexOf("/") + 1,
         );
-        const shareUrl = `${origin}${path}songs.html?track=${currentStoryTrackId}`;
+        const isAlbum = currentStoryTrackId === -1;
+        const shareUrl = isAlbum
+          ? `${origin}${path}songs.html`
+          : `${origin}${path}songs.html?track=${currentStoryTrackId}`;
         copyToClipboard(shareUrl);
         showToast("Link copied for Story Sticker!");
       });
@@ -1519,6 +1533,7 @@
 
     // Prev / Next
     if (dom.btnPrev) dom.btnPrev.addEventListener("click", prevTrack);
+    if (dom.btnMobPrev) dom.btnMobPrev.addEventListener("click", prevTrack);
     if (dom.btnNext) dom.btnNext.addEventListener("click", nextTrack);
     if (dom.btnMobNext) dom.btnMobNext.addEventListener("click", nextTrack);
 
@@ -1526,9 +1541,14 @@
     if (dom.btnShuffle) dom.btnShuffle.addEventListener("click", toggleShuffle);
     if (dom.btnRepeat) dom.btnRepeat.addEventListener("click", toggleRepeat);
 
-    // Hero share artist
+    // Hero share artist / playlist
     if (dom.heroShareArtistBtn) {
       dom.heroShareArtistBtn.addEventListener("click", shareArtist);
+    }
+    if (dom.heroStoryBtn) {
+      dom.heroStoryBtn.addEventListener("click", () => {
+        openStoryModal("album");
+      });
     }
 
     // Bottom bar share

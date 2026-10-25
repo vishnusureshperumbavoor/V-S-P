@@ -150,7 +150,7 @@
         <!-- Playlist Hero Banner -->
         <section class="sp-hero-header" id="sp-hero-header">
           <div class="sp-hero-cover-wrap">
-            <img src="assets/images/profile2.jpg" alt="VSP Songs Album Cover" class="sp-hero-cover" id="sp-hero-cover" />
+            <img src="assets/images/cover_artist_playlist.jpg" alt="VSP Songs Album Cover" class="sp-hero-cover" id="sp-hero-cover" />
           </div>
 
           <div class="sp-hero-details">
@@ -185,15 +185,15 @@
             <i class="fa-solid fa-repeat"></i>
           </button>
 
-          <!-- Share Artist -->
-          <button class="sp-action-icon-btn" id="sp-hero-share-artist-btn" title="Share Artist" aria-label="Share Artist">
+          <!-- Share Playlist / Artist -->
+          <button class="sp-action-icon-btn" id="sp-hero-share-artist-btn" title="Share Playlist" aria-label="Share Playlist">
             <i class="fa-solid fa-share-nodes"></i>
           </button>
 
-          <div class="sp-action-right">
-            <span class="sp-tag-badge"><i class="fa-solid fa-compact-disc"></i> Studio Master</span>
-            <span class="sp-tag-badge d-none d-md-inline-flex"><i class="fa-solid fa-wave-square"></i> 192kbps MP3</span>
-          </div>
+          <!-- Share Playlist to Instagram Story -->
+          <button class="sp-action-icon-btn sp-story-btn" id="sp-hero-story-btn" title="Share Playlist to Instagram Story" aria-label="Share Playlist to Instagram Story">
+            <i class="fa-brands fa-instagram"></i>
+          </button>
         </div>
 
         <!-- Audio Visualizer Section -->
@@ -475,12 +475,6 @@
         <p class="sp-bar-title" id="sp-bar-title">No Crown Given</p>
         <p class="sp-bar-artist" id="sp-bar-artist">Vishnu Suresh Perumbavoor (VSP)</p>
       </div>
-      <button class="sp-ctrl-btn" id="sp-bar-share-btn" title="Share current song" aria-label="Share current song" style="margin-left: 4px;">
-        <i class="fa-solid fa-share-nodes"></i>
-      </button>
-      <button class="sp-ctrl-btn sp-story-btn" id="sp-bar-story-btn" title="Share to Instagram Story" aria-label="Share to Instagram Story" style="margin-left: 2px;">
-        <i class="fa-brands fa-instagram"></i>
-      </button>
     </div>
 
     <!-- Center: Playback Controls & Live Scrub Bar -->
@@ -538,12 +532,15 @@
       </button>
     </div>
 
-    <!-- Mobile Play / Next Controls -->
+    <!-- Mobile Play / Prev / Next Controls -->
     <div class="sp-mobile-controls">
-      <button class="sp-btn-playpause" id="sp-btn-mob-playpause" aria-label="Play / Pause">
+      <button class="sp-ctrl-btn" id="sp-btn-mob-prev" aria-label="Previous Track" title="Previous Track">
+        <i class="fa-solid fa-backward-step"></i>
+      </button>
+      <button class="sp-btn-playpause" id="sp-btn-mob-playpause" aria-label="Play / Pause" title="Play / Pause">
         <i class="fa-solid fa-play" id="sp-mob-play-icon"></i>
       </button>
-      <button class="sp-ctrl-btn" id="sp-btn-mob-next" aria-label="Next Track">
+      <button class="sp-ctrl-btn" id="sp-btn-mob-next" aria-label="Next Track" title="Next Track">
         <i class="fa-solid fa-forward-step"></i>
       </button>
     </div>
@@ -581,11 +578,14 @@
     <div class="sp-story-backdrop" id="sp-story-backdrop"></div>
     <div class="sp-story-dialog">
       <div class="sp-story-dialog-header">
+        <button class="sp-story-back-btn" id="sp-story-back-btn" aria-label="Back to Songs" title="Back to Songs">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
         <div class="sp-story-header-title">
           <i class="fa-brands fa-instagram sp-story-ig-icon"></i>
           <span>Share to Instagram Story</span>
         </div>
-        <button class="sp-story-close-btn" id="sp-story-close-btn" aria-label="Close Story Share">
+        <button class="sp-story-close-btn" id="sp-story-close-btn" aria-label="Close Story Share" title="Close">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -597,14 +597,13 @@
               <i class="fa-solid fa-circle-notch fa-spin"></i>
             </div>
           </div>
-          <span class="sp-story-preview-badge"><i class="fa-solid fa-mobile-screen"></i> 9:16 Story Card</span>
         </div>
 
         <div class="sp-story-actions-panel">
           <div class="sp-story-track-info">
             <span class="sp-story-label">NOW SHARING</span>
             <h4 id="sp-story-track-title">Track Title</h4>
-            <p id="sp-story-track-artist">Vishnu Suresh Perumbavoor (VSP)</p>
+            <p id="sp-story-track-artist">VSP</p>
           </div>
 
           <div class="sp-story-btn-stack">
@@ -624,6 +623,12 @@
             <button class="sp-story-sec-btn" id="sp-story-copy-link-btn">
               <i class="fa-solid fa-link"></i>
               <span>Copy Link for Sticker</span>
+            </button>
+
+            <!-- Back to Player / Cancel Button -->
+            <button class="sp-story-cancel-btn" id="sp-story-cancel-btn">
+              <i class="fa-solid fa-arrow-left"></i>
+              <span>Back to Song Player</span>
             </button>
           </div>
 
