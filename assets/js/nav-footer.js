@@ -8,6 +8,68 @@
 (function () {
   'use strict';
 
+  // Check if running inside VSP Persistent Audio Shell
+  const isInsideVspShell = (function () {
+    try {
+      return Boolean(window.parent && window.parent !== window && window.parent.vspPlayerActive);
+    } catch (e) {
+      return false;
+    }
+  })();
+
+  if (isInsideVspShell) {
+    document.body.classList.add('in-vsp-frame');
+    const frameStyle = document.createElement('style');
+    frameStyle.id = 'vsp-frame-styles';
+    frameStyle.textContent = `
+      body.in-vsp-frame {
+        padding-top: 0 !important;
+      }
+      body.in-vsp-frame header#vsp-header,
+      body.in-vsp-frame header {
+        display: none !important;
+      }
+      body.in-vsp-frame .vsp-design-hud {
+        top: 14px !important;
+      }
+      body.in-vsp-frame .blog-feed-section {
+        padding-top: 24px !important;
+      }
+      body.in-vsp-frame.vspbot-full-page {
+        padding-top: 10px !important;
+      }
+      body.in-vsp-frame .w3l-main-banner {
+        margin-top: 1.5rem !important;
+      }
+    `;
+    document.head.appendChild(frameStyle);
+
+    // Notify parent window on load of metadata
+    try {
+      window.parent.vspSyncChildMeta(window.location.pathname, document.title);
+    } catch (e) {}
+
+    // Intercept clicks on links that target songs.html or songs player
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+      if (href.includes('songs.html')) {
+        e.preventDefault();
+        const matchTrack = href.match(/[?&]track=(\d+)/);
+        const trackId = matchTrack ? parseInt(matchTrack[1], 10) : 0;
+        const autoplay = href.includes('autoplay=true');
+        try {
+          window.parent.vspShowSongs(trackId, autoplay);
+        } catch (err) {
+          window.location.href = href;
+        }
+      }
+    });
+  }
+
   function getRootPrefix() {
     const currentScript = document.currentScript || document.querySelector('script[src*="nav-footer.js"]');
     if (currentScript) {
@@ -43,6 +105,11 @@
   function renderHeader() {
     const headerContainer = document.getElementById('vsp-header') || document.querySelector('header');
     if (!headerContainer) return;
+
+    if (isInsideVspShell) {
+      headerContainer.style.display = 'none';
+      return;
+    }
 
     const root = getRootPrefix();
     const active = getActiveTab();

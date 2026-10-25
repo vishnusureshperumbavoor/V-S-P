@@ -133,6 +133,45 @@
   }
   window.vspShowToast = showToast;
 
+  let autoplayPending = false;
+
+  function showAutoplayPrompt() {
+    removeAutoplayPrompt();
+    const track = TRACKS[currentTrackIdx];
+    const banner = document.createElement('div');
+    banner.id = 'sp-autoplay-banner';
+    banner.className = 'sp-autoplay-banner';
+    banner.innerHTML = `
+      <i class="fa-solid fa-circle-play"></i>
+      <span>Tap to Listen: <strong>${track.title}</strong></span>
+    `;
+    banner.addEventListener('click', (e) => {
+      e.stopPropagation();
+      unlockAudio();
+    });
+    document.body.appendChild(banner);
+  }
+
+  function removeAutoplayPrompt() {
+    const existing = document.getElementById('sp-autoplay-banner');
+    if (existing) {
+      existing.remove();
+    }
+  }
+
+  function unlockAudio() {
+    autoplayPending = false;
+    removeAutoplayPrompt();
+    initAudioContext();
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+    playAudio();
+    window.removeEventListener('click', unlockAudio, true);
+    window.removeEventListener('touchstart', unlockAudio, true);
+    window.removeEventListener('keydown', unlockAudio, true);
+  }
+
   // Load a track into the player
   function loadTrack(index, autoplay = false) {
     if (index < 0 || index >= TRACKS.length) return;
@@ -164,6 +203,10 @@
     updateTableActiveRow();
 
     if (autoplay) {
+      autoplayPending = true;
+      window.addEventListener('click', unlockAudio, true);
+      window.addEventListener('touchstart', unlockAudio, true);
+      window.addEventListener('keydown', unlockAudio, true);
       playAudio();
     }
   }
@@ -171,15 +214,26 @@
   // Play audio
   function playAudio() {
     initAudioContext();
-    audio.play().then(() => {
-      isPlaying = true;
-      updatePlayPauseUI(true);
-      startVisualizer();
-    }).catch((err) => {
-      console.warn('Audio playback prevented or waiting for user gesture:', err);
-      isPlaying = false;
-      updatePlayPauseUI(false);
-    });
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        isPlaying = true;
+        autoplayPending = false;
+        removeAutoplayPrompt();
+        updatePlayPauseUI(true);
+        startVisualizer();
+      }).catch((err) => {
+        console.warn('Audio playback prevented or waiting for user gesture:', err);
+        isPlaying = false;
+        updatePlayPauseUI(false);
+        if (autoplayPending) {
+          showAutoplayPrompt();
+        }
+      });
+    }
   }
 
   // Pause audio
@@ -458,8 +512,8 @@
     const shareUrl = `${origin}${path}songs.html?track=${trackId}&autoplay=true`;
 
     const shareData = {
-      title: `${track.title} - Vishnu Suresh Perumbavoor`,
-      text: `Listen to "${track.title}" (${track.genre}) by Vishnu Suresh Perumbavoor`,
+      title: `${track.title} - VSP`,
+      text: `Listen to "${track.title}" (${track.genre}) by VSP`,
       url: shareUrl
     };
 
@@ -481,8 +535,8 @@
     const shareUrl = `${origin}${path}songs.html`;
 
     const shareData = {
-      title: 'Vishnu Suresh Perumbavoor (VSP) - Artist Profile & Songs',
-      text: 'Listen to cover songs and beats by Vishnu Suresh Perumbavoor (VSP)',
+      title: 'VSP - Songs & Covers',
+      text: 'Listen to cover songs and beats by VSP',
       url: shareUrl
     };
 
@@ -772,6 +826,175 @@
     setupVolumeBar();
     setupFullscreenModal();
     setupKeyboardShortcuts();
+    setupShellNavigation();
+  }
+
+  // Seamless Multi-Page Shell Router (Continuous Audio Across Pages)
+  window.vspPlayerActive = true;
+
+  window.vspShowSongs = function(trackId, autoplay) {
+    navigateTo('songs.html', 'songs');
+    if (typeof trackId === 'number' && trackId >= 0 && trackId < TRACKS.length) {
+      loadTrack(trackId, !!autoplay);
+    }
+  };
+
+  window.vspNavigateFromChild = function(url) {
+    let cleanUrl = url;
+    if (cleanUrl.startsWith('../')) cleanUrl = cleanUrl.substring(3);
+    else if (cleanUrl.startsWith('./')) cleanUrl = cleanUrl.substring(2);
+
+    let targetTab = 'home';
+    if (cleanUrl.includes('songs.html')) targetTab = 'songs';
+    else if (cleanUrl.includes('bot')) targetTab = 'bot';
+    else if (cleanUrl.includes('blogs')) targetTab = 'blogs';
+    else if (cleanUrl.includes('vsp') || cleanUrl.includes('lab')) targetTab = 'vsp';
+
+    navigateTo(cleanUrl, targetTab);
+  };
+
+  window.vspSyncChildMeta = function(path, title) {
+    try {
+      if (title) document.title = title;
+      if (path) {
+        window.history.replaceState({ url: path }, title || '', path);
+      }
+    } catch (e) {}
+  };
+
+  window.vspPauseAudio = pauseAudio;
+  window.vspPlayAudio = playAudio;
+
+  function updateNavActiveTab(tab) {
+    const navLinks = document.querySelectorAll('#vsp-header .nav-link, .sp-sidebar-link');
+    navLinks.forEach((link) => {
+      const href = (link.getAttribute('href') || '').toLowerCase();
+      link.classList.remove('active');
+      if (tab === 'home' && (href.endsWith('index.html') || href === './' || href === 'index.html')) {
+        link.classList.add('active');
+      } else if (tab === 'bot' && href.includes('bot')) {
+        link.classList.add('active');
+      } else if (tab === 'blogs' && href.includes('blogs')) {
+        link.classList.add('active');
+      } else if (tab === 'vsp' && (href.includes('vsp') || href.includes('lab'))) {
+        link.classList.add('active');
+      } else if (tab === 'songs' && href.includes('songs')) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  function navigateTo(url, targetTab, pushToHistory = true) {
+    const appContainer = document.getElementById('sp-app-container');
+    const viewportContainer = document.getElementById('sp-viewport-container');
+    const iframe = document.getElementById('sp-viewport-iframe');
+    const footer = document.getElementById('vsp-footer');
+
+    // Close mobile nav menu if open
+    const collapseNav = document.querySelector('#vsp-header #navbarNav');
+    const toggler = document.querySelector('#vsp-header .navbar-toggler');
+    if (collapseNav && collapseNav.classList.contains('show')) {
+      collapseNav.classList.remove('show');
+      if (toggler) toggler.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('noscroll');
+    }
+
+    if (targetTab === 'songs' || url.includes('songs.html')) {
+      if (viewportContainer) viewportContainer.style.display = 'none';
+      if (appContainer) appContainer.style.display = '';
+      if (footer) footer.style.display = '';
+      document.body.classList.remove('sp-in-viewport');
+      document.title = 'Songs & Music | Vishnu Suresh Perumbavoor (VSP)';
+      if (pushToHistory) {
+        window.history.pushState({ page: 'songs', url: 'songs.html' }, '', 'songs.html');
+      }
+      updateNavActiveTab('songs');
+      return;
+    }
+
+    // Switch view to iframe viewport
+    if (appContainer) appContainer.style.display = 'none';
+    if (footer) footer.style.display = 'none';
+    if (viewportContainer) viewportContainer.style.display = 'block';
+    document.body.classList.add('sp-in-viewport');
+
+    const titles = {
+      home: 'Vishnu Suresh Perumbavoor | Software Engineer & Researcher',
+      bot: 'VSP Bot | Intelligent In-Browser Assistant',
+      blogs: 'Blogs | Vishnu Suresh Perumbavoor (VSP)',
+      vsp: 'VSP 3D Lab | Interactive 3D Typography & Visuals'
+    };
+
+    if (iframe) {
+      const currentSrc = iframe.getAttribute('data-loaded-src');
+      if (currentSrc !== url) {
+        iframe.src = url;
+        iframe.setAttribute('data-loaded-src', url);
+      }
+    }
+
+    const newTitle = titles[targetTab] || document.title;
+    document.title = newTitle;
+
+    if (pushToHistory) {
+      window.history.pushState({ page: targetTab, url: url }, '', url);
+    }
+    updateNavActiveTab(targetTab);
+  }
+
+  function setupShellNavigation() {
+    // Event delegation on document to catch all topbar & sidebar navigation clicks
+    document.addEventListener('click', (e) => {
+      const headerLink = e.target.closest('#vsp-header .nav-link, #vsp-header .navbar-brand, #vsp-header .vsp-nav-back-btn');
+      if (headerLink) {
+        const href = headerLink.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:')) return;
+
+        e.preventDefault();
+        let targetTab = 'home';
+        if (href.includes('songs.html')) targetTab = 'songs';
+        else if (href.includes('bot')) targetTab = 'bot';
+        else if (href.includes('blogs')) targetTab = 'blogs';
+        else if (href.includes('vsp') || href.includes('lab')) targetTab = 'vsp';
+
+        navigateTo(href, targetTab);
+        return;
+      }
+
+      const sidebarLink = e.target.closest('.sp-sidebar-link, .sp-hero-meta a');
+      if (sidebarLink) {
+        const href = sidebarLink.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:')) return;
+
+        e.preventDefault();
+        let targetTab = 'home';
+        if (href.includes('songs.html')) targetTab = 'songs';
+        else if (href.includes('bot')) targetTab = 'bot';
+        else if (href.includes('blogs')) targetTab = 'blogs';
+        else if (href.includes('vsp') || href.includes('lab')) targetTab = 'vsp';
+
+        navigateTo(href, targetTab);
+        return;
+      }
+    });
+
+    // Browser History Back/Forward support
+    window.addEventListener('popstate', (e) => {
+      const state = e.state;
+      if (!state || state.page === 'songs' || window.location.pathname.endsWith('songs.html')) {
+        navigateTo('songs.html', 'songs', false);
+      } else if (state && state.url) {
+        navigateTo(state.url, state.page, false);
+      } else {
+        const path = window.location.pathname.toLowerCase();
+        let tab = 'home';
+        if (path.includes('bot')) tab = 'bot';
+        else if (path.includes('blogs')) tab = 'blogs';
+        else if (path.includes('vsp') || path.includes('lab')) tab = 'vsp';
+        else if (path.includes('songs')) tab = 'songs';
+        navigateTo(window.location.pathname, tab, false);
+      }
+    });
   }
 
   // Initialize on DOM Ready

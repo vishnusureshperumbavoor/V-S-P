@@ -1174,7 +1174,7 @@
             var origin = window.location.origin;
             var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
             var url = origin + path + 'songs.html?track=' + id + '&autoplay=true';
-            var data = { title: title + ' - Vishnu Suresh Perumbavoor', text: 'Listen to "' + title + '" (Self Mass) by Vishnu Suresh Perumbavoor', url: url };
+            var data = { title: title + ' - VSP', text: 'Listen to "' + title + '" (Self Mass) by VSP', url: url };
             if (navigator.share && navigator.canShare && navigator.canShare(data)) {
               navigator.share(data).catch(function() {});
             } else if (navigator.clipboard && navigator.clipboard.writeText) {

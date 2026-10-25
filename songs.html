@@ -31,7 +31,7 @@
   <header id="vsp-header"></header>
 
   <!-- Main Music App Shell -->
-  <div class="sp-app-container">
+  <div class="sp-app-container" id="sp-app-container">
     <!-- Music Left Sidebar -->
     <aside class="sp-sidebar" aria-label="Music Navigation">
       <!-- Top Navigation Card -->
@@ -106,14 +106,9 @@
       <section class="sp-hero-header" id="sp-hero-header">
         <div class="sp-hero-cover-wrap">
           <img src="assets/images/profile2.jpg" alt="VSP Songs Album Cover" class="sp-hero-cover" id="sp-hero-cover" />
-          <span class="sp-hero-badge"><i class="fa-solid fa-bolt"></i> SESSION 05</span>
         </div>
 
         <div class="sp-hero-details">
-          <div class="sp-hero-type">
-            <i class="fa-solid fa-circle-check sp-verified-badge"></i>
-            <span>Verified Artist Playlist</span>
-          </div>
           <h1 class="sp-hero-title" id="sp-hero-title">VSP Songs & Covers</h1>
           <p class="sp-hero-desc">
             Curated high-voltage cover tracks and beats produced by Vishnu Suresh Perumbavoor. Driven by heavy basslines, relentless tempo, and cybernetic cadence.
@@ -285,6 +280,11 @@
         </div>
       </section>
     </main>
+  </div>
+
+  <!-- Persistent Viewport Container for seamless browsing across Home, 3D Labs, Bot, Blogs while songs continue playing -->
+  <div class="sp-viewport-container" id="sp-viewport-container" style="display: none;">
+    <iframe class="sp-viewport-iframe" id="sp-viewport-iframe" title="VSP Content Viewport" src="about:blank"></iframe>
   </div>
 
   <!-- ==========================================================================

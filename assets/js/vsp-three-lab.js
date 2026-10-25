@@ -24,14 +24,6 @@
   const themeBtn = document.getElementById('vsp-toggle-theme');
   const switcherBtns = document.querySelectorAll('.vsp-mode-btn');
 
-  // Audio elements & reactive analyser
-  const danceAudioEl = document.getElementById('vsp-dance-audio');
-  const danceMusicBtn = document.getElementById('vsp-dance-music-btn');
-  const musicLabelEl = document.getElementById('vsp-music-label');
-  let isMusicPlaying = false;
-  let audioAnalyser = null;
-  let audioDataArray = null;
-
   if (!container) return;
 
   // Scene state
@@ -1178,56 +1170,6 @@
     });
   }
 
-  // ==========================================================================
-  // Audio Controller & Beat Analyser for Dance
-  // ==========================================================================
-  function setupAudioAnalyser() {
-    if (audioAnalyser || !danceAudioEl) return;
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      const source = ctx.createMediaElementSource(danceAudioEl);
-      audioAnalyser = ctx.createAnalyser();
-      audioAnalyser.fftSize = 64;
-      source.connect(audioAnalyser);
-      audioAnalyser.connect(ctx.destination);
-      audioDataArray = new Uint8Array(audioAnalyser.frequencyBinCount);
-    } catch (e) {
-      console.warn('Web Audio API analyser note:', e);
-    }
-  }
-
-  function toggleDanceMusic(forcePlay) {
-    if (!danceAudioEl || !danceMusicBtn) return;
-    const shouldPlay = typeof forcePlay === 'boolean' ? forcePlay : !isMusicPlaying;
-
-    if (shouldPlay) {
-      setupAudioAnalyser();
-      const playPromise = danceAudioEl.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            isMusicPlaying = true;
-            danceMusicBtn.classList.add('active');
-            danceMusicBtn.setAttribute('title', 'Sound: ON (Click to Mute)');
-            const icon = danceMusicBtn.querySelector('i');
-            if (icon) icon.className = 'fa-solid fa-volume-high';
-          })
-          .catch((err) => {
-            console.warn('Audio play request:', err);
-          });
-      }
-    } else {
-      danceAudioEl.pause();
-      isMusicPlaying = false;
-      danceMusicBtn.classList.remove('active');
-      danceMusicBtn.setAttribute('title', 'Sound: OFF (Click to Play)');
-      const icon = danceMusicBtn.querySelector('i');
-      if (icon) icon.className = 'fa-solid fa-volume-xmark';
-    }
-  }
-
   function createAvatarDesign() {
     const group = new THREE.Group();
 
@@ -1395,21 +1337,10 @@
           avatarMixers.forEach((m) => m.update(delta));
         }
 
-        // Real-time Audio Reactive Beat Modulation
-        let beatScale = 1;
-        if (isMusicPlaying && audioAnalyser && audioDataArray) {
-          audioAnalyser.getByteFrequencyData(audioDataArray);
-          const bass = (audioDataArray[1] + audioDataArray[2] + audioDataArray[3]) / (3 * 255);
-          beatScale = 1 + bass * 0.22;
-          ring1.scale.set(beatScale, beatScale, 1);
-          ring2.scale.set(beatScale, beatScale, 1);
-        } else {
-          ring1.scale.set(1, 1, 1);
-          ring2.scale.set(1, 1, 1);
-        }
-
-        ring1.rotation.z = time * (isMusicPlaying ? 0.6 : 0.3);
-        ring2.rotation.z = -time * (isMusicPlaying ? 0.4 : 0.2);
+        ring1.scale.set(1, 1, 1);
+        ring2.scale.set(1, 1, 1);
+        ring1.rotation.z = time * 0.4;
+        ring2.rotation.z = -time * 0.3;
         vspHalo.rotation.y = time * 1.5;
         vspHalo.position.y = curHaloY + Math.sin(time * 2.5) * 0.6;
       }
@@ -1642,14 +1573,6 @@
       }
     });
   });
-
-  // Hook Dance Music Toggle Button
-  if (danceMusicBtn) {
-    danceMusicBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleDanceMusic();
-    });
-  }
 
   // Auto-Spin Toggle Button
   if (autoSpinBtn) {
