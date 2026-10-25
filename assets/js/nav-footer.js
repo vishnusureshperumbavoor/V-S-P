@@ -25,6 +25,9 @@
 
   function getActiveTab() {
     const path = window.location.pathname.toLowerCase();
+    if (path.includes('songs') || path.includes('/songs')) {
+      return 'songs';
+    }
     if (path.includes('blogs') || path.includes('/blogs/')) {
       return 'blogs';
     }
@@ -48,6 +51,7 @@
     const botActive = active === 'bot' ? 'active' : '';
     const blogActive = active === 'blogs' ? 'active' : '';
     const vspActive = active === 'vsp' ? 'active' : '';
+    const songsActive = active === 'songs' ? 'active' : '';
 
     let backTarget = `${root}index.html`;
     let backTitle = 'Back to Home';
@@ -109,6 +113,12 @@
                   <a class="nav-link pl-0 pr-0 ${vspActive}" href="${root}vsp.html" title="VSP 3D Lab" aria-label="VSP 3D Lab">
                     <span class="fa-solid fa-cube nav-icon"></span>
                     <span class="nav-text">3D Lab</span>
+                  </a>
+                </li>
+                <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0 ${songsActive}" href="${root}songs.html" title="Songs" aria-label="Songs">
+                    <span class="fa-solid fa-music nav-icon"></span>
+                    <span class="nav-text">Songs</span>
                   </a>
                 </li>
               </ul>
