@@ -458,13 +458,8 @@
     </main>
   </div>
 
-  <!-- Persistent Viewport Container for seamless browsing across Home, 3D Labs, Bot, Blogs while songs continue playing -->
-  <div class="sp-viewport-container" id="sp-viewport-container" style="display: none;">
-    <iframe class="sp-viewport-iframe" id="sp-viewport-iframe" title="VSP Content Viewport" src="about:blank"></iframe>
-  </div>
-
   <!-- ==========================================================================
-       Persistent Sticky Bottom Player Bar
+       Sticky Bottom Player Bar
        ========================================================================== -->
   <aside class="sp-player-bar" id="sp-player-bar" aria-label="Audio Player">
     <!-- Left: Track Details -->
@@ -508,7 +503,7 @@
       </div>
     </div>
 
-    <!-- Right: Visualizer, Volume, Fullscreen, Minimize -->
+    <!-- Right: Visualizer, Volume, Fullscreen -->
     <div class="sp-bar-right">
       <button class="sp-ctrl-btn active" id="sp-btn-toggleviz" title="Toggle Visualizer" aria-label="Toggle Visualizer">
         <i class="fa-solid fa-chart-simple"></i>
@@ -529,10 +524,6 @@
       <button class="sp-ctrl-btn" id="sp-btn-openfs" title="Open Fullscreen" aria-label="Open Fullscreen View">
         <i class="fa-solid fa-up-right-and-down-left-and-up-right-to-center"></i>
       </button>
-
-      <button class="sp-ctrl-btn" id="sp-btn-minimize" title="Minimize player" aria-label="Minimize Player">
-        <i class="fa-solid fa-chevron-down" id="sp-minimize-icon"></i>
-      </button>
     </div>
 
     <!-- Mobile Play / Prev / Next Controls -->
@@ -545,22 +536,6 @@
       </button>
       <button class="sp-ctrl-btn" id="sp-btn-mob-next" aria-label="Next Track" title="Next Track">
         <i class="fa-solid fa-forward-step"></i>
-      </button>
-      <button class="sp-ctrl-btn" id="sp-btn-mob-minimize" title="Minimize player" aria-label="Minimize Player">
-        <i class="fa-solid fa-chevron-down" id="sp-mob-minimize-icon"></i>
-      </button>
-    </div>
-
-    <!-- Mini-pill quick actions (active when minimized into floating pill) -->
-    <div class="sp-pill-actions" id="sp-pill-actions">
-      <button class="sp-ctrl-btn sp-pill-btn" id="sp-btn-pill-playpause" title="Play / Pause" aria-label="Play or Pause">
-        <i class="fa-solid fa-play" id="sp-pill-play-icon"></i>
-      </button>
-      <button class="sp-ctrl-btn sp-pill-btn" id="sp-btn-pill-expand" title="Expand Player" aria-label="Expand Player">
-        <i class="fa-solid fa-chevron-up"></i>
-      </button>
-      <button class="sp-ctrl-btn sp-pill-btn" id="sp-btn-pill-close" title="Turn Off Audio" aria-label="Turn off audio">
-        <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
   </aside>
