@@ -23,7 +23,6 @@ let ttsEnabled = (() => {
 })();
 
 let preferredVoice = null;
-let activeSpeakBtn = null;
 let speechKeepAliveTimer = null;
 
 function loadVoices() {
@@ -119,15 +118,9 @@ function stopSpeaking() {
   if (!("speechSynthesis" in window)) return;
   stopSpeechKeepAlive();
   window.speechSynthesis.cancel();
-  if (activeSpeakBtn) {
-    activeSpeakBtn.classList.remove("is-speaking");
-    activeSpeakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-    activeSpeakBtn.title = "Read aloud";
-    activeSpeakBtn = null;
-  }
 }
 
-function speakMessage(rawText, buttonEl = null) {
+function speakMessage(rawText) {
   if (!("speechSynthesis" in window)) {
     console.warn("Speech synthesis not supported in this browser.");
     return;
@@ -138,22 +131,8 @@ function speakMessage(rawText, buttonEl = null) {
   const speakable = cleanTextForSpeech(rawText);
   if (!speakable) return;
 
-  if (buttonEl) {
-    activeSpeakBtn = buttonEl;
-    buttonEl.classList.add("is-speaking");
-    buttonEl.innerHTML = '<i class="fa-solid fa-stop"></i>';
-    buttonEl.title = "Stop reading";
-  }
-
   const chunks = chunkText(speakable, 180);
-  if (chunks.length === 0) {
-    if (activeSpeakBtn) {
-      activeSpeakBtn.classList.remove("is-speaking");
-      activeSpeakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-      activeSpeakBtn = null;
-    }
-    return;
-  }
+  if (chunks.length === 0) return;
 
   if (!preferredVoice) loadVoices();
   startSpeechKeepAlive();
@@ -168,12 +147,6 @@ function speakMessage(rawText, buttonEl = null) {
     utterance.onend = () => {
       if (isLast) {
         stopSpeechKeepAlive();
-        if (activeSpeakBtn) {
-          activeSpeakBtn.classList.remove("is-speaking");
-          activeSpeakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-          activeSpeakBtn.title = "Read aloud";
-          activeSpeakBtn = null;
-        }
       }
     };
     utterance.onerror = (e) => {
@@ -182,11 +155,6 @@ function speakMessage(rawText, buttonEl = null) {
       }
       if (isLast) {
         stopSpeechKeepAlive();
-        if (activeSpeakBtn) {
-          activeSpeakBtn.classList.remove("is-speaking");
-          activeSpeakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-          activeSpeakBtn = null;
-        }
       }
     };
 
@@ -512,40 +480,13 @@ function addMessage(role, content, extraClass = "") {
   return bubble;
 }
 
-function createMessageMeta(chatItem, getMessageText) {
-  if (!chatItem) return { speedEl: null, speakBtn: null };
-  const metaEl = document.createElement("div");
-  metaEl.className = "vspbot-msg-meta";
-
-  const speedEl = document.createElement("span");
-  speedEl.className = "vspbot-token-speed";
-  speedEl.textContent = "Speed: -- tok/s";
-  metaEl.appendChild(speedEl);
-
-  const speakBtn = document.createElement("button");
-  speakBtn.className = "vspbot-msg-speak-btn";
-  speakBtn.type = "button";
-  speakBtn.setAttribute("aria-label", "Read aloud");
-  speakBtn.title = "Read aloud (Speech Synthesis)";
-  speakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-  speakBtn.style.display = "none";
-
-  speakBtn.addEventListener("click", () => {
-    if (speakBtn.classList.contains("is-speaking")) {
-      stopSpeaking();
-    } else {
-      speakMessage(getMessageText(), speakBtn);
-    }
-  });
-
-  metaEl.appendChild(speakBtn);
-  chatItem.appendChild(metaEl);
-
-  return { speedEl, speakBtn };
-}
-
 function createTokenSpeedEl(chatItem) {
-  return createMessageMeta(chatItem, () => "").speedEl;
+  if (!chatItem) return null;
+  const metricEl = document.createElement("div");
+  metricEl.className = "vspbot-token-speed";
+  metricEl.textContent = "Speed: -- tok/s";
+  chatItem.appendChild(metricEl);
+  return metricEl;
 }
 
 function buildPrompt(messages) {
@@ -750,10 +691,7 @@ async function sendMessage() {
     : "Generating response...";
   const botBubble = addMessage("assistant", preparingText);
   const botItem = botBubble.closest(".chat");
-  const { speedEl, speakBtn } = createMessageMeta(
-    botItem,
-    () => botBubble.textContent,
-  );
+  const speedEl = createTokenSpeedEl(botItem);
   let tokenCount = 0;
   let generationStart = 0;
   let firstTokenTime = 0;
@@ -821,13 +759,9 @@ async function sendMessage() {
       speedEl.textContent = `Speed: ${finalTps.toFixed(1)} tok/s | ${tokenCount} tokens | TTFT: ${ttftMs} ms`;
     }
 
-    if (speakBtn) {
-      speakBtn.style.display = "inline-flex";
-    }
-
     // Auto-speak response if voice response is enabled or user asked with voice
     if (ttsEnabled || userUsedVoice) {
-      speakMessage(cleanAnswer, speakBtn);
+      speakMessage(cleanAnswer);
       userUsedVoice = false;
     }
   } catch (error) {
@@ -1080,16 +1014,3 @@ document
     btn.addEventListener("click", toggleTts);
   });
 updateTtsToggleUi();
-
-const welcomeSpeakBtn = document.getElementById("vspbot-welcome-speak-btn");
-if (welcomeSpeakBtn) {
-  welcomeSpeakBtn.addEventListener("click", () => {
-    if (welcomeSpeakBtn.classList.contains("is-speaking")) {
-      stopSpeaking();
-    } else {
-      const welcomeText =
-        "Hi, I'm VSP Bot, an autonomous AI assistant running locally in your browser via WebAssembly. Ask me about machine learning research, Kaggle solutions, sovereign AI, or technical projects.";
-      speakMessage(welcomeText, welcomeSpeakBtn);
-    }
-  });
-}
