@@ -818,7 +818,7 @@ body.vsp-songs-page::-webkit-scrollbar-thumb:hover,
 }
 
 /* ==========================================================================
-   Persistent Sticky Bottom Player Bar
+   Sticky Bottom Player Bar
    ========================================================================== */
 .sp-player-bar {
   position: fixed;
@@ -828,10 +828,10 @@ body.vsp-songs-page::-webkit-scrollbar-thumb:hover,
   height: var(--sp-player-height);
   background: #000000;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: grid;
-  grid-template-columns: 300px 1fr 300px;
+  display: flex;
   align-items: center;
-  padding: 0 20px;
+  justify-content: space-between;
+  padding: 0 28px;
   z-index: 1050;
   backdrop-filter: blur(12px);
 }
@@ -841,7 +841,9 @@ body.vsp-songs-page::-webkit-scrollbar-thumb:hover,
   display: flex;
   align-items: center;
   gap: 14px;
-  min-width: 0;
+  min-width: 200px;
+  max-width: 280px;
+  flex-shrink: 0;
 }
 
 .sp-bar-thumb {
@@ -1039,21 +1041,6 @@ body.vsp-songs-page::-webkit-scrollbar-thumb:hover,
   transform: translate(-50%, -50%) scale(1);
 }
 
-/* Right Section: Volume & Utilities */
-.sp-bar-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-}
-
-.sp-vol-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 130px;
-}
-
 /* Fullscreen Immersive Modal */
 .sp-fullscreen-modal {
   position: fixed;
@@ -1191,12 +1178,9 @@ body.vsp-songs-page::-webkit-scrollbar-thumb:hover,
     padding-right: 16px;
   }
   .sp-player-bar {
-    grid-template-columns: 1fr auto;
-    padding: 0 12px;
+    padding: 0 16px;
     height: 78px;
-  }
-  .sp-bar-right {
-    display: none;
+    justify-content: space-between;
   }
   .sp-bar-center {
     display: none;

@@ -139,18 +139,10 @@
       sliderThumb: document.getElementById("sp-slider-thumb"),
       currentTimeLabel: document.getElementById("sp-time-current"),
       totalTimeLabel: document.getElementById("sp-time-total"),
-      // Volume Slider
-      btnMute: document.getElementById("sp-btn-mute"),
-      muteIcon: document.getElementById("sp-mute-icon"),
-      volWrap: document.getElementById("sp-vol-wrap"),
-      volFill: document.getElementById("sp-vol-fill"),
-      volThumb: document.getElementById("sp-vol-thumb"),
       // Canvas Visualizer
       canvas: document.getElementById("sp-audio-canvas"),
-      btnToggleViz: document.getElementById("sp-btn-toggleviz"),
       // Fullscreen Modal
       fsModal: document.getElementById("sp-fullscreen-modal"),
-      btnOpenFs: document.getElementById("sp-btn-openfs"),
       btnCloseFs: document.getElementById("sp-btn-closefs"),
       fsCover: document.getElementById("sp-fs-cover"),
       fsTitle: document.getElementById("sp-fs-title"),
@@ -1475,9 +1467,6 @@
           setVolume(Math.max(0, currentVolume - 0.1));
           showToast(`Volume: ${Math.round(currentVolume * 100)}%`);
           break;
-        case "KeyM":
-          if (dom.btnMute) dom.btnMute.click();
-          break;
         case "KeyN":
           nextTrack();
           break;
@@ -1736,22 +1725,8 @@
       });
     });
 
-    // Visualizer toggle button
-    if (dom.btnToggleViz) {
-      dom.btnToggleViz.addEventListener("click", () => {
-        const vizSec = document.getElementById("sp-visualizer-section");
-        if (vizSec) {
-          const isHidden = vizSec.style.display === "none";
-          vizSec.style.display = isHidden ? "block" : "none";
-          dom.btnToggleViz.classList.toggle("active", isHidden);
-          showToast(isHidden ? "Visualizer Shown" : "Visualizer Hidden");
-        }
-      });
-    }
-
     setupProgressBar();
     setupSingleScrubber();
-    setupVolumeBar();
     setupFullscreenModal();
     setupKeyboardShortcuts();
     setupHistoryNavigation();
