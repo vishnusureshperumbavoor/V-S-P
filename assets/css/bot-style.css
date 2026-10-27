@@ -512,6 +512,7 @@ button#vspbot-delete-model.is-hidden,
   gap: 12px !important;
   max-width: 82% !important;
   animation: fadeInMsg 0.25s ease-out;
+  flex-wrap: wrap !important;
 }
 
 @keyframes fadeInMsg {
@@ -762,14 +763,61 @@ button#vspbot-delete-model.is-hidden,
   box-shadow: 0 4px 12px rgba(0, 214, 121, 0.18);
 }
 
-/* Generation Token Speed Indicator */
+/* Generation Token Speed Indicator & Message Actions */
+.vspbot-msg-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-basis: 100% !important;
+  width: calc(100% - 46px) !important;
+  margin: 6px 0 0 46px !important;
+  padding: 0 4px !important;
+  box-sizing: border-box !important;
+  gap: 8px !important;
+}
+
 .vspbot-token-speed {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.72rem;
   color: #7df9ff;
-  margin-top: 6px;
-  margin-left: 6px;
   opacity: 0.9;
+  flex: 1;
+}
+
+.vspbot-msg-speak-btn {
+  background: rgba(15, 23, 42, 0.7) !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  color: #94a3b8 !important;
+  font-size: 0.76rem !important;
+  cursor: pointer !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+.vspbot-msg-speak-btn:hover {
+  color: #00d679 !important;
+  border-color: rgba(0, 214, 121, 0.5) !important;
+  background: rgba(0, 214, 121, 0.14) !important;
+}
+
+.vspbot-msg-speak-btn.is-speaking {
+  color: #00d679 !important;
+  border-color: #00d679 !important;
+  background: rgba(0, 214, 121, 0.2) !important;
+  animation: speakPulse 1.2s infinite !important;
+}
+
+@keyframes speakPulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 214, 121, 0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(0, 214, 121, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 214, 121, 0); }
 }
 
 /* Thinking Pulse Indicator */
@@ -837,6 +885,71 @@ button#vspbot-delete-model.is-hidden,
 
 .chat-input textarea::placeholder {
   color: #55657a;
+}
+
+.chat-input button#vspbot-mic-btn,
+.vspbot.vspbot-expanded .chat-input button#vspbot-mic-btn {
+  width: 38px !important;
+  height: 38px !important;
+  background: rgba(0, 214, 121, 0.12) !important;
+  border: 1px solid rgba(0, 214, 121, 0.35) !important;
+  border-radius: 10px !important;
+  color: #00d679 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  margin: 0 0 0 6px !important;
+}
+
+.chat-input button#vspbot-mic-btn:hover:not(:disabled) {
+  background: rgba(0, 214, 121, 0.24) !important;
+  color: #7df9ff !important;
+  border-color: #7df9ff !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 14px rgba(125, 249, 255, 0.35);
+}
+
+.chat-input button#vspbot-mic-btn.is-listening {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  animation: micPulse 1.4s infinite !important;
+}
+
+@keyframes micPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7), 0 0 12px rgba(239, 68, 68, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0), 0 0 20px rgba(239, 68, 68, 0.9);
+    transform: scale(1.08);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0), 0 0 12px rgba(239, 68, 68, 0.5);
+    transform: scale(1);
+  }
+}
+
+/* Voice Output TTS Tray Toggle */
+#vspbot-tts-toggle.is-active,
+#vspbot-tts-toggle-widget.is-active {
+  background: rgba(0, 214, 121, 0.16) !important;
+  border-color: rgba(0, 214, 121, 0.45) !important;
+  color: #00d679 !important;
+  box-shadow: 0 0 10px rgba(0, 214, 121, 0.25) !important;
+}
+
+#vspbot-tts-toggle.is-muted,
+#vspbot-tts-toggle-widget.is-muted {
+  background: rgba(148, 163, 184, 0.1) !important;
+  border-color: rgba(148, 163, 184, 0.25) !important;
+  color: #64748b !important;
+  box-shadow: none !important;
 }
 
 .chat-input button#vspbot-send,

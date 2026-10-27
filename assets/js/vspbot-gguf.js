@@ -10,6 +10,347 @@ const MODEL_SIZE_HINT_BYTES = 380 * 1024 * 1024;
 const MODEL_READY_KEY = "vspbot_model_ready_vsp_alpaca_300ep_v2_instruct_q4km";
 const MODEL_SIZE_KEY = "vspbot_model_size_vsp_alpaca_300ep_v2_instruct_q4km";
 
+// ==========================================
+// VOICE INTERACTION (Speech Synthesis & Recognition)
+// ==========================================
+const TTS_STORAGE_KEY = "vspbot_tts_enabled";
+let ttsEnabled = (() => {
+  try {
+    return localStorage.getItem(TTS_STORAGE_KEY) !== "0";
+  } catch (_e) {
+    return true;
+  }
+})();
+
+let preferredVoice = null;
+let activeSpeakBtn = null;
+let speechKeepAliveTimer = null;
+
+function loadVoices() {
+  if (!("speechSynthesis" in window)) return;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) return;
+
+  preferredVoice =
+    voices.find(
+      (v) =>
+        v.lang.startsWith("en") &&
+        (v.name.includes("Natural") ||
+          v.name.includes("Google") ||
+          v.name.includes("Samantha") ||
+          v.name.includes("Premium") ||
+          v.name.includes("Enhanced") ||
+          v.name.includes("Daniel")),
+    ) ||
+    voices.find((v) => v.lang.startsWith("en")) ||
+    voices[0];
+}
+
+if ("speechSynthesis" in window) {
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    loadVoices();
+  };
+}
+
+function cleanTextForSpeech(raw) {
+  if (!raw) return "";
+  return raw
+    .replace(/```[\s\S]*?```/g, "Code block omitted.")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/https?:\/\/\S+/g, "link")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/(\*\*|__)(.*?)\1/g, "$2")
+    .replace(/(\*|_)(.*?)\1/g, "$2")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^>\s+/gm, "")
+    .replace(/^[\s*-+]+(?=\S)/gm, "")
+    .replace(/^\d+\.\s+/gm, "")
+    .replace(/<\|.*?\|>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function chunkText(text, maxLen = 180) {
+  const sentences = text.match(/[^.!?\n]+[.!?\n]+|[^.!?\n]+$/g) || [text];
+  const result = [];
+  for (const s of sentences) {
+    const trimmed = s.trim();
+    if (!trimmed) continue;
+    if (trimmed.length <= maxLen) {
+      result.push(trimmed);
+    } else {
+      const words = trimmed.split(" ");
+      let current = "";
+      for (const w of words) {
+        if ((current + " " + w).trim().length <= maxLen) {
+          current = (current + " " + w).trim();
+        } else {
+          if (current) result.push(current);
+          current = w;
+        }
+      }
+      if (current) result.push(current);
+    }
+  }
+  return result;
+}
+
+function startSpeechKeepAlive() {
+  stopSpeechKeepAlive();
+  speechKeepAliveTimer = setInterval(() => {
+    if (!window.speechSynthesis || !window.speechSynthesis.speaking) {
+      stopSpeechKeepAlive();
+      return;
+    }
+    window.speechSynthesis.pause();
+    window.speechSynthesis.resume();
+  }, 10000);
+}
+
+function stopSpeechKeepAlive() {
+  if (speechKeepAliveTimer) {
+    clearInterval(speechKeepAliveTimer);
+    speechKeepAliveTimer = null;
+  }
+}
+
+function stopSpeaking() {
+  if (!("speechSynthesis" in window)) return;
+  stopSpeechKeepAlive();
+  window.speechSynthesis.cancel();
+  if (activeSpeakBtn) {
+    activeSpeakBtn.classList.remove("is-speaking");
+    activeSpeakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+    activeSpeakBtn.title = "Read aloud";
+    activeSpeakBtn = null;
+  }
+}
+
+function speakMessage(rawText, buttonEl = null) {
+  if (!("speechSynthesis" in window)) {
+    console.warn("Speech synthesis not supported in this browser.");
+    return;
+  }
+
+  stopSpeaking();
+
+  const speakable = cleanTextForSpeech(rawText);
+  if (!speakable) return;
+
+  if (buttonEl) {
+    activeSpeakBtn = buttonEl;
+    buttonEl.classList.add("is-speaking");
+    buttonEl.innerHTML = '<i class="fa-solid fa-stop"></i>';
+    buttonEl.title = "Stop reading";
+  }
+
+  const chunks = chunkText(speakable, 180);
+  if (chunks.length === 0) {
+    if (activeSpeakBtn) {
+      activeSpeakBtn.classList.remove("is-speaking");
+      activeSpeakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+      activeSpeakBtn = null;
+    }
+    return;
+  }
+
+  if (!preferredVoice) loadVoices();
+  startSpeechKeepAlive();
+
+  chunks.forEach((chunk, index) => {
+    const utterance = new SpeechSynthesisUtterance(chunk);
+    if (preferredVoice) utterance.voice = preferredVoice;
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+
+    const isLast = index === chunks.length - 1;
+    utterance.onend = () => {
+      if (isLast) {
+        stopSpeechKeepAlive();
+        if (activeSpeakBtn) {
+          activeSpeakBtn.classList.remove("is-speaking");
+          activeSpeakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+          activeSpeakBtn.title = "Read aloud";
+          activeSpeakBtn = null;
+        }
+      }
+    };
+    utterance.onerror = (e) => {
+      if (e.error !== "interrupted" && e.error !== "canceled") {
+        console.warn("Speech synthesis error:", e);
+      }
+      if (isLast) {
+        stopSpeechKeepAlive();
+        if (activeSpeakBtn) {
+          activeSpeakBtn.classList.remove("is-speaking");
+          activeSpeakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+          activeSpeakBtn = null;
+        }
+      }
+    };
+
+    window.speechSynthesis.speak(utterance);
+  });
+}
+
+function updateTtsToggleUi() {
+  const toggleBtns = document.querySelectorAll(
+    "#vspbot-tts-toggle, #vspbot-tts-toggle-widget",
+  );
+  toggleBtns.forEach((btn) => {
+    if (ttsEnabled) {
+      btn.classList.add("is-active");
+      btn.classList.remove("is-muted");
+      btn.title = "Voice output enabled (Click to mute)";
+      btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+    } else {
+      btn.classList.remove("is-active");
+      btn.classList.add("is-muted");
+      btn.title = "Voice output muted (Click to enable)";
+      btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+    }
+  });
+}
+
+function toggleTts() {
+  ttsEnabled = !ttsEnabled;
+  try {
+    localStorage.setItem(TTS_STORAGE_KEY, ttsEnabled ? "1" : "0");
+  } catch (_e) {}
+  if (!ttsEnabled) {
+    stopSpeaking();
+  }
+  updateTtsToggleUi();
+  setStatus(ttsEnabled ? "Voice response enabled" : "Voice response muted");
+}
+
+// Speech Recognition (Speech-to-Text)
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition || null;
+let recognition = null;
+let isRecognizing = false;
+let userUsedVoice = false;
+
+function updateMicUi(listening) {
+  const micBtns = document.querySelectorAll("#vspbot-mic-btn");
+  micBtns.forEach((btn) => {
+    if (listening) {
+      btn.classList.add("is-listening");
+      btn.title = "Listening... Click to finish & send";
+      btn.innerHTML = '<i class="fa-solid fa-stop"></i>';
+    } else {
+      btn.classList.remove("is-listening");
+      btn.title = "Speak with VSP Bot";
+      btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+    }
+  });
+}
+
+function initSpeechRecognition() {
+  if (!SpeechRecognition) return null;
+
+  const recognizer = new SpeechRecognition();
+  recognizer.continuous = false;
+  recognizer.interimResults = true;
+  recognizer.lang = navigator.language || "en-US";
+
+  recognizer.onstart = () => {
+    isRecognizing = true;
+    updateMicUi(true);
+    setStatus("Listening... Speak your prompt");
+    if (inputEl) {
+      inputEl.placeholder = "Listening... Speak now...";
+    }
+    stopSpeaking();
+  };
+
+  recognizer.onresult = (event) => {
+    let interim = "";
+    let final = "";
+
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      const trans = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        final += trans;
+      } else {
+        interim += trans;
+      }
+    }
+
+    const currentText = final || interim;
+    if (currentText && inputEl) {
+      inputEl.value = currentText;
+      inputEl.style.height = "auto";
+      inputEl.style.height = `${Math.min(Math.max(inputEl.scrollHeight, 38), 120)}px`;
+    }
+    userUsedVoice = true;
+  };
+
+  recognizer.onerror = (event) => {
+    isRecognizing = false;
+    updateMicUi(false);
+    if (inputEl) {
+      inputEl.placeholder = "Ask VSP Bot anything...";
+    }
+    if (event.error === "not-allowed" || event.error === "permission-denied") {
+      setStatus("Microphone permission blocked. Please allow mic access.");
+    } else if (event.error === "no-speech") {
+      setStatus("No speech detected. Click the mic to try again.");
+    } else {
+      console.warn("Speech recognition error:", event.error);
+    }
+  };
+
+  recognizer.onend = () => {
+    isRecognizing = false;
+    updateMicUi(false);
+    if (inputEl) {
+      inputEl.placeholder = "Ask VSP Bot anything...";
+      const captured = inputEl.value.trim();
+      if (captured) {
+        setStatus("Voice captured • Press Enter or click Send");
+      }
+    }
+  };
+
+  return recognizer;
+}
+
+function handleMicClick() {
+  if (!SpeechRecognition) {
+    setStatus(
+      "Speech recognition not supported in this browser (Chrome, Edge & Safari recommended).",
+    );
+    return;
+  }
+
+  if (isRecognizing) {
+    if (recognition) {
+      recognition.stop();
+    }
+    const text = inputEl?.value.trim();
+    if (text) {
+      sendMessage();
+    }
+  } else {
+    stopSpeaking();
+    try {
+      if (!recognition) {
+        recognition = initSpeechRecognition();
+      }
+      recognition.start();
+    } catch (e) {
+      try {
+        recognition.abort();
+        setTimeout(() => recognition.start(), 150);
+      } catch (_err) {
+        setStatus("Could not access microphone.");
+      }
+    }
+  }
+}
+
 const state = {
   wllama: null,
   modelReady: false,
@@ -171,13 +512,40 @@ function addMessage(role, content, extraClass = "") {
   return bubble;
 }
 
+function createMessageMeta(chatItem, getMessageText) {
+  if (!chatItem) return { speedEl: null, speakBtn: null };
+  const metaEl = document.createElement("div");
+  metaEl.className = "vspbot-msg-meta";
+
+  const speedEl = document.createElement("span");
+  speedEl.className = "vspbot-token-speed";
+  speedEl.textContent = "Speed: -- tok/s";
+  metaEl.appendChild(speedEl);
+
+  const speakBtn = document.createElement("button");
+  speakBtn.className = "vspbot-msg-speak-btn";
+  speakBtn.type = "button";
+  speakBtn.setAttribute("aria-label", "Read aloud");
+  speakBtn.title = "Read aloud (Speech Synthesis)";
+  speakBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+  speakBtn.style.display = "none";
+
+  speakBtn.addEventListener("click", () => {
+    if (speakBtn.classList.contains("is-speaking")) {
+      stopSpeaking();
+    } else {
+      speakMessage(getMessageText(), speakBtn);
+    }
+  });
+
+  metaEl.appendChild(speakBtn);
+  chatItem.appendChild(metaEl);
+
+  return { speedEl, speakBtn };
+}
+
 function createTokenSpeedEl(chatItem) {
-  if (!chatItem) return null;
-  const metricEl = document.createElement("div");
-  metricEl.className = "vspbot-token-speed";
-  metricEl.textContent = "Speed: -- tok/s";
-  chatItem.appendChild(metricEl);
-  return metricEl;
+  return createMessageMeta(chatItem, () => "").speedEl;
 }
 
 function buildPrompt(messages) {
@@ -358,6 +726,13 @@ async function sendMessage() {
   const text = inputEl?.value.trim();
   if (!text || !sendBtn || sendBtn.disabled) return;
 
+  if (isRecognizing && recognition) {
+    try {
+      recognition.stop();
+    } catch (_e) {}
+  }
+  stopSpeaking();
+
   if (state.cacheCheck) {
     await state.cacheCheck;
   }
@@ -375,7 +750,10 @@ async function sendMessage() {
     : "Generating response...";
   const botBubble = addMessage("assistant", preparingText);
   const botItem = botBubble.closest(".chat");
-  const speedEl = createTokenSpeedEl(botItem);
+  const { speedEl, speakBtn } = createMessageMeta(
+    botItem,
+    () => botBubble.textContent,
+  );
   let tokenCount = 0;
   let generationStart = 0;
   let firstTokenTime = 0;
@@ -442,6 +820,16 @@ async function sendMessage() {
             Math.max(0.001, (performance.now() - generationStart) / 1000);
       speedEl.textContent = `Speed: ${finalTps.toFixed(1)} tok/s | ${tokenCount} tokens | TTFT: ${ttftMs} ms`;
     }
+
+    if (speakBtn) {
+      speakBtn.style.display = "inline-flex";
+    }
+
+    // Auto-speak response if voice response is enabled or user asked with voice
+    if (ttsEnabled || userUsedVoice) {
+      speakMessage(cleanAnswer, speakBtn);
+      userUsedVoice = false;
+    }
   } catch (error) {
     console.error(error);
     botBubble.closest(".chat")?.classList.remove("thinking");
@@ -451,6 +839,7 @@ async function sendMessage() {
     if (speedEl && tokenCount === 0) {
       speedEl.textContent = "Speed: 0.0 tok/s";
     }
+    userUsedVoice = false;
   } finally {
     sendBtn.disabled = false;
     inputEl?.focus();
@@ -504,6 +893,12 @@ async function clearCachedModel() {
 
   const btn = document.getElementById("vspbot-delete-model");
   if (btn) btn.disabled = true;
+  stopSpeaking();
+  if (isRecognizing && recognition) {
+    try {
+      recognition.stop();
+    } catch (_e) {}
+  }
   setStatus("Purging cached model from browser storage...");
 
   try {
@@ -673,3 +1068,28 @@ function initMobileViewportSync() {
 }
 
 initMobileViewportSync();
+
+// Bind Voice Interaction Buttons
+document.querySelectorAll("#vspbot-mic-btn").forEach((btn) => {
+  btn.addEventListener("click", handleMicClick);
+});
+
+document
+  .querySelectorAll("#vspbot-tts-toggle, #vspbot-tts-toggle-widget")
+  .forEach((btn) => {
+    btn.addEventListener("click", toggleTts);
+  });
+updateTtsToggleUi();
+
+const welcomeSpeakBtn = document.getElementById("vspbot-welcome-speak-btn");
+if (welcomeSpeakBtn) {
+  welcomeSpeakBtn.addEventListener("click", () => {
+    if (welcomeSpeakBtn.classList.contains("is-speaking")) {
+      stopSpeaking();
+    } else {
+      const welcomeText =
+        "Hi, I'm VSP Bot, an autonomous AI assistant running locally in your browser via WebAssembly. Ask me about machine learning research, Kaggle solutions, sovereign AI, or technical projects.";
+      speakMessage(welcomeText, welcomeSpeakBtn);
+    }
+  });
+}

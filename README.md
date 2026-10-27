@@ -30,6 +30,7 @@ The website features an edge AI assistant that runs 100% locally in the user's b
 - **Quantization**: `Q4_K_M` GGUF (~379 MB)
 - **Prompt Format**: ChatML (`<|im_start|>role\ncontent<|im_end|>`)
 - **Storage**: Browser-managed CacheStorage + IndexedDB with in-app one-click cache purge
+- **Voice Interaction**: Native browser Speech Recognition (STT dictation) & Speech Synthesis (TTS voice responses with read-aloud controls)
 
 ---
 

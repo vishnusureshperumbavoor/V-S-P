@@ -1552,11 +1552,33 @@
           </button>
           <h2 style="margin: 0; font-size: 1.1rem">Chat with VSP Bot</h2>
         </div>
-        <span
-          class="fa-solid fa-xmark"
-          onclick="document.body.classList.remove('show-vspbot')"
-          style="cursor: pointer"
-        ></span>
+        <div class="d-flex align-items-center" style="gap: 8px;">
+          <button
+            id="vspbot-tts-toggle-widget"
+            class="vspbot-tray-icon-btn is-active"
+            type="button"
+            title="Voice output enabled (Click to mute)"
+            style="
+              background: rgba(0, 214, 121, 0.14);
+              border: 1px solid rgba(0, 214, 121, 0.35);
+              color: #00d679;
+              border-radius: 6px;
+              width: 28px;
+              height: 28px;
+              cursor: pointer;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+          <span
+            class="fa-solid fa-xmark"
+            onclick="document.body.classList.remove('show-vspbot')"
+            style="cursor: pointer"
+          ></span>
+        </div>
       </header>
       <ul class="chatbox" id="vspbot-chatbox">
         <li class="chat incoming">
@@ -1608,6 +1630,9 @@
           placeholder="Ask VSP Bot..."
           required
         ></textarea>
+        <button id="vspbot-mic-btn" class="vspbot-mic-btn" type="button" aria-label="Voice input (Speech Recognition)" title="Speak with VSP Bot">
+          <i class="fa-solid fa-microphone"></i>
+        </button>
         <button id="vspbot-send" type="button" aria-label="Send message">
           <span class="fa-regular fa-paper-plane"></span>
         </button>
