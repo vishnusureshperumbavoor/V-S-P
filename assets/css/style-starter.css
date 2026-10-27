@@ -10763,19 +10763,6 @@ section.w3l-grid-quote h3 {
   justify-content: center;
 }
 
-.vspbot .chat-input button#vspbot-mic-btn {
-  background: rgba(0, 214, 121, 0.15);
-  border: 1px solid rgba(0, 214, 121, 0.35);
-  color: #00d679;
-}
-
-.vspbot .chat-input button#vspbot-mic-btn.is-listening {
-  background: #ef4444;
-  border-color: #ef4444;
-  color: #ffffff;
-  animation: micPulse 1.4s infinite;
-}
-
 .vspbot .chat-input button:disabled{
   cursor:not-allowed;
   opacity:0.55;

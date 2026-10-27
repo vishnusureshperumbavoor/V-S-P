@@ -41,6 +41,9 @@
     if (path.includes("bot")) {
       return "bot";
     }
+    if (path.includes("voice")) {
+      return "voice";
+    }
     if (
       path.includes("3d-lab") ||
       path.includes("lab") ||
@@ -61,6 +64,7 @@
 
     const homeActive = active === "home" ? "active" : "";
     const botActive = active === "bot" ? "active" : "";
+    const voiceActive = active === "voice" ? "active" : "";
     const blogActive = active === "blogs" ? "active" : "";
     const labActive =
       active === "3d-lab" || active === "lab" || active === "vsp"
@@ -115,6 +119,12 @@
                   <a class="nav-link pl-0 pr-0 ${botActive}" href="${root}bot/" title="Bot" aria-label="Bot">
                     <span class="fa-solid fa-robot nav-icon"></span>
                     <span class="nav-text">Bot</span>
+                  </a>
+                </li>
+                <li class="nav-item mr-lg-4">
+                  <a class="nav-link pl-0 pr-0 ${voiceActive}" href="${root}voice.html" title="Voice AI" aria-label="Voice AI">
+                    <span class="fa-solid fa-microphone-lines nav-icon"></span>
+                    <span class="nav-text">Voice</span>
                   </a>
                 </li>
                 <li class="nav-item mr-lg-4">

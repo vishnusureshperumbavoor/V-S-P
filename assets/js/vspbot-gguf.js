@@ -193,132 +193,6 @@ function toggleTts() {
   setStatus(ttsEnabled ? "Voice response enabled" : "Voice response muted");
 }
 
-// Speech Recognition (Speech-to-Text)
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition || null;
-let recognition = null;
-let isRecognizing = false;
-let userUsedVoice = false;
-
-function updateMicUi(listening) {
-  const micBtns = document.querySelectorAll("#vspbot-mic-btn");
-  micBtns.forEach((btn) => {
-    if (listening) {
-      btn.classList.add("is-listening");
-      btn.title = "Listening... Click to finish & send";
-      btn.innerHTML = '<i class="fa-solid fa-stop"></i>';
-    } else {
-      btn.classList.remove("is-listening");
-      btn.title = "Speak with VSP Bot";
-      btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-    }
-  });
-}
-
-function initSpeechRecognition() {
-  if (!SpeechRecognition) return null;
-
-  const recognizer = new SpeechRecognition();
-  recognizer.continuous = false;
-  recognizer.interimResults = true;
-  recognizer.lang = navigator.language || "en-US";
-
-  recognizer.onstart = () => {
-    isRecognizing = true;
-    updateMicUi(true);
-    setStatus("Listening... Speak your prompt");
-    if (inputEl) {
-      inputEl.placeholder = "Listening... Speak now...";
-    }
-    stopSpeaking();
-  };
-
-  recognizer.onresult = (event) => {
-    let interim = "";
-    let final = "";
-
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      const trans = event.results[i][0].transcript;
-      if (event.results[i].isFinal) {
-        final += trans;
-      } else {
-        interim += trans;
-      }
-    }
-
-    const currentText = final || interim;
-    if (currentText && inputEl) {
-      inputEl.value = currentText;
-      inputEl.style.height = "auto";
-      inputEl.style.height = `${Math.min(Math.max(inputEl.scrollHeight, 38), 120)}px`;
-    }
-    userUsedVoice = true;
-  };
-
-  recognizer.onerror = (event) => {
-    isRecognizing = false;
-    updateMicUi(false);
-    if (inputEl) {
-      inputEl.placeholder = "Ask VSP Bot anything...";
-    }
-    if (event.error === "not-allowed" || event.error === "permission-denied") {
-      setStatus("Microphone permission blocked. Please allow mic access.");
-    } else if (event.error === "no-speech") {
-      setStatus("No speech detected. Click the mic to try again.");
-    } else {
-      console.warn("Speech recognition error:", event.error);
-    }
-  };
-
-  recognizer.onend = () => {
-    isRecognizing = false;
-    updateMicUi(false);
-    if (inputEl) {
-      inputEl.placeholder = "Ask VSP Bot anything...";
-      const captured = inputEl.value.trim();
-      if (captured) {
-        setStatus("Voice captured • Press Enter or click Send");
-      }
-    }
-  };
-
-  return recognizer;
-}
-
-function handleMicClick() {
-  if (!SpeechRecognition) {
-    setStatus(
-      "Speech recognition not supported in this browser (Chrome, Edge & Safari recommended).",
-    );
-    return;
-  }
-
-  if (isRecognizing) {
-    if (recognition) {
-      recognition.stop();
-    }
-    const text = inputEl?.value.trim();
-    if (text) {
-      sendMessage();
-    }
-  } else {
-    stopSpeaking();
-    try {
-      if (!recognition) {
-        recognition = initSpeechRecognition();
-      }
-      recognition.start();
-    } catch (e) {
-      try {
-        recognition.abort();
-        setTimeout(() => recognition.start(), 150);
-      } catch (_err) {
-        setStatus("Could not access microphone.");
-      }
-    }
-  }
-}
-
 const state = {
   wllama: null,
   modelReady: false,
@@ -667,11 +541,6 @@ async function sendMessage() {
   const text = inputEl?.value.trim();
   if (!text || !sendBtn || sendBtn.disabled) return;
 
-  if (isRecognizing && recognition) {
-    try {
-      recognition.stop();
-    } catch (_e) {}
-  }
   stopSpeaking();
 
   if (state.cacheCheck) {
@@ -759,10 +628,9 @@ async function sendMessage() {
       speedEl.textContent = `Speed: ${finalTps.toFixed(1)} tok/s | ${tokenCount} tokens | TTFT: ${ttftMs} ms`;
     }
 
-    // Auto-speak response if voice response is enabled or user asked with voice
-    if (ttsEnabled || userUsedVoice) {
+    // Auto-speak response if voice output (TTS) is enabled
+    if (ttsEnabled) {
       speakMessage(cleanAnswer);
-      userUsedVoice = false;
     }
   } catch (error) {
     console.error(error);
@@ -773,7 +641,6 @@ async function sendMessage() {
     if (speedEl && tokenCount === 0) {
       speedEl.textContent = "Speed: 0.0 tok/s";
     }
-    userUsedVoice = false;
   } finally {
     sendBtn.disabled = false;
     inputEl?.focus();
@@ -1003,11 +870,7 @@ function initMobileViewportSync() {
 
 initMobileViewportSync();
 
-// Bind Voice Interaction Buttons
-document.querySelectorAll("#vspbot-mic-btn").forEach((btn) => {
-  btn.addEventListener("click", handleMicClick);
-});
-
+// Bind TTS Toggle Button
 document
   .querySelectorAll("#vspbot-tts-toggle, #vspbot-tts-toggle-widget")
   .forEach((btn) => {

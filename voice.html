@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, interactive-widget=resizes-content" />
+
+  <!-- Primary Meta Tags -->
+  <title>VSP Voice Bot | Conversational Voice Assistant</title>
+  <meta name="title" content="VSP Voice Bot | Conversational Voice Assistant" />
+  <meta name="description" content="Talk hands-free with VSP Voice Bot, an intelligent in-browser voice assistant by Vishnu Suresh Perumbavoor." />
+
+  <!-- Open Graph / Social Cards -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VSP Voice Bot" />
+  <meta property="og:url" content="https://vishnusureshperumbavoor.github.io/V-S-P/voice.html" />
+  <meta property="og:title" content="VSP Voice Bot | Conversational Voice Assistant" />
+  <meta property="og:description" content="Talk hands-free with VSP Voice Bot, an intelligent in-browser voice assistant by Vishnu Suresh Perumbavoor." />
+  <meta property="og:image" content="https://vishnusureshperumbavoor.github.io/V-S-P/assets/images/vsp3.jpeg" />
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@vspeeeeee" />
+  <meta name="twitter:title" content="VSP Voice Bot | Conversational Voice Assistant" />
+  <meta name="twitter:description" content="Talk hands-free with VSP Voice Bot, an intelligent in-browser voice assistant by Vishnu Suresh Perumbavoor." />
+  <meta name="twitter:image" content="https://vishnusureshperumbavoor.github.io/V-S-P/assets/images/vsp3.jpeg" />
+
+  <link rel="icon" href="assets/images/vsp3.jpeg" type="image/png" />
+
+  <!-- Google fonts -->
+  <link href="//fonts.googleapis.com/css?family=Nunito:400,600,700,800,900&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Base Theme & Voice Agent CSS -->
+  <link rel="stylesheet" href="assets/css/style-starter.css" />
+  <link rel="stylesheet" href="assets/css/voice-agent.css?v=1.0" />
+</head>
+
+<body class="vsp-voice-page">
+  <!-- Ambient Cosmic Glows -->
+  <div class="voice-ambient-bg" aria-hidden="true">
+    <div class="voice-glow-1"></div>
+    <div class="voice-glow-2"></div>
+  </div>
+
+  <!-- Shared Global Navigation Topbar Header -->
+  <header id="vsp-header"></header>
+
+  <!-- Main Voice App Container -->
+  <main class="voice-app-wrap">
+
+    <!-- Top HUD Branding -->
+    <div class="voice-hud-header">
+      <h1 class="voice-title">VSP Voice Bot</h1>
+    </div>
+
+    <!-- Central Interactive Holographic Voice Orb Area -->
+    <div class="voice-stage-container state-idle" id="voice-stage">
+      <div class="voice-orb-wrapper">
+        <canvas id="voice-canvas" class="voice-canvas"></canvas>
+        <div class="voice-ring voice-ring-1" aria-hidden="true"></div>
+        <div class="voice-ring voice-ring-2" aria-hidden="true"></div>
+        <div class="voice-ring voice-ring-3" aria-hidden="true"></div>
+        
+        <button id="voice-orb" class="voice-orb" type="button" aria-label="Toggle voice session" title="Voice">
+          <i class="fa-solid fa-microphone"></i>
+        </button>
+      </div>
+
+      <!-- State Pill -->
+      <div class="voice-status-pill" id="voice-status-pill" aria-live="polite">
+        <span class="voice-status-dot"></span>
+        <span id="voice-status-text">Ready</span>
+      </div>
+    </div>
+
+    <!-- Live Transcript Glass Card -->
+    <div class="voice-transcript-card" id="voice-transcript-card" aria-live="polite"></div>
+
+  </main>
+
+  <script src="assets/js/nav-footer.js"></script>
+  <script src="assets/js/voice-agent.js?v=1.0"></script>
+</body>
+
+</html>
