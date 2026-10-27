@@ -51,6 +51,7 @@
   // State
   let currentTrackIdx = 0;
   let isPlaying = false;
+  let isPlayerMinimized = false;
   let isShuffle = false;
   let repeatMode = 1; // 0: off, 1: all, 2: one (default: loop all songs)
   let currentVolume = 0.85;
@@ -113,10 +114,17 @@
       heroCover: document.getElementById("sp-hero-cover"),
       heroTitle: document.getElementById("sp-hero-title"),
       // Player Bar elements
+      playerBar: document.getElementById("sp-player-bar"),
       barThumb: document.getElementById("sp-bar-thumb"),
       barTitle: document.getElementById("sp-bar-title"),
       barArtist: document.getElementById("sp-bar-artist"),
       barShareBtn: document.getElementById("sp-bar-share-btn"),
+      btnMinimize: document.getElementById("sp-btn-minimize"),
+      btnMobMinimize: document.getElementById("sp-btn-mob-minimize"),
+      pillPlayPause: document.getElementById("sp-btn-pill-playpause"),
+      pillPlayIcon: document.getElementById("sp-pill-play-icon"),
+      pillExpand: document.getElementById("sp-btn-pill-expand"),
+      pillClose: document.getElementById("sp-btn-pill-close"),
       // Controls
       btnPlayPause: document.getElementById("sp-btn-playpause"),
       playPauseIcon: document.getElementById("sp-playpause-icon"),
@@ -351,6 +359,145 @@
   }
   window.vspShowAlbumView = showAlbumView;
 
+  // Minimize / Expand Bottom Player Bar into floating mini-pill
+  function setPlayerMinimized(minimized) {
+    isPlayerMinimized = !!minimized;
+    const bar = dom.playerBar || document.getElementById("sp-player-bar");
+    if (bar) {
+      bar.classList.toggle("sp-minimized", isPlayerMinimized);
+    }
+    document.body.classList.toggle("sp-player-minimized", isPlayerMinimized);
+
+    const minIcon = dom.btnMinimize
+      ? dom.btnMinimize.querySelector("i")
+      : document.getElementById("sp-minimize-icon");
+    if (minIcon) {
+      minIcon.className = isPlayerMinimized
+        ? "fa-solid fa-chevron-up"
+        : "fa-solid fa-chevron-down";
+    }
+    const mobMinIcon = dom.btnMobMinimize
+      ? dom.btnMobMinimize.querySelector("i")
+      : document.getElementById("sp-mob-minimize-icon");
+    if (mobMinIcon) {
+      mobMinIcon.className = isPlayerMinimized
+        ? "fa-solid fa-chevron-up"
+        : "fa-solid fa-chevron-down";
+    }
+  }
+
+  function togglePlayerMinimized() {
+    setPlayerMinimized(!isPlayerMinimized);
+  }
+
+  // Native MediaSession API Integration (Supports OS lock screens, notifications, & laptop browser controls)
+  function setupMediaSession() {
+    if (!("mediaSession" in navigator)) return;
+    const handlers = [
+      ["play", () => playAudio()],
+      ["pause", () => pauseAudio()],
+      ["previoustrack", () => prevTrack()],
+      ["nexttrack", () => nextTrack()],
+      [
+        "seekto",
+        (details) => {
+          if (details.fastSeek && "fastSeek" in audio) {
+            audio.fastSeek(details.seekTime);
+            return;
+          }
+          if (typeof details.seekTime === "number" && !isNaN(details.seekTime)) {
+            audio.currentTime = details.seekTime;
+            updateMediaSessionPosition();
+          }
+        },
+      ],
+      [
+        "seekbackward",
+        (details) => {
+          const skipTime = details.seekOffset || 10;
+          audio.currentTime = Math.max(audio.currentTime - skipTime, 0);
+          updateMediaSessionPosition();
+        },
+      ],
+      [
+        "seekforward",
+        (details) => {
+          const skipTime = details.seekOffset || 10;
+          audio.currentTime = Math.min(
+            audio.currentTime + skipTime,
+            audio.duration || 0,
+          );
+          updateMediaSessionPosition();
+        },
+      ],
+      [
+        "stop",
+        () => {
+          pauseAudio();
+          audio.currentTime = 0;
+        },
+      ],
+    ];
+
+    handlers.forEach(([action, handler]) => {
+      try {
+        navigator.mediaSession.setActionHandler(action, handler);
+      } catch (e) {
+        // Some actions might not be supported across all browsers
+      }
+    });
+  }
+
+  function updateMediaSessionMetadata(track) {
+    if (!("mediaSession" in navigator) || !track) return;
+    try {
+      const fullCoverUrl = new URL(track.cover, window.location.href).href;
+
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: track.title,
+        artist: track.artist,
+        album: track.album || "Self Mass",
+        artwork: [
+          { src: fullCoverUrl, sizes: "96x96", type: "image/jpeg" },
+          { src: fullCoverUrl, sizes: "128x128", type: "image/jpeg" },
+          { src: fullCoverUrl, sizes: "192x192", type: "image/jpeg" },
+          { src: fullCoverUrl, sizes: "256x256", type: "image/jpeg" },
+          { src: fullCoverUrl, sizes: "512x512", type: "image/jpeg" },
+        ],
+      });
+    } catch (e) {
+      console.debug("MediaSession metadata update ignored:", e);
+    }
+  }
+
+  function updateMediaSessionPlaybackState(state) {
+    if (!("mediaSession" in navigator)) return;
+    try {
+      navigator.mediaSession.playbackState = state;
+    } catch (e) {}
+  }
+
+  function updateMediaSessionPosition() {
+    if (
+      !("mediaSession" in navigator) ||
+      !navigator.mediaSession.setPositionState
+    )
+      return;
+    try {
+      if (
+        audio.duration &&
+        !isNaN(audio.duration) &&
+        isFinite(audio.duration)
+      ) {
+        navigator.mediaSession.setPositionState({
+          duration: audio.duration,
+          playbackRate: audio.playbackRate || 1,
+          position: Math.min(Math.max(audio.currentTime, 0), audio.duration),
+        });
+      }
+    } catch (e) {}
+  }
+
   // Load a track into the player
   function loadTrack(index, autoplay = false) {
     if (index < 0 || index >= TRACKS.length) return;
@@ -384,6 +531,10 @@
     // Update Active Row in Table
     updateTableActiveRow();
 
+    // Sync Native MediaSession
+    updateMediaSessionMetadata(track);
+    updateMediaSessionPlaybackState(autoplay ? "playing" : "paused");
+
     if (autoplay) {
       autoplayPending = true;
       window.addEventListener("click", unlockAudio, true);
@@ -407,6 +558,8 @@
           autoplayPending = false;
           updatePlayPauseUI(true);
           startVisualizer();
+          updateMediaSessionPlaybackState("playing");
+          updateMediaSessionPosition();
         })
         .catch((err) => {
           console.warn(
@@ -415,6 +568,7 @@
           );
           isPlaying = false;
           updatePlayPauseUI(false);
+          updateMediaSessionPlaybackState("paused");
         });
     }
   }
@@ -424,6 +578,7 @@
     audio.pause();
     isPlaying = false;
     updatePlayPauseUI(false);
+    updateMediaSessionPlaybackState("paused");
   }
 
   // Toggle Play / Pause
@@ -446,6 +601,15 @@
     // Mobile bottom bar button
     if (dom.mobPlayIcon) {
       dom.mobPlayIcon.className = playIconClass;
+    }
+    // Floating mini-pill play button
+    if (dom.pillPlayIcon) {
+      dom.pillPlayIcon.className = playIconClass;
+    }
+    // Bottom bar element class
+    const bar = dom.playerBar || document.getElementById("sp-player-bar");
+    if (bar) {
+      bar.classList.toggle("is-playing", playing);
     }
     // Hero big button
     if (dom.heroPlayIcon) {
@@ -604,6 +768,8 @@
       if (dom.singleScrubberThumb) dom.singleScrubberThumb.style.left = `${pct}%`;
       if (dom.singleTimeCur)
         dom.singleTimeCur.textContent = formatTime(current);
+
+      updateMediaSessionPosition();
     }
   });
 
@@ -615,6 +781,7 @@
     if (dom.singleTimeTotal && audio.duration) {
       dom.singleTimeTotal.textContent = formatTime(audio.duration);
     }
+    updateMediaSessionPosition();
   });
 
   // Progress Bar Seek Controls
@@ -1558,19 +1725,56 @@
       });
     }
 
-    // Bottom bar thumbnail & title click to open single view
+    // Bottom bar thumbnail & title click to open single view (or expand if minimized)
     if (dom.barThumb) {
       dom.barThumb.style.cursor = "pointer";
       dom.barThumb.addEventListener("click", () => {
+        if (isPlayerMinimized) {
+          setPlayerMinimized(false);
+          return;
+        }
         showSingleView(currentTrackIdx, true);
       });
     }
     if (dom.barTitle) {
       dom.barTitle.style.cursor = "pointer";
       dom.barTitle.addEventListener("click", () => {
+        if (isPlayerMinimized) {
+          setPlayerMinimized(false);
+          return;
+        }
         showSingleView(currentTrackIdx, true);
       });
     }
+
+    // Minimize / Expand buttons
+    if (dom.btnMinimize) {
+      dom.btnMinimize.addEventListener("click", () => togglePlayerMinimized());
+    }
+    if (dom.btnMobMinimize) {
+      dom.btnMobMinimize.addEventListener("click", () => togglePlayerMinimized());
+    }
+    if (dom.pillExpand) {
+      dom.pillExpand.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setPlayerMinimized(false);
+      });
+    }
+    if (dom.pillPlayPause) {
+      dom.pillPlayPause.addEventListener("click", (e) => {
+        e.stopPropagation();
+        togglePlayPause();
+      });
+    }
+    if (dom.pillClose) {
+      dom.pillClose.addEventListener("click", (e) => {
+        e.stopPropagation();
+        pauseAudio();
+        showToast("Audio Paused");
+      });
+    }
+
+    setupMediaSession();
 
     // Table rows click to play and open single view
     const rows = document.querySelectorAll(".sp-row");
@@ -1813,6 +2017,7 @@
       if (appContainer) appContainer.style.display = "";
       if (footer) footer.style.display = "";
       document.body.classList.remove("sp-in-viewport");
+      setPlayerMinimized(false);
       document.title = "Songs & Music | Vishnu Suresh Perumbavoor (VSP)";
       if (pushToHistory) {
         window.history.pushState(
@@ -1830,6 +2035,7 @@
     if (footer) footer.style.display = "none";
     if (viewportContainer) viewportContainer.style.display = "block";
     document.body.classList.add("sp-in-viewport");
+    setPlayerMinimized(true);
 
     const iframeTarget = targetUrl;
     if (iframe) {
