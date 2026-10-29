@@ -55,14 +55,14 @@
     <!-- Top HUD Branding & Model Status Indicator -->
     <div class="voice-hud-header">
       <h1 class="voice-title">VSP Voice Bot</h1>
-      <div class="voice-status-pill state-ready" id="voice-status-pill" aria-live="polite">
+      <div class="voice-status-pill state-listening" id="voice-status-pill" aria-live="polite">
         <span class="voice-status-dot"></span>
-        <span id="voice-status-text">AI Model Ready</span>
+        <span id="voice-status-text">Listening... Speak now</span>
       </div>
     </div>
 
     <!-- Central Interactive Holographic Voice Orb Area -->
-    <div class="voice-stage-container state-idle" id="voice-stage">
+    <div class="voice-stage-container state-listening" id="voice-stage">
       <div class="voice-orb-wrapper">
         <canvas id="voice-canvas" class="voice-canvas"></canvas>
         <div class="voice-ring voice-ring-1" aria-hidden="true"></div>
@@ -77,16 +77,16 @@
 
     <!-- Live Bottom Caption Dock (Fixed height, only live text, never expands page) -->
     <div class="voice-live-bottom-dock">
-      <div class="voice-live-caption-card" id="voice-live-card" aria-live="polite">
-        <span class="voice-live-badge badge-ready" id="voice-live-badge"><i class="fa-solid fa-microphone"></i></span>
-        <p class="voice-live-text" id="voice-live-text">Tap the orb to start conversation</p>
+      <div class="voice-live-caption-card active-user" id="voice-live-card" aria-live="polite">
+        <span class="voice-live-badge badge-user" id="voice-live-badge"><i class="fa-solid fa-microphone"></i></span>
+        <p class="voice-live-text text-user" id="voice-live-text">Listening to your voice... (speak now)</p>
       </div>
     </div>
 
   </main>
 
   <script src="assets/js/nav-footer.js"></script>
-  <script src="assets/js/voice-agent.js?v=2.0"></script>
+  <script src="assets/js/voice-agent.js?v=2.2"></script>
 </body>
 
 </html>

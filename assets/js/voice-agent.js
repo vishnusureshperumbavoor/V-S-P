@@ -35,6 +35,9 @@
   let animFrameId = null;
   let speechEnergy = 0;
   let lastCapturedText = "";
+  let speechGenId = 0;
+  let speechWatchdog = null;
+  const activeUtterances = [];
 
   // Radial Spectrum Visualizer Configuration
   const NUM_BARS = 48;
@@ -478,38 +481,74 @@
 
     // Natural processing pause
     await new Promise((r) => setTimeout(r, 400));
+    if (!sessionActive) return;
 
     const answer = getKnowledgeResponse(userQuery);
     speakMessage(answer);
   }
 
   // Speech Synthesis
+  function clearSpeechWatchdog() {
+    if (speechWatchdog) {
+      clearInterval(speechWatchdog);
+      speechWatchdog = null;
+    }
+  }
+
   function stopSpeaking() {
+    speechGenId++;
+    clearSpeechWatchdog();
+    activeUtterances.length = 0;
     if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+      window.speechSynthesis.cancel();
+    }
     if (currentState === "speaking") {
       setState("idle");
     }
   }
 
-  function speakMessage(text) {
-    if (!("speechSynthesis" in window)) {
+  function finishSpeakingAndListen(genId) {
+    if (genId !== speechGenId) return;
+    speechGenId++;
+    clearSpeechWatchdog();
+    activeUtterances.length = 0;
+
+    if (sessionActive) {
+      // Transition out of "speaking" immediately so UI is ready and turn-taking proceeds
+      setState("listening", "Listening... Speak now");
+      setLiveCaption("user", "Listening to your voice... (speak now)");
+      setTimeout(() => {
+        if (sessionActive && currentState !== "speaking" && currentState !== "thinking") {
+          startListening();
+        }
+      }, 250);
+    } else {
       setState("idle");
       setLiveCaption("ready", "AI Model ready • Tap orb to talk");
-      return;
     }
+  }
 
-    stopSpeaking();
-    setState("speaking", "AI Model Speaking...");
-
-    const clean = cleanForSpeech(text);
-    if (!clean) {
+  function speakMessage(text) {
+    if (!("speechSynthesis" in window)) {
       if (sessionActive) {
+        setState("listening", "Listening... Speak now");
+        setLiveCaption("user", "Listening to your voice... (speak now)");
         startListening();
       } else {
         setState("idle");
         setLiveCaption("ready", "AI Model ready • Tap orb to talk");
       }
+      return;
+    }
+
+    stopSpeaking();
+    const myGenId = ++speechGenId;
+    setState("speaking", "AI Model Speaking...");
+
+    const clean = cleanForSpeech(text);
+    if (!clean) {
+      finishSpeakingAndListen(myGenId);
       return;
     }
 
@@ -518,19 +557,21 @@
     const valid = sentences.map((s) => s.trim()).filter((s) => s.length > 0);
 
     if (valid.length === 0) {
-      if (sessionActive) {
-        startListening();
-      } else {
-        setState("idle");
-        setLiveCaption("ready", "AI Model ready • Tap orb to talk");
-      }
+      finishSpeakingAndListen(myGenId);
       return;
     }
 
     if (!preferredVoice) initVoices();
+    setLiveCaption("ai", valid[0]);
+
+    let hasStartedSpeaking = false;
+    const startTime = Date.now();
 
     valid.forEach((sentence, idx) => {
       const utter = new SpeechSynthesisUtterance(sentence);
+      // Keep reference in module array to prevent browser GC from dropping onend events
+      activeUtterances.push(utter);
+
       if (preferredVoice) utter.voice = preferredVoice;
       utter.rate = 1.02;
       utter.pitch = 1.0;
@@ -538,44 +579,46 @@
       const isLast = idx === valid.length - 1;
 
       utter.onstart = () => {
+        if (myGenId !== speechGenId) return;
+        hasStartedSpeaking = true;
         // Live text displays strictly the current sentence being spoken!
         setLiveCaption("ai", sentence);
       };
 
       utter.onend = () => {
         if (isLast) {
-          // Automatic Turn-Taking: seamlessly resume listening when speech finishes!
-          if (sessionActive) {
-            setTimeout(() => {
-              if (sessionActive && currentState !== "speaking" && currentState !== "thinking") {
-                startListening();
-                setLiveCaption("ready", "Listening... (Speak your next question)");
-              }
-            }, 300);
-          } else {
-            setState("idle");
-            setLiveCaption("ready", "AI Model ready • Tap orb to talk");
-          }
+          finishSpeakingAndListen(myGenId);
         }
       };
 
-      utter.onerror = () => {
+      utter.onerror = (e) => {
+        if (e && (e.error === "canceled" || e.error === "interrupted")) {
+          return;
+        }
         if (isLast) {
-          if (sessionActive) {
-            setTimeout(() => {
-              if (sessionActive && currentState !== "speaking" && currentState !== "thinking") {
-                startListening();
-              }
-            }, 300);
-          } else {
-            setState("idle");
-            setLiveCaption("ready", "AI Model ready • Tap orb to talk");
-          }
+          finishSpeakingAndListen(myGenId);
         }
       };
 
       window.speechSynthesis.speak(utter);
     });
+
+    // Watchdog: handles Chromium pause bug & ensures turn-taking even if browser drops onend
+    speechWatchdog = setInterval(() => {
+      if (myGenId !== speechGenId || currentState !== "speaking") {
+        clearSpeechWatchdog();
+        return;
+      }
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      const isBusy = window.speechSynthesis.speaking || window.speechSynthesis.pending;
+      if (isBusy) {
+        hasStartedSpeaking = true;
+      } else if (hasStartedSpeaking || Date.now() - startTime > 1500) {
+        finishSpeakingAndListen(myGenId);
+      }
+    }, 250);
   }
 
   // Hands-Free Listening Manager
@@ -621,7 +664,7 @@
     // Set up Web Audio in background without blocking recognition
     setupAudioContext().catch((err) => console.warn(err));
 
-    if (sessionActive) {
+    if (sessionActive && (isRecognizing || currentState === "speaking" || currentState === "thinking")) {
       // User tapped orb while active -> pause/stop session
       stopSession();
     } else {
@@ -636,8 +679,16 @@
     orbEl.addEventListener("click", toggleVoiceSession);
   }
 
-  // Initialize
+  // Initialize & auto-start listening on initial page load
   initVisualizer();
-  setState("idle", "AI Model Ready");
-  setLiveCaption("ready", "AI Model ready • Tap orb to start conversation");
+  if (SpeechRecognition) {
+    sessionActive = true;
+    setState("listening", "Listening... Speak now");
+    setLiveCaption("user", "Listening to your voice... (speak now)");
+    setupAudioContext().catch((err) => console.warn(err));
+    startListening();
+  } else {
+    setState("idle", "AI Model Ready");
+    setLiveCaption("ready", "AI Model ready • Tap orb to start conversation");
+  }
 })();
