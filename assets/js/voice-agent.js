@@ -48,26 +48,68 @@
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
+  // Select best available natural male voice (reflecting VSP)
+  function findMaleVoice(voices) {
+    if (!voices || voices.length === 0) return null;
+
+    const englishVoices = voices.filter((v) => v.lang && v.lang.startsWith("en"));
+    const pool = englishVoices.length > 0 ? englishVoices : voices;
+
+    const femaleKeywords = [
+      "female", "woman", "girl", "samantha", "victoria", "karen", "zira",
+      "jenny", "aria", "sonia", "hazel", "susan", "catherine", "linda",
+      "heather", "elena", "heera", "neerja", "veena", "fiona", "moira",
+      "tessa", "alice", "ava", "emma", "serena", "stephanie", "zoe"
+    ];
+
+    const isFemale = (v) => {
+      const name = (v.name || "").toLowerCase();
+      if (name === "google us english" || name.includes("google uk english female")) {
+        return true;
+      }
+      return femaleKeywords.some((kw) => name.includes(kw));
+    };
+
+    const topMaleKeywords = [
+      "rishi", "prabhat", "madhur", "mohan",
+      "google uk english male", "google us english male", "male",
+      "guy", "ryan", "christopher", "andrew", "brian", "eric", "steffan",
+      "daniel", "alex", "david", "mark", "george", "james", "oliver",
+      "arthur", "aaron", "nathan", "tom"
+    ];
+
+    // Priority 1: Indian English Male voices (Rishi, Prabhat, etc.)
+    for (const kw of ["rishi", "prabhat", "madhur", "mohan"]) {
+      const match = pool.find((v) => !isFemale(v) && v.name.toLowerCase().includes(kw));
+      if (match) return match;
+    }
+
+    // Priority 2: High-quality Natural male voices
+    for (const kw of topMaleKeywords) {
+      const match = pool.find((v) => !isFemale(v) && v.name.toLowerCase().includes(kw) && v.name.includes("Natural"));
+      if (match) return match;
+    }
+
+    // Priority 3: Any recognized male voice
+    for (const kw of topMaleKeywords) {
+      const match = pool.find((v) => !isFemale(v) && v.name.toLowerCase().includes(kw));
+      if (match) return match;
+    }
+
+    // Priority 4: Non-female voice
+    const nonFemale = pool.find((v) => !isFemale(v));
+    if (nonFemale) return nonFemale;
+
+    return pool[0];
+  }
+
   // Initialize Speech Synthesis Voices
   function initVoices() {
     if (!("speechSynthesis" in window)) return;
     const voices = window.speechSynthesis.getVoices();
     if (!voices || voices.length === 0) return;
 
-    preferredVoice =
-      voices.find(
-        (v) =>
-          v.lang.startsWith("en") &&
-          (v.name.includes("Natural") ||
-            v.name.includes("Google") ||
-            v.name.includes("Samantha") ||
-            v.name.includes("Premium") ||
-            v.name.includes("Enhanced") ||
-            v.name.includes("Daniel") ||
-            v.name.includes("Karen")),
-      ) ||
-      voices.find((v) => v.lang.startsWith("en")) ||
-      voices[0];
+    preferredVoice = findMaleVoice(voices);
   }
 
   if ("speechSynthesis" in window) {
@@ -107,12 +149,20 @@
     if (orbEl) {
       if (state === "listening") {
         orbEl.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+        orbEl.title = "Listening (Tap to stop)";
+        orbEl.setAttribute("aria-label", "Stop voice session");
       } else if (state === "thinking") {
         orbEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+        orbEl.title = "Thinking (Tap to stop)";
+        orbEl.setAttribute("aria-label", "Stop voice session");
       } else if (state === "speaking") {
         orbEl.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+        orbEl.title = "Speaking (Tap to stop)";
+        orbEl.setAttribute("aria-label", "Stop speaking");
       } else {
         orbEl.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+        orbEl.title = "Click to speak";
+        orbEl.setAttribute("aria-label", "Start voice conversation");
       }
     }
 
@@ -411,6 +461,11 @@
 
     rec.onend = () => {
       isRecognizing = false;
+      if (!sessionActive) {
+        setState("idle");
+        setLiveCaption("ready", "AI Model ready • Tap orb to start conversation");
+        return;
+      }
       if (lastCapturedText && lastCapturedText.trim().length > 0) {
         const query = lastCapturedText.trim();
         lastCapturedText = "";
@@ -424,7 +479,7 @@
         }, 300);
       } else {
         setState("idle");
-        setLiveCaption("ready", "AI Model ready • Tap orb to talk");
+        setLiveCaption("ready", "AI Model ready • Tap orb to start conversation");
       }
     };
 
@@ -476,6 +531,7 @@
 
   // Handle Response & Speak
   async function handleAgentResponse(userQuery) {
+    if (!sessionActive) return;
     setState("thinking", "AI Model Thinking...");
     setLiveCaption("thinking", "Processing your question...");
 
@@ -484,6 +540,7 @@
     if (!sessionActive) return;
 
     const answer = getKnowledgeResponse(userQuery);
+    if (!sessionActive) return;
     speakMessage(answer);
   }
 
@@ -499,9 +556,10 @@
     speechGenId++;
     clearSpeechWatchdog();
     activeUtterances.length = 0;
-    if (!("speechSynthesis" in window)) return;
-    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-      window.speechSynthesis.cancel();
+    if ("speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch (_) {}
     }
     if (currentState === "speaking") {
       setState("idle");
@@ -525,11 +583,13 @@
       }, 250);
     } else {
       setState("idle");
-      setLiveCaption("ready", "AI Model ready • Tap orb to talk");
+      setLiveCaption("ready", "AI Model ready • Tap orb to start conversation");
     }
   }
 
   function speakMessage(text) {
+    if (!sessionActive) return;
+
     if (!("speechSynthesis" in window)) {
       if (sessionActive) {
         setState("listening", "Listening... Speak now");
@@ -537,12 +597,13 @@
         startListening();
       } else {
         setState("idle");
-        setLiveCaption("ready", "AI Model ready • Tap orb to talk");
+        setLiveCaption("ready", "AI Model ready • Tap orb to start conversation");
       }
       return;
     }
 
     stopSpeaking();
+    if (!sessionActive) return;
     const myGenId = ++speechGenId;
     setState("speaking", "AI Model Speaking...");
 
@@ -574,18 +635,19 @@
 
       if (preferredVoice) utter.voice = preferredVoice;
       utter.rate = 1.02;
-      utter.pitch = 1.0;
+      utter.pitch = 0.94;
 
       const isLast = idx === valid.length - 1;
 
       utter.onstart = () => {
-        if (myGenId !== speechGenId) return;
+        if (myGenId !== speechGenId || !sessionActive) return;
         hasStartedSpeaking = true;
         // Live text displays strictly the current sentence being spoken!
         setLiveCaption("ai", sentence);
       };
 
       utter.onend = () => {
+        if (myGenId !== speechGenId || !sessionActive) return;
         if (isLast) {
           finishSpeakingAndListen(myGenId);
         }
@@ -595,6 +657,7 @@
         if (e && (e.error === "canceled" || e.error === "interrupted")) {
           return;
         }
+        if (myGenId !== speechGenId || !sessionActive) return;
         if (isLast) {
           finishSpeakingAndListen(myGenId);
         }
@@ -605,7 +668,7 @@
 
     // Watchdog: handles Chromium pause bug & ensures turn-taking even if browser drops onend
     speechWatchdog = setInterval(() => {
-      if (myGenId !== speechGenId || currentState !== "speaking") {
+      if (myGenId !== speechGenId || currentState !== "speaking" || !sessionActive) {
         clearSpeechWatchdog();
         return;
       }
@@ -623,7 +686,7 @@
 
   // Hands-Free Listening Manager
   function startListening() {
-    if (!SpeechRecognition) return;
+    if (!sessionActive || !SpeechRecognition) return;
     if (currentState === "speaking") {
       stopSpeaking();
     }
@@ -638,7 +701,7 @@
       try {
         recognition.abort();
         setTimeout(() => {
-          if (sessionActive) recognition.start();
+          if (sessionActive && !isRecognizing) recognition.start();
         }, 150);
       } catch (_err) {}
     }
@@ -646,49 +709,75 @@
 
   function stopSession() {
     sessionActive = false;
+    lastCapturedText = "";
+    
+    // Stop any in-progress speech synthesis immediately
     stopSpeaking();
-    if (isRecognizing && recognition) {
-      recognition.stop();
+    
+    // Abort recognition immediately to drop pending audio buffers
+    if (recognition) {
+      try {
+        recognition.abort();
+      } catch (_) {}
     }
-    setState("idle");
-    setLiveCaption("ready", "AI Model ready • Tap orb to talk");
+    isRecognizing = false;
+    speechEnergy = 0;
+    
+    setState("idle", "AI Model Ready");
+    setLiveCaption("ready", "AI Model ready • Tap orb to start conversation");
   }
 
-  // Toggle Voice Input Session via Orb
-  async function toggleVoiceSession() {
+  // Toggle Voice Input Session via Orb / Voice UI
+  function toggleVoiceSession(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     if (!SpeechRecognition) {
       alert("Speech Recognition is not supported by your browser. Please use Chrome, Edge, or Safari.");
       return;
     }
 
-    // Set up Web Audio in background without blocking recognition
-    setupAudioContext().catch((err) => console.warn(err));
-
-    if (sessionActive && (isRecognizing || currentState === "speaking" || currentState === "thinking")) {
-      // User tapped orb while active -> pause/stop session
+    if (sessionActive) {
+      // User tapped voice UI while active -> IMMEDIATELY stop everything
       stopSession();
     } else {
-      // User tapped orb to start -> begin continuous hands-free session
+      // User tapped voice UI while idle -> start session
       sessionActive = true;
+      setupAudioContext().catch((err) => console.warn(err));
       startListening();
     }
   }
 
-  // Event Listeners
+  // Event Listeners: Tapping orb, wrapper, status pill or dock toggles / stops the voice
   if (orbEl) {
     orbEl.addEventListener("click", toggleVoiceSession);
   }
+  const orbWrapperEl = document.querySelector(".voice-orb-wrapper");
+  if (orbWrapperEl) {
+    orbWrapperEl.addEventListener("click", (e) => {
+      if (e.target !== orbEl && !orbEl.contains(e.target)) {
+        toggleVoiceSession(e);
+      }
+    });
+  }
+  if (statusPillEl) {
+    statusPillEl.style.cursor = "pointer";
+    statusPillEl.addEventListener("click", toggleVoiceSession);
+  }
+  if (liveCardEl) {
+    liveCardEl.style.cursor = "pointer";
+    liveCardEl.addEventListener("click", toggleVoiceSession);
+  }
 
-  // Initialize & auto-start listening on initial page load
+  // Initialize in idle state waiting for user interaction (no auto-start)
   initVisualizer();
+  setState("idle", "AI Model Ready");
   if (SpeechRecognition) {
-    sessionActive = true;
-    setState("listening", "Listening... Speak now");
-    setLiveCaption("user", "Listening to your voice... (speak now)");
-    setupAudioContext().catch((err) => console.warn(err));
-    startListening();
-  } else {
-    setState("idle", "AI Model Ready");
     setLiveCaption("ready", "AI Model ready • Tap orb to start conversation");
+  } else {
+    setState("idle", "Browser Unsupported");
+    setLiveCaption("ready", "Speech recognition not supported in this browser");
   }
 })();

@@ -25,24 +25,63 @@ let ttsEnabled = (() => {
 let preferredVoice = null;
 let speechKeepAliveTimer = null;
 
+// Select best available natural male voice (reflecting VSP)
+function findMaleVoice(voices) {
+  if (!voices || voices.length === 0) return null;
+
+  const englishVoices = voices.filter((v) => v.lang && v.lang.startsWith("en"));
+  const pool = englishVoices.length > 0 ? englishVoices : voices;
+
+  const femaleKeywords = [
+    "female", "woman", "girl", "samantha", "victoria", "karen", "zira",
+    "jenny", "aria", "sonia", "hazel", "susan", "catherine", "linda",
+    "heather", "elena", "heera", "neerja", "veena", "fiona", "moira",
+    "tessa", "alice", "ava", "emma", "serena", "stephanie", "zoe"
+  ];
+
+  const isFemale = (v) => {
+    const name = (v.name || "").toLowerCase();
+    if (name === "google us english" || name.includes("google uk english female")) {
+      return true;
+    }
+    return femaleKeywords.some((kw) => name.includes(kw));
+  };
+
+  const topMaleKeywords = [
+    "rishi", "prabhat", "madhur", "mohan",
+    "google uk english male", "google us english male", "male",
+    "guy", "ryan", "christopher", "andrew", "brian", "eric", "steffan",
+    "daniel", "alex", "david", "mark", "george", "james", "oliver",
+    "arthur", "aaron", "nathan", "tom"
+  ];
+
+  for (const kw of ["rishi", "prabhat", "madhur", "mohan"]) {
+    const match = pool.find((v) => !isFemale(v) && v.name.toLowerCase().includes(kw));
+    if (match) return match;
+  }
+
+  for (const kw of topMaleKeywords) {
+    const match = pool.find((v) => !isFemale(v) && v.name.toLowerCase().includes(kw) && v.name.includes("Natural"));
+    if (match) return match;
+  }
+
+  for (const kw of topMaleKeywords) {
+    const match = pool.find((v) => !isFemale(v) && v.name.toLowerCase().includes(kw));
+    if (match) return match;
+  }
+
+  const nonFemale = pool.find((v) => !isFemale(v));
+  if (nonFemale) return nonFemale;
+
+  return pool[0];
+}
+
 function loadVoices() {
   if (!("speechSynthesis" in window)) return;
   const voices = window.speechSynthesis.getVoices();
   if (!voices || voices.length === 0) return;
 
-  preferredVoice =
-    voices.find(
-      (v) =>
-        v.lang.startsWith("en") &&
-        (v.name.includes("Natural") ||
-          v.name.includes("Google") ||
-          v.name.includes("Samantha") ||
-          v.name.includes("Premium") ||
-          v.name.includes("Enhanced") ||
-          v.name.includes("Daniel")),
-    ) ||
-    voices.find((v) => v.lang.startsWith("en")) ||
-    voices[0];
+  preferredVoice = findMaleVoice(voices);
 }
 
 if ("speechSynthesis" in window) {
@@ -141,7 +180,7 @@ function speakMessage(rawText) {
     const utterance = new SpeechSynthesisUtterance(chunk);
     if (preferredVoice) utterance.voice = preferredVoice;
     utterance.rate = 1.0;
-    utterance.pitch = 1.0;
+    utterance.pitch = 0.94;
 
     const isLast = index === chunks.length - 1;
     utterance.onend = () => {
