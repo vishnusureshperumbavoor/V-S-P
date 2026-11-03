@@ -589,6 +589,27 @@
     return `That's a great question about "${prompt}". Vishnu specializes in machine learning research, edge WebAssembly inference, and computer vision systems. You can also explore his detailed technical write-ups in the Blogs section!`;
   }
 
+  // Time-aware welcome message spoken when a voice session starts
+  function getWelcomeMessage() {
+    const hour = new Date().getHours();
+    const greeting =
+      hour < 12
+        ? "Good morning"
+        : hour < 17
+        ? "Good afternoon"
+        : "Good evening";
+
+    const intros = [
+      "I'm VSP Voice Bot, and I'm now listening. Ask me about Vishnu's machine learning research, Kaggle breakthroughs, hackathon wins, or technical stack.",
+      "VSP Voice Bot is ready to talk. Feel free to ask about Vishnu's projects, AI research, computer vision work, or how to get in touch.",
+      "I'm live and ready to help. Ask me anything about Vishnu's work in machine learning, edge AI, 3D medical imaging, music, or his blogs.",
+      "Voice assistant activated. You can ask about Vishnu's portfolio, his Vaiga hackathon win, or his open-source projects like Vibe ML Studio."
+    ];
+
+    const intro = intros[Math.floor(Math.random() * intros.length)];
+    return `${greeting}! ${intro}`;
+  }
+
   // Handle Response & Speak
   async function handleAgentResponse(userQuery) {
     if (!sessionActive) return;
@@ -817,7 +838,8 @@
       if (!isMobileDevice()) {
         setupAudioContext().catch((err) => console.warn(err));
       }
-      startListening();
+      // Speak a time-aware welcome, then automatically fall into listening.
+      speakMessage(getWelcomeMessage());
     }
   }
 
