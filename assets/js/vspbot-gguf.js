@@ -234,10 +234,29 @@ function toggleTts() {
   } catch (_e) {}
   if (!ttsEnabled) {
     stopSpeaking();
+  } else {
+    primeSpeechSynthesis();
   }
   updateTtsToggleUi();
   setStatus(ttsEnabled ? "Voice response enabled" : "Voice response muted");
 }
+
+// Android Chrome requires speech synthesis to be unlocked from a user gesture.
+// Replies are spoken after an async model response, so prime it on the first tap.
+let ttsPrimed = false;
+function primeSpeechSynthesis() {
+  if (ttsPrimed || !("speechSynthesis" in window)) return;
+  ttsPrimed = true;
+  try {
+    const utterance = new SpeechSynthesisUtterance(".");
+    utterance.volume = 0;
+    utterance.rate = 2;
+    window.speechSynthesis.speak(utterance);
+  } catch (_e) {}
+}
+
+document.addEventListener("click", primeSpeechSynthesis, { once: true });
+document.addEventListener("touchstart", primeSpeechSynthesis, { once: true });
 
 const state = {
   wllama: null,

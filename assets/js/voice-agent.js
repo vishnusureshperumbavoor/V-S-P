@@ -32,12 +32,24 @@
   let audioCtx = null;
   let analyser = null;
   let micStream = null;
+  let micSource = null;
   let animFrameId = null;
   let speechEnergy = 0;
   let lastCapturedText = "";
   let speechGenId = 0;
   let speechWatchdog = null;
+  let speechPrimed = false;
   const activeUtterances = [];
+
+  // Mobile browsers (especially Android Chrome) cannot reliably share the mic
+  // between getUserMedia (visualizer) and SpeechRecognition, and they require
+  // speech synthesis to be unlocked inside a real user gesture.
+  function isMobileDevice() {
+    return (
+      (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
+      /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "")
+    );
+  }
 
   // Radial Spectrum Visualizer Configuration
   const NUM_BARS = 48;
@@ -377,12 +389,41 @@
       }
       if (!micStream && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const source = audioCtx.createMediaStreamSource(micStream);
-        source.connect(analyser);
+        micSource = audioCtx.createMediaStreamSource(micStream);
+        micSource.connect(analyser);
       }
     } catch (e) {
       console.warn("AudioContext / mic stream visualizer access:", e);
     }
+  }
+
+  // Release the visualizer microphone so SpeechRecognition can own the mic.
+  // Android Chrome does not reliably allow both to capture at the same time.
+  function releaseMic() {
+    try {
+      if (micSource) {
+        micSource.disconnect();
+        micSource = null;
+      }
+      if (micStream) {
+        micStream.getTracks().forEach((track) => track.stop());
+        micStream = null;
+      }
+    } catch (e) {
+      console.warn("Failed to release microphone:", e);
+    }
+  }
+
+  // Unlock speech synthesis inside a user gesture (required on Android Chrome).
+  function primeSpeechSynthesis() {
+    if (speechPrimed || !("speechSynthesis" in window)) return;
+    speechPrimed = true;
+    try {
+      const utter = new SpeechSynthesisUtterance(".");
+      utter.volume = 0;
+      utter.rate = 2;
+      window.speechSynthesis.speak(utter);
+    } catch (_) {}
   }
 
   // Setup Speech Recognition
@@ -392,13 +433,17 @@
     const rec = new SpeechRecognition();
     rec.continuous = false;
     rec.interimResults = true;
-    rec.lang = navigator.language || "en-US";
+    const navLang = navigator.language || "en-US";
+    rec.lang = /^en/i.test(navLang) ? navLang : "en-US";
 
     rec.onstart = () => {
       isRecognizing = true;
       setState("listening", "Listening... Speak now");
       setLiveCaption("user", "Listening to your voice... (speak now)");
-      stopSpeaking();
+      // Do not cancel the silent priming utterance used to unlock mobile TTS.
+      if (activeUtterances.length > 0) {
+        stopSpeaking();
+      }
     };
 
     rec.onspeechstart = () => {
@@ -443,6 +488,18 @@
         sessionActive = false;
         setState("idle", "Microphone access blocked");
         setLiveCaption("ready", "Microphone blocked. Please allow mic permissions in your browser.");
+      } else if (event.error === "audio-capture") {
+        sessionActive = false;
+        setState("idle", "No microphone found");
+        setLiveCaption("ready", "No microphone detected. Check your device mic and try again.");
+      } else if (event.error === "network") {
+        sessionActive = false;
+        setState("idle", "Speech service offline");
+        setLiveCaption("ready", "Speech recognition needs an internet connection. Check your network and retry.");
+      } else if (event.error === "service-not-allowed") {
+        sessionActive = false;
+        setState("idle", "Speech service unavailable");
+        setLiveCaption("ready", "Speech recognition is disabled on this browser. Enable Google Speech Services and retry.");
       } else if (event.error === "no-speech") {
         if (sessionActive) {
           setTimeout(() => {
@@ -695,6 +752,12 @@
     }
     if (isRecognizing) return;
 
+    // SpeechRecognition must own the mic; release the visualizer stream first
+    // or Android Chrome may start but never capture audio.
+    if (isMobileDevice()) {
+      releaseMic();
+    }
+
     try {
       if (!recognition) {
         recognition = initRecognition();
@@ -725,6 +788,7 @@
     }
     isRecognizing = false;
     speechEnergy = 0;
+    releaseMic();
     
     setState("idle", "AI Model Ready");
     setLiveCaption("ready", "AI Model ready • Tap orb to start conversation");
@@ -748,7 +812,11 @@
     } else {
       // User tapped voice UI while idle -> start session
       sessionActive = true;
-      setupAudioContext().catch((err) => console.warn(err));
+      // Unlock TTS while we are still inside the user gesture (Android Chrome).
+      primeSpeechSynthesis();
+      if (!isMobileDevice()) {
+        setupAudioContext().catch((err) => console.warn(err));
+      }
       startListening();
     }
   }
