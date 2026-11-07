@@ -250,14 +250,38 @@
     `;
   }
 
-  // Execute immediately if DOM elements exist, or on DOMContentLoaded
+  let headerRendered = false;
+  let footerRendered = false;
+
+  function initHeader() {
+    if (headerRendered) return;
+    const container =
+      document.getElementById("vsp-header") || document.querySelector("header");
+    if (!container) return;
+    renderHeader();
+    headerRendered = true;
+  }
+
+  function initFooter() {
+    if (footerRendered) return;
+    const container =
+      document.getElementById("vsp-footer") || document.querySelector("footer");
+    if (!container) return;
+    renderFooter();
+    footerRendered = true;
+  }
+
+  // Render the header immediately if its container is already in the DOM so it
+  // is not delayed by the blocking scripts later in the body. Render the footer
+  // once the DOM has finished parsing.
+  initHeader();
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
-      renderHeader();
-      renderFooter();
+      initHeader();
+      initFooter();
     });
   } else {
-    renderHeader();
-    renderFooter();
+    initHeader();
+    initFooter();
   }
 })();

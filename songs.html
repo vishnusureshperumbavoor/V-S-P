@@ -53,6 +53,8 @@
 <body class="vsp-songs-page">
   <!-- Shared Global Navigation Topbar Header -->
   <header id="vsp-header"></header>
+  <!-- Render topbar immediately, before later blocking scripts -->
+  <script src="assets/js/nav-footer.js"></script>
 
   <!-- Main Music App Shell -->
   <div class="sp-app-container" id="sp-app-container">
@@ -636,7 +638,6 @@
   <footer id="vsp-footer"></footer>
 
   <!-- Scripts -->
-  <script src="assets/js/nav-footer.js"></script>
   <script src="assets/js/songs-player.js"></script>
 </body>
 </html>

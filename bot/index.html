@@ -43,6 +43,8 @@
 <body class="vspbot-full-page">
   <!-- Shared Global Navigation Topbar Header -->
   <header id="vsp-header"></header>
+  <!-- Render topbar immediately, before later blocking scripts -->
+  <script src="../assets/js/nav-footer.js"></script>
 
   <main class="vspbot-page-wrap">
     <div class="vspbot vspbot-expanded">
@@ -129,7 +131,6 @@
     </div>
   </main>
 
-  <script src="../assets/js/nav-footer.js"></script>
   <script type="module" src="../assets/js/vspbot-gguf.js"></script>
 </body>
 

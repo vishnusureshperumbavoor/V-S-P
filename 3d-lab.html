@@ -98,6 +98,8 @@
   <body class="vsp-lab-page">
     <!-- Shared Navigation Topbar Header -->
     <header id="vsp-header"></header>
+    <!-- Render topbar immediately, before later blocking scripts -->
+    <script src="assets/js/nav-footer.js"></script>
 
     <!-- Top Corner Design Name HUD (Small text indicator requested) -->
     <aside class="vsp-design-hud" id="vsp-design-hud" aria-live="polite">
@@ -261,8 +263,6 @@
       </div>
     </nav>
 
-    <!-- Navigation / Footer Component Engine -->
-    <script src="assets/js/nav-footer.js"></script>
 
     <!-- 3D Graphics Engine & Controls -->
     <script src="assets/js/three.min.js"></script>
