@@ -601,7 +601,7 @@
   async function handleAgentResponse(userQuery) {
     if (!sessionActive) return;
     setState("thinking", "AI Model Thinking...");
-    setLiveCaption("thinking", "Processing your question...");
+    setLiveCaption("thinking", "Thinking...");
 
     const answer = await getModelResponse(userQuery);
     if (!sessionActive) return;
