@@ -5,10 +5,13 @@ import {
 import WasmFromCDN from "https://cdn.jsdelivr.net/npm/@wllama/wllama@2.2.1/esm/wasm-from-cdn.js";
 
 const MODEL_URL =
-  "https://huggingface.co/vishnusureshperumbavoor/vsp_alpaca-instruct-300ep-v2-vml/resolve/main/vsp_alpaca-instruct-300ep-v2-instruct-q4_k_m.gguf";
+  "https://huggingface.co/vishnusureshperumbavoor/vsp-persona-qwen-0.5b/resolve/main/vsp-persona-qwen2.5-0.5b-q4_k_m.gguf";
 const MODEL_SIZE_HINT_BYTES = 380 * 1024 * 1024;
-const MODEL_READY_KEY = "vspbot_model_ready_vsp_alpaca_300ep_v2_instruct_q4km";
-const MODEL_SIZE_KEY = "vspbot_model_size_vsp_alpaca_300ep_v2_instruct_q4km";
+const MODEL_READY_KEY = "vspbot_model_ready_vsp_persona_qwen05_q4km";
+const MODEL_SIZE_KEY = "vspbot_model_size_vsp_persona_qwen05_q4km";
+
+const MAX_HISTORY_MESSAGES = 8;
+const GENERATION_MAX_TOKENS = 160;
 
 // ==========================================
 // VOICE INTERACTION (Speech Synthesis & Recognition)
@@ -390,7 +393,7 @@ function setDownloadMeta({ loaded = null, total = null } = {}) {
 
   if (storageInfoEl) {
     storageInfoEl.innerHTML =
-      `<i class="fa-solid fa-database"></i> Storage: IndexedDB`;
+      `<i class="fa-solid fa-database"></i> Storage: OPFS`;
   }
 }
 
@@ -437,6 +440,14 @@ function buildPrompt(messages) {
       )
       .join("\n") + "\n<|im_start|>assistant\n"
   );
+}
+
+function buildHistory(messages, limit = MAX_HISTORY_MESSAGES) {
+  const history = messages.slice(-limit);
+  while (history.length > 0 && history[0].role !== "user") {
+    history.shift();
+  }
+  return history;
 }
 
 function cleanupLegacyStorageKeys() {
@@ -643,39 +654,46 @@ async function sendMessage() {
     generationStart = performance.now();
     lastSpeedUpdate = generationStart;
 
-    answer = await state.wllama.createCompletion(buildPrompt(state.messages), {
-      nPredict: 256,
-      sampling: {
-        temp: 0.1,
-        top_k: 40,
-        top_p: 0.9,
+    answer = await state.wllama.createCompletion(
+      buildPrompt(buildHistory(state.messages)),
+      {
+        nPredict: GENERATION_MAX_TOKENS,
+        sampling: {
+          temp: 0.65,
+          top_k: 40,
+          top_p: 0.9,
+          penalty_last_n: 128,
+          penalty_repeat: 1.2,
+          penalty_freq: 0.0,
+          penalty_present: 0.0,
+        },
+        stopWords: ["<|im_end|>", "<|endoftext|>", "<|im_start|>"],
+        onNewToken: (_token, _piece, currentText) => {
+          tokenCount += 1;
+          answer = currentText;
+          const now = performance.now();
+
+          if (tokenCount === 1) {
+            firstTokenTime = now;
+            ttftMs = Math.round(firstTokenTime - generationStart);
+          }
+
+          const evalSec = (now - firstTokenTime) / 1000;
+          const tps =
+            evalSec > 0 && tokenCount > 1
+              ? (tokenCount - 1) / evalSec
+              : tokenCount / Math.max(0.001, (now - generationStart) / 1000);
+
+          if (speedEl && (now - lastSpeedUpdate > 250 || tokenCount === 1)) {
+            speedEl.textContent = `Speed: ${tps.toFixed(1)} tok/s | TTFT: ${ttftMs} ms`;
+            lastSpeedUpdate = now;
+          }
+          botBubble.closest(".chat")?.classList.remove("thinking");
+          botBubble.textContent = answer;
+          if (chatbox) chatbox.scrollTop = chatbox.scrollHeight;
+        },
       },
-      stopWords: ["<|im_end|>", "<|endoftext|>", "<|im_start|>"],
-      onNewToken: (_token, _piece, currentText) => {
-        tokenCount += 1;
-        answer = currentText;
-        const now = performance.now();
-
-        if (tokenCount === 1) {
-          firstTokenTime = now;
-          ttftMs = Math.round(firstTokenTime - generationStart);
-        }
-
-        const evalSec = (now - firstTokenTime) / 1000;
-        const tps =
-          evalSec > 0 && tokenCount > 1
-            ? (tokenCount - 1) / evalSec
-            : tokenCount / Math.max(0.001, (now - generationStart) / 1000);
-
-        if (speedEl && (now - lastSpeedUpdate > 250 || tokenCount === 1)) {
-          speedEl.textContent = `Speed: ${tps.toFixed(1)} tok/s | TTFT: ${ttftMs} ms`;
-          lastSpeedUpdate = now;
-        }
-        botBubble.closest(".chat")?.classList.remove("thinking");
-        botBubble.textContent = answer;
-        if (chatbox) chatbox.scrollTop = chatbox.scrollHeight;
-      },
-    });
+    );
 
     const cleanAnswer =
       answer.trim() || "I could not generate a reply. Please try again.";
@@ -760,11 +778,6 @@ async function clearCachedModel() {
   const btn = document.getElementById("vspbot-delete-model");
   if (btn) btn.disabled = true;
   stopSpeaking();
-  if (isRecognizing && recognition) {
-    try {
-      recognition.stop();
-    } catch (_e) {}
-  }
   setStatus("Purging cached model from browser storage...");
 
   try {
@@ -773,6 +786,16 @@ async function clearCachedModel() {
       for (const k of keys) {
         await caches.delete(k);
       }
+    }
+    // wllama >=2.2 stores GGUF weights in OPFS (Origin Private File System),
+    // which is separate from Cache Storage and localStorage.
+    try {
+      const cacheManager =
+        state.wllama?.cacheManager ??
+        new Wllama(WasmFromCDN, { logger: LoggerWithoutDebug }).cacheManager;
+      await cacheManager.clear();
+    } catch (_opfsErr) {
+      console.warn("Failed to clear OPFS model cache:", _opfsErr);
     }
     localStorage.removeItem(MODEL_READY_KEY);
     localStorage.removeItem(MODEL_SIZE_KEY);
