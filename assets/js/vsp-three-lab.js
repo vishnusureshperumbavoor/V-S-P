@@ -27,7 +27,7 @@
   if (!container) return;
 
   // Scene state
-  let currentDesign = "matrix";
+  let currentDesign = "avatar";
   let autoSpin = true;
   let activeThemeIndex = 0;
   const themes = [
@@ -237,7 +237,7 @@
     scene.add(activeGroup);
 
     // Build default design
-    loadDesign("matrix");
+    loadDesign("avatar");
 
     // Attach Event Listeners
     window.addEventListener("resize", onWindowResize, false);
