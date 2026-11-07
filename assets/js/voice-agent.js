@@ -438,6 +438,7 @@
 
     rec.onstart = () => {
       isRecognizing = true;
+      lastCapturedText = "";
       setState("listening", "Listening... Speak now");
       setLiveCaption("user", "Listening to your voice... (speak now)");
       // Do not cancel the silent priming utterance used to unlock mobile TTS.
@@ -464,7 +465,7 @@
       let interim = "";
       let final = "";
 
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
+      for (let i = 0; i < event.results.length; ++i) {
         const text = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
           final += text;
@@ -475,9 +476,12 @@
 
       const current = final || interim;
       if (current) {
-        lastCapturedText = current;
-        // Live text caption updates with current utterance only
+        // Live text caption updates with the current utterance only.
         setLiveCaption("user", current);
+      }
+      // Only finalized speech becomes a query, so partial/noise cannot trigger replies.
+      if (final) {
+        lastCapturedText = final;
       }
     };
 
@@ -546,48 +550,31 @@
     return rec;
   }
 
-  // Conversational Knowledge Engine
-  function getKnowledgeResponse(prompt) {
-    const q = prompt.toLowerCase();
-
-    if (q.includes("knee") || q.includes("rsna") || q.includes("mri") || q.includes("jumped") || q.includes("osteoarthritis")) {
-      return "For the RSNA Knee Osteoarthritis Detection challenge on Kaggle, I built a 3D MRI pipeline that processed volumetric DICOM scans with coordinate-aligned bounding boxes. That solution jumped 4,900 ranks on the leaderboard into the top 8%!";
+  // Local GGUF model response (no canned fallbacks)
+  async function getModelResponse(prompt) {
+    // The model module is a deferred ES module; wait briefly for it to expose its API.
+    for (let i = 0; i < 50 && typeof window.vspGenerateReply !== "function"; i += 1) {
+      await new Promise((r) => setTimeout(r, 100));
     }
-
-    if (q.includes("vibe ml") || q.includes("studio") || q.includes("vibe-ml") || q.includes("vml")) {
-      return "Vibe ML Studio is my open-source, zero-code machine learning platform. It allows developers to train, evaluate, and export PyTorch, Scikit-Learn, and ONNX models directly through an interactive GUI.";
+    if (typeof window.vspGenerateReply !== "function") {
+      return "The local AI model is not available on this page yet. Please refresh and try again.";
     }
-
-    if (q.includes("vaiga") || q.includes("hackathon") || q.includes("pepper") || q.includes("winner")) {
-      return "At the Vaiga 2023 National Hackathon, our team won First Prize for building an autonomous Pepper Harvesting Robotic System powered by computer vision and real-time edge AI.";
+    try {
+      return await window.vspGenerateReply(prompt);
+    } catch (err) {
+      console.error("Local voice model error:", err);
+      return "Sorry, I couldn't run the local AI model. Please try again.";
     }
-
-    if (q.includes("skill") || q.includes("stack") || q.includes("tech") || q.includes("experience") || q.includes("framework")) {
-      return "My core AI stack centers on PyTorch, ONNX, Scikit-Learn, and edge deployment using WebAssembly and WebGPU. I also specialize in 3D medical imaging, autonomous AI agents, and computer vision.";
-    }
-
-    if (q.includes("who are you") || q.includes("what is this") || q.includes("about you") || q.includes("what do you do")) {
-      return "I'm VSP Voice Bot, an AI assistant representing Vishnu Suresh Perumbavoor. You can ask me about his machine learning research, hackathon wins, Kaggle breakthroughs, or technical stack!";
-    }
-
-    if (q.includes("song") || q.includes("music") || q.includes("beat") || q.includes("cover")) {
-      return "Vishnu produces AI cover songs and original beats, including 'No Crown Given' and 'I'm Running This', available in the Songs section of this portfolio.";
-    }
-
-    if (q.includes("blog") || q.includes("article") || q.includes("post") || q.includes("write")) {
-      return "Vishnu writes deep-dive technical articles on 3D computer vision, zero-code ML, and edge inference. You can read them directly in the Blogs section!";
-    }
-
-    if (q.includes("contact") || q.includes("hire") || q.includes("email") || q.includes("reach") || q.includes("github")) {
-      return "You can connect with Vishnu on GitHub at vishnusureshperumbavoor or reach out via LinkedIn and email from the Contact section of this portfolio.";
-    }
-
-    if (q.includes("hello") || q.includes("hi") || q.includes("hey") || q.includes("morning") || q.includes("afternoon")) {
-      return "Hello! I'm VSP Voice Bot. How can I help you explore Vishnu's projects and AI research today?";
-    }
-
-    return `That's a great question about "${prompt}". Vishnu specializes in machine learning research, edge WebAssembly inference, and computer vision systems. You can also explore his detailed technical write-ups in the Blogs section!`;
   }
+
+  // Surface first-run model download progress in the voice caption.
+  window.addEventListener("vsp-model-progress", (event) => {
+    if (!sessionActive || currentState !== "thinking") return;
+    const percent = event.detail && event.detail.percent;
+    if (Number.isFinite(percent)) {
+      setLiveCaption("thinking", `Loading local AI model... ${percent}%`);
+    }
+  });
 
   // Time-aware welcome message spoken when a voice session starts
   function getWelcomeMessage() {
@@ -600,10 +587,10 @@
         : "Good evening";
 
     const intros = [
-      "I'm VSP Voice Bot, and I'm now listening. Ask me about Vishnu's machine learning research, Kaggle breakthroughs, hackathon wins, or technical stack.",
-      "VSP Voice Bot is ready to talk. Feel free to ask about Vishnu's projects, AI research, computer vision work, or how to get in touch.",
-      "I'm live and ready to help. Ask me anything about Vishnu's work in machine learning, edge AI, 3D medical imaging, music, or his blogs.",
-      "Voice assistant activated. You can ask about Vishnu's portfolio, his Vaiga hackathon win, or his open-source projects like Vibe ML Studio."
+      "I'm VSP Voice Bot, and I'm now listening. Ask me about VSP's machine learning research, Kaggle breakthroughs, hackathon wins, or technical stack.",
+      "VSP Voice Bot is ready to talk. Feel free to ask about VSP's projects, AI research, computer vision work, or how to get in touch.",
+      "I'm live and ready to help. Ask me anything about VSP's work in machine learning, edge AI, 3D medical imaging, music, or blogs.",
+      "Voice assistant activated. You can ask about VSP's portfolio, the Vaiga hackathon win, or open-source projects like Vibe ML Studio."
     ];
 
     const intro = intros[Math.floor(Math.random() * intros.length)];
@@ -616,11 +603,7 @@
     setState("thinking", "AI Model Thinking...");
     setLiveCaption("thinking", "Processing your question...");
 
-    // Natural processing pause
-    await new Promise((r) => setTimeout(r, 400));
-    if (!sessionActive) return;
-
-    const answer = getKnowledgeResponse(userQuery);
+    const answer = await getModelResponse(userQuery);
     if (!sessionActive) return;
     speakMessage(answer);
   }

@@ -593,6 +593,11 @@ async function loadModel() {
         setDownloadMeta({ loaded, total });
         setStatus(`Downloading model weights... ${percent}%`);
         updateDownloadButtonsUi("loading", percent);
+        window.dispatchEvent(
+          new CustomEvent("vsp-model-progress", {
+            detail: { loaded, total, percent },
+          }),
+        );
       },
     });
 
@@ -612,6 +617,47 @@ async function loadModel() {
 
   return state.loading;
 }
+
+// Headless generation API used by the voice agent so spoken answers come from
+// the same local GGUF model instead of canned responses.
+const voiceHistory = [];
+
+async function generateReply(prompt) {
+  const text = (prompt || "").trim();
+  if (!text) return "";
+
+  await loadModel();
+
+  const messages = [...voiceHistory, { role: "user", content: text }];
+  const raw = await state.wllama.createCompletion(
+    buildPrompt(buildHistory(messages)),
+    {
+      nPredict: GENERATION_MAX_TOKENS,
+      sampling: {
+        temp: 0.65,
+        top_k: 40,
+        top_p: 0.9,
+        penalty_last_n: 128,
+        penalty_repeat: 1.2,
+        penalty_freq: 0.0,
+        penalty_present: 0.0,
+      },
+      stopWords: ["<|im_end|>", "<|endoftext|>", "<|im_start|>"],
+    },
+  );
+
+  let answer = (raw || "").replace(/<\|[^>]+\|>/g, "").trim();
+  if (!answer) answer = "I'm not sure how to answer that yet.";
+
+  voiceHistory.push({ role: "user", content: text });
+  voiceHistory.push({ role: "assistant", content: answer });
+  while (voiceHistory.length > MAX_HISTORY_MESSAGES) voiceHistory.shift();
+
+  return answer;
+}
+
+window.vspGenerateReply = generateReply;
+window.vspModelReady = () => state.modelReady;
 
 async function sendMessage() {
   const text = inputEl?.value.trim();
