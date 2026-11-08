@@ -523,10 +523,10 @@
         : "Good evening";
 
     const intros = [
-      "I'm VSP Voice Bot, and I'm now listening. Ask me about VSP's machine learning research, Kaggle breakthroughs, hackathon wins, or technical stack.",
-      "VSP Voice Bot is ready to talk. Feel free to ask about VSP's projects, AI research, computer vision work, or how to get in touch.",
-      "I'm live and ready to help. Ask me anything about VSP's work in machine learning, edge AI, 3D medical imaging, music, or blogs.",
-      "Voice assistant activated. You can ask about VSP's portfolio, the Vaiga hackathon win, or open-source projects like Vibe ML Studio."
+      "I'm VSP Voice Bot. How can I help?",
+      "VSP Voice Bot here. What would you like to know?",
+      "I'm listening. Ask me anything about VSP.",
+      "Ready when you are. What can I tell you?"
     ];
 
     const intro = intros[Math.floor(Math.random() * intros.length)];
