@@ -28,62 +28,10 @@ let ttsEnabled = (() => {
 let preferredVoice = null;
 let speechKeepAliveTimer = null;
 
-// Select best available natural female voice (reflecting VSP)
+// Select the most natural available voice (delegated to shared voice utils)
 function findFemaleVoice(voices) {
-  if (!voices || voices.length === 0) return null;
-
-  const englishVoices = voices.filter((v) => v.lang && v.lang.startsWith("en"));
-  const pool = englishVoices.length > 0 ? englishVoices : voices;
-
-  const femaleKeywords = [
-    "female", "woman", "girl", "samantha", "victoria", "karen", "zira",
-    "jenny", "aria", "sonia", "hazel", "susan", "catherine", "linda",
-    "heather", "elena", "heera", "neerja", "veena", "fiona", "moira",
-    "tessa", "alice", "ava", "emma", "serena", "stephanie", "zoe"
-  ];
-
-  const isFemale = (v) => {
-    const name = (v.name || "").toLowerCase();
-    if (name === "google us english" || name.includes("google uk english female")) {
-      return true;
-    }
-    return femaleKeywords.some((kw) => name.includes(kw));
-  };
-
-  const topFemaleKeywords = [
-    "heera", "neerja", "veena",
-    "google uk english female", "google us english female", "female",
-    "samantha", "victoria", "karen", "zira", "jenny", "aria", "sonia",
-    "hazel", "susan", "catherine", "linda", "heather", "elena", "fiona",
-    "moira", "tessa", "alice", "ava", "emma", "serena", "stephanie", "zoe"
-  ];
-
-  // Priority 1: Indian English female voices (Heera, Neerja, Veena, etc.)
-  for (const kw of ["heera", "neerja", "veena"]) {
-    const match = pool.find((v) => isFemale(v) && v.name.toLowerCase().includes(kw));
-    if (match) return match;
-  }
-
-  // Priority 2: High-quality Natural female voices
-  for (const kw of topFemaleKeywords) {
-    const match = pool.find((v) => isFemale(v) && v.name.toLowerCase().includes(kw) && v.name.includes("Natural"));
-    if (match) return match;
-  }
-
-  // Priority 3: Any recognized female voice
-  for (const kw of topFemaleKeywords) {
-    const match = pool.find((v) => isFemale(v) && v.name.toLowerCase().includes(kw));
-    if (match) return match;
-  }
-
-  // Priority 4: Any non-explicitly-male voice
-  const nonMale = pool.find((v) => {
-    const name = (v.name || "").toLowerCase();
-    return !name.includes("male") || name.includes("female");
-  });
-  if (nonMale) return nonMale;
-
-  return pool[0];
+  if (window.VSPVoice) return window.VSPVoice.selectVoice(voices);
+  return (voices && voices[0]) || null;
 }
 
 function loadVoices() {
@@ -102,46 +50,14 @@ if ("speechSynthesis" in window) {
 }
 
 function cleanTextForSpeech(raw) {
+  if (window.VSPVoice) return window.VSPVoice.cleanForSpeech(raw);
   if (!raw) return "";
-  return raw
-    .replace(/```[\s\S]*?```/g, "Code block omitted.")
-    .replace(/`([^`]+)`/g, "$1")
-    .replace(/https?:\/\/\S+/g, "link")
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .replace(/(\*\*|__)(.*?)\1/g, "$2")
-    .replace(/(\*|_)(.*?)\1/g, "$2")
-    .replace(/^#{1,6}\s+/gm, "")
-    .replace(/^>\s+/gm, "")
-    .replace(/^[\s*-+]+(?=\S)/gm, "")
-    .replace(/^\d+\.\s+/gm, "")
-    .replace(/<\|.*?\|>/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  return String(raw).replace(/\s+/g, " ").trim();
 }
 
-function chunkText(text, maxLen = 180) {
-  const sentences = text.match(/[^.!?\n]+[.!?\n]+|[^.!?\n]+$/g) || [text];
-  const result = [];
-  for (const s of sentences) {
-    const trimmed = s.trim();
-    if (!trimmed) continue;
-    if (trimmed.length <= maxLen) {
-      result.push(trimmed);
-    } else {
-      const words = trimmed.split(" ");
-      let current = "";
-      for (const w of words) {
-        if ((current + " " + w).trim().length <= maxLen) {
-          current = (current + " " + w).trim();
-        } else {
-          if (current) result.push(current);
-          current = w;
-        }
-      }
-      if (current) result.push(current);
-    }
-  }
-  return result;
+function chunkText(text, maxLen = 240) {
+  if (window.VSPVoice) return window.VSPVoice.chunkForSpeech(text, maxLen);
+  return [String(text || "").trim()].filter(Boolean);
 }
 
 function startSpeechKeepAlive() {
@@ -180,17 +96,20 @@ function speakMessage(rawText) {
   const speakable = cleanTextForSpeech(rawText);
   if (!speakable) return;
 
-  const chunks = chunkText(speakable, 180);
+  const chunks = chunkText(speakable, 240);
   if (chunks.length === 0) return;
 
   if (!preferredVoice) loadVoices();
   startSpeechKeepAlive();
 
+  const rate = window.VSPVoice ? window.VSPVoice.SPEECH_RATE : 1.0;
+  const pitch = window.VSPVoice ? window.VSPVoice.SPEECH_PITCH : 1.0;
+
   chunks.forEach((chunk, index) => {
     const utterance = new SpeechSynthesisUtterance(chunk);
     if (preferredVoice) utterance.voice = preferredVoice;
-    utterance.rate = 1.0;
-    utterance.pitch = 1.05;
+    utterance.rate = rate;
+    utterance.pitch = pitch;
 
     const isLast = index === chunks.length - 1;
     utterance.onend = () => {

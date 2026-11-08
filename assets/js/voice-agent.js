@@ -60,62 +60,10 @@
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
-  // Select best available natural female voice (reflecting VSP)
+  // Select the most natural available voice (delegated to shared voice utils)
   function findFemaleVoice(voices) {
-    if (!voices || voices.length === 0) return null;
-
-    const englishVoices = voices.filter((v) => v.lang && v.lang.startsWith("en"));
-    const pool = englishVoices.length > 0 ? englishVoices : voices;
-
-    const femaleKeywords = [
-      "female", "woman", "girl", "samantha", "victoria", "karen", "zira",
-      "jenny", "aria", "sonia", "hazel", "susan", "catherine", "linda",
-      "heather", "elena", "heera", "neerja", "veena", "fiona", "moira",
-      "tessa", "alice", "ava", "emma", "serena", "stephanie", "zoe"
-    ];
-
-    const isFemale = (v) => {
-      const name = (v.name || "").toLowerCase();
-      if (name === "google us english" || name.includes("google uk english female")) {
-        return true;
-      }
-      return femaleKeywords.some((kw) => name.includes(kw));
-    };
-
-    const topFemaleKeywords = [
-      "heera", "neerja", "veena",
-      "google uk english female", "google us english female", "female",
-      "samantha", "victoria", "karen", "zira", "jenny", "aria", "sonia",
-      "hazel", "susan", "catherine", "linda", "heather", "elena", "fiona",
-      "moira", "tessa", "alice", "ava", "emma", "serena", "stephanie", "zoe"
-    ];
-
-    // Priority 1: Indian English female voices (Heera, Neerja, Veena, etc.)
-    for (const kw of ["heera", "neerja", "veena"]) {
-      const match = pool.find((v) => isFemale(v) && v.name.toLowerCase().includes(kw));
-      if (match) return match;
-    }
-
-    // Priority 2: High-quality Natural female voices
-    for (const kw of topFemaleKeywords) {
-      const match = pool.find((v) => isFemale(v) && v.name.toLowerCase().includes(kw) && v.name.includes("Natural"));
-      if (match) return match;
-    }
-
-    // Priority 3: Any recognized female voice
-    for (const kw of topFemaleKeywords) {
-      const match = pool.find((v) => isFemale(v) && v.name.toLowerCase().includes(kw));
-      if (match) return match;
-    }
-
-    // Priority 4: Any non-explicitly-male voice
-    const nonMale = pool.find((v) => {
-      const name = (v.name || "").toLowerCase();
-      return !name.includes("male") || name.includes("female");
-    });
-    if (nonMale) return nonMale;
-
-    return pool[0];
+    if (window.VSPVoice) return window.VSPVoice.selectVoice(voices);
+    return (voices && voices[0]) || null;
   }
 
   // Initialize Speech Synthesis Voices
@@ -134,21 +82,9 @@
 
   // Clean raw markdown text for smooth TTS pronunciation
   function cleanForSpeech(raw) {
+    if (window.VSPVoice) return window.VSPVoice.cleanForSpeech(raw);
     if (!raw) return "";
-    return raw
-      .replace(/```[\s\S]*?```/g, "")
-      .replace(/`([^`]+)`/g, "$1")
-      .replace(/https?:\/\/\S+/g, "")
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-      .replace(/(\*\*|__)(.*?)\1/g, "$2")
-      .replace(/(\*|_)(.*?)\1/g, "$2")
-      .replace(/^#{1,6}\s+/gm, "")
-      .replace(/^>\s+/gm, "")
-      .replace(/^[\s*-+]+(?=\S)/gm, "")
-      .replace(/^\d+\.\s+/gm, "")
-      .replace(/<\|.*?\|>/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
+    return String(raw).replace(/\s+/g, " ").trim();
   }
 
   // Update Status Pill & UI States
@@ -677,37 +613,41 @@
       return;
     }
 
-    // Split into sentences for reliable speech and live subtitle chunking
-    const sentences = clean.match(/[^.!?\n]+[.!?\n]+|[^.!?\n]+$/g) || [clean];
-    const valid = sentences.map((s) => s.trim()).filter((s) => s.length > 0);
+    // Group sentences so intonation flows instead of resetting every sentence.
+    const chunks = window.VSPVoice
+      ? window.VSPVoice.chunkForSpeech(clean, 240)
+      : [clean];
 
-    if (valid.length === 0) {
+    if (chunks.length === 0) {
       finishSpeakingAndListen(myGenId);
       return;
     }
 
     if (!preferredVoice) initVoices();
-    setLiveCaption("ai", valid[0]);
+    setLiveCaption("ai", chunks[0]);
+
+    const rate = window.VSPVoice ? window.VSPVoice.SPEECH_RATE : 1.0;
+    const pitch = window.VSPVoice ? window.VSPVoice.SPEECH_PITCH : 1.0;
 
     let hasStartedSpeaking = false;
     const startTime = Date.now();
 
-    valid.forEach((sentence, idx) => {
-      const utter = new SpeechSynthesisUtterance(sentence);
+    chunks.forEach((chunk, idx) => {
+      const utter = new SpeechSynthesisUtterance(chunk);
       // Keep reference in module array to prevent browser GC from dropping onend events
       activeUtterances.push(utter);
 
       if (preferredVoice) utter.voice = preferredVoice;
-      utter.rate = 1.02;
-      utter.pitch = 1.05;
+      utter.rate = rate;
+      utter.pitch = pitch;
 
-      const isLast = idx === valid.length - 1;
+      const isLast = idx === chunks.length - 1;
 
       utter.onstart = () => {
         if (myGenId !== speechGenId || !sessionActive) return;
         hasStartedSpeaking = true;
-        // Live text displays strictly the current sentence being spoken!
-        setLiveCaption("ai", sentence);
+        // Live text displays strictly the current chunk being spoken!
+        setLiveCaption("ai", chunk);
       };
 
       utter.onend = () => {
